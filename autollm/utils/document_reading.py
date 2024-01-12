@@ -55,8 +55,10 @@ def read_files_as_documents(
         required_exts=required_exts,
         **kwargs)
 
-    logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
-        f"Reading files {input_files}..")
+    if input_dir:
+        logger.info(f"Reading files from {input_dir}..")
+    else:
+        logger.error("input_dir is not provided")
 
     # Read and process the documents
     documents = reader.load_data(show_progress=show_progress)
