@@ -7,12 +7,12 @@ from typing import Callable, List, Optional, Sequence, Tuple
 from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
-from autollm.utils.git_utils import clone_or_pull_repository
+from autollm.utils.git_utils import clone_or_pull_repository, merge_strategy, checkout_branch
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
-from autollm.utils.webpage_reader import WebPageReader
-from autollm.utils.website_reader import WebSiteReader
+from autollm.utils.webpage_reader import WebPageReader, SELECTORS, IGNORED_TAGS
+from autollm.utils.website_reader import WebSiteReader, WebPageReader
 
 
 def read_files_as_documents(
@@ -103,7 +103,7 @@ def read_github_repo_as_documents(
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
-        clone_or_pull_repository(git_repo_url, temp_dir)
+        clone_or_pull_repository(git_repo_url, temp_dir, merge_strategy='merge-recursive', checkout_branch='main')
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
@@ -114,7 +114,7 @@ def read_github_repo_as_documents(
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     finally:
         # Delete the temporary directory
-        shutil.rmtree(temp_dir, onerror=on_rm_error)
+            shutil.rmtree(temp_dir, ignore_errors=True, onerror=on_rm_error)
 
     return documents
 
@@ -142,7 +142,7 @@ def read_website_as_documents(
     if (parent_url is None and sitemap_url is None) or (parent_url is not None and sitemap_url is not None):
         raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
 
-    reader = WebSiteReader()
+    reader = WebSiteReader(parent_url=parent_url, sitemap_url=sitemap_url, include_filter_str=include_filter_str, exclude_filter_str=exclude_filter_str)
     if parent_url:
         documents = reader.load_data(
             parent_url=parent_url,
@@ -167,6 +167,6 @@ def read_webpage_as_documents(url: str) -> List[Document]:
     Returns:
         List[Document]: A list of Document objects containing content and metadata from the web page.
     """
-    reader = WebPageReader()
+    reader = WebPageReader(url=url)
     documents = reader.load_data(url)
     return documents
