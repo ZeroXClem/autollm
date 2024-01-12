@@ -20,7 +20,7 @@ from autollm.utils.document_reading import (
 )
 
 
-def read_files_as_documents(
+def read_files_as_documents_with_errors(
         input_dir: Optional[str] = None,
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
