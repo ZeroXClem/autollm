@@ -1,3 +1,4 @@
+from sys import sys
 import os
 import shutil
 import stat
@@ -9,7 +10,7 @@ from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
-from autollm.utils.error_handling import handle_exception, handle_custom
+from autollm.utils.error_handling import handle_exception, handle_custom, handle_error, handle_warning, handle_info, handle_debug, handle_critical, handle_fatal
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
@@ -96,11 +97,16 @@ def read_github_repo_as_documents(
         Sequence[Document]: A sequence of Document objects.
     """
 
-    # Ensure the temp_dir directory exists
-    temp_dir = Path("autollm/temp/")
-    temp_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        # Ensure the temp_dir directory exists
+        temp_dir = Path("autollm/temp/")
+        temp_dir.mkdir(parents=True, exist_ok=True)
 
-    logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
+        logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
+    except Exception as e:
+        handle_exception(*sys.exc_info())
+        handle_custom(logging.ERROR, f"Error occurred: {e}")
+        logger.error(f"Error occurred: {e}", exc_info=True)
 
     try:
         # Add error handling and logging to catch any exceptions
