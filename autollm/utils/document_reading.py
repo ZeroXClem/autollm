@@ -13,6 +13,8 @@ from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
+from autollm.utils.document_reading import on_rm_error
+from autollm.utils.logging import logger
 
 
 def read_files_as_documents(
@@ -77,8 +79,6 @@ def on_rm_error(func: Callable, path: str, exc_info: Tuple):
     """
     os.chmod(path, stat.S_IWRITE)
     os.unlink(path)
-
-
 def read_github_repo_as_documents(
         git_repo_url: str,
         relative_folder_path: Optional[str] = None,
@@ -114,7 +114,9 @@ def read_github_repo_as_documents(
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     finally:
         # Delete the temporary directory
-        shutil.rmtree(temp_dir, onerror=on_rm_error)
+        shutil.rmtree(temp_dir)
+    except Exception as e:
+        logger.error(f'Error occurred while deleting temporary directory: {e}')
 
     return documents
 
