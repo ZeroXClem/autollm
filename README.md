@@ -302,7 +302,7 @@ LLM Total Token Cost: $0.002317
 ```python
 >>> from autollm import AutoFastAPI
 
->>> app = AutoFastAPI.from_config(config_path, env_path)
+>>> app = AutoFastAPI.from_config('path_to_config_file', 'path_to_env_file')
 ```
 
 Here, `config` and `env` should be replaced by your configuration and environment file paths.
