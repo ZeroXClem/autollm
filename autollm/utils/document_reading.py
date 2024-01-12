@@ -17,6 +17,8 @@ from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
+from autollm.utils.simple_directory_reader import SimpleDirectoryReader
+from llama_index.schema import Document
 
 
 def read_files_as_documents(
@@ -78,11 +80,10 @@ def read_files_as_documents(
         # Read and process the documents
         documents = reader.load_data(show_progress=show_progress)
         except Exception as e:
-        logger.error(f"An error occurred while reading and processing the documents: {e}")
-        return []
-    logger.info(f"Found {len(documents)} 'document(s)'.")
-        return documents
+            logger.error(f"An error occurred while reading and processing the documents: {e}")
+            return []
         logger.info(f"Found {len(documents)} 'document(s)'.")
+        return documents
     except Exception as e:
         logger.error(f"An error occurred while reading and processing the documents: {e}")
         return []
@@ -104,7 +105,6 @@ def on_rm_error(func: Callable, path: str, exc_info: Tuple):
     """
     os.chmod(path, stat.S_IWRITE)
     os.unlink(path)
-
 
 def read_github_repo_as_documents(
         git_repo_url: str,
@@ -144,11 +144,62 @@ def read_github_repo_as_documents(
         shutil.rmtree(temp_dir, onerror=on_rm_error)
 
     return documents
+    """
+    A document provider that fetches documents from a specific folder within a GitHub repository.
+
+    Parameters:
+        git_repo_url (str): The URL of the GitHub repository.
+        relative_folder_path (str, optional): The relative path from the repo root to the folder containing documents.
+        required_exts (Optional[List[str]]): List of required extensions.
+
+    Returns:
+        Sequence[Document]: A sequence of Document objects.
+    """
+
+    # Ensure the temp_dir directory exists
+    temp_dir = Path("autollm/temp/")
+    temp_dir.mkdir(parents=True, exist_ok=True)
+
+    logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
+
+    try:
+        # Clone or pull the GitHub repository to get the latest documents
+        clone_or_pull_repository(git_repo_url, temp_dir)
+
+        # Specify the path to the documents
+        docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
+
+        # Read and process the documents
+        documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+        # Logging (assuming logger is configured)
+        logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
+    finally:
+        # Delete the temporary directory
+        shutil.rmtree(temp_dir, onerror=on_rm_error)
+
+    return documents
 
 
 def read_website_as_documents(
         parent_url: Optional[str] = None,
         sitemap_url: Optional[str] = None,
+        include_filter_str: Optional[str] = None,
+        exclude_filter_str: Optional[str] = None) -> List[Document]:
+    """
+    Read documents from a website or a sitemap.
+
+    Parameters:
+        parent_url (str, optional): The starting URL from which to scrape documents.
+        sitemap_url (str, optional): The URL of the sitemap to process.
+        include_filter_str (str, optional): Filter string to include certain URLs.
+        exclude_filter_str (str, optional): Filter string to exclude certain URLs.
+
+    Returns:
+        List[Document]: A list of Document objects containing content and metadata.
+
+    Raises:
+        ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
+    """
         include_filter_str: Optional[str] = None,
         exclude_filter_str: Optional[str] = None) -> List[Document]:
     """
