@@ -11,7 +11,7 @@ from autollm.utils.git_utils import clone_or_pull_repository, merge_strategy, ch
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
-from autollm.utils.webpage_reader import WebPageReader
+from autollm.utils.webpage_reader import WebPageReader, SELECTORS, IGNORED_TAGS
 from autollm.utils.website_reader import WebSiteReader, WebPageReader
 
 
@@ -167,6 +167,6 @@ def read_webpage_as_documents(url: str) -> List[Document]:
     Returns:
         List[Document]: A list of Document objects containing content and metadata from the web page.
     """
-    reader = WebPageReader()
+    reader = WebPageReader(url=url)
     documents = reader.load_data(url)
     return documents
