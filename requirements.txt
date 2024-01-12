@@ -5,3 +5,6 @@ fastapi
 python-dotenv
 httpx
 lancedb==0.3.3
+
+# Additional dependencies for clone_or_pull_repository
+gitpython==3.1.17
