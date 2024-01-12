@@ -17,6 +17,14 @@ from autollm.utils.website_reader import WebSiteReader
 
 def read_files_as_documents(
         input_dir: Optional[str] = None,
+        input_files: Optional[List[str]] = None,
+        exclude_hidden: bool = True,
+        filename_as_id: bool = True,
+        recursive: bool = True,
+        required_exts: Optional[List[str]] = None,
+        show_progress: bool = True,
+        **kwargs) -> Sequence[Document]:
+        input_dir: Optional[str] = None,
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
         filename_as_id: bool = True,
@@ -35,7 +43,11 @@ def read_files_as_documents(
         recursive (bool): Whether to recursively search for files in the input directory.
         required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
 
+        Raises:
+        Exception: If an error occurs during file reading or processing.
+
     Returns:
+        documents (Sequence[Document]): A sequence of Document objects representing the extracted content.
         documents (Sequence[Document]): A sequence of Document objects.
     """
     # Configure file_extractor to use MarkdownReader for md files
@@ -58,7 +70,15 @@ def read_files_as_documents(
     logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
         f"Reading files {input_files}..")
 
-    # Read and process the documents
+        # Read and process the documents
+    try:
+        # Read and process the documents
+        documents = reader.load_data(show_progress=show_progress)
+
+        logger.info(f"Found {len(documents)} 'document(s)'.")
+        return documents
+    except Exception as e:
+        logger.error(f"Error reading or processing documents: {str(e)}")
     documents = reader.load_data(show_progress=show_progress)
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
