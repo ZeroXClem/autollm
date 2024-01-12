@@ -20,7 +20,7 @@ answer the query.
 
 REFINE_PROMPT_TEMPLATE = '''
 The original query is as follows: {query_str}
-You have provided an existing answer: {existing_answer}
+{existing_answer_code_block}
 Here is the new context:
 ------------
 {context_msg}
