@@ -8,7 +8,7 @@ from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
-from autollm.utils.logging import logger
+import logging
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
@@ -102,6 +102,19 @@ def read_github_repo_as_documents(
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
 
     try:
+        # Clone or pull the GitHub repository to get the latest documents
+        clone_or_pull_repository(git_repo_url, temp_dir)
+
+        # Specify the path to the documents
+        docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
+
+        # Read and process the documents
+        documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+        # Logging (assuming logger is configured)
+        logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
+    except Exception as e:
+        logger.error(f"An error occurred: {e}")
+        raise e
         # Clone or pull the GitHub repository to get the latest documents
         clone_or_pull_repository(git_repo_url, temp_dir)
 
