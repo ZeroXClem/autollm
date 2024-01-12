@@ -13,6 +13,11 @@ from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
+from autollm.utils.logging import logger
+from typing import List, Optional
+from autollm.utils.logging import logger
+from typing import List, Optional
+from autollm.utils.logging import logger
 
 
 def read_files_as_documents(
@@ -70,22 +75,15 @@ def read_files_as_documents(
     logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
         f"Reading files {input_files}..")
 
-        # Read and process the documents
-    try:
-        # Read and process the documents
-        documents = reader.load_data(show_progress=show_progress)
+        try:
+            # Read and process the documents
+            documents = reader.load_data(show_progress=show_progress)
 
-        logger.info(f"Found {len(documents)} 'document(s)'.")
-        return documents
-    except Exception as e:
-        logger.error(f"Error reading or processing documents: {str(e)}")
-    documents = reader.load_data(show_progress=show_progress)
-
-    logger.info(f"Found {len(documents)} 'document(s)'.")
-    return documents
-
-
-# From http://stackoverflow.com/a/4829285/548792
+            logger.info(f"Found {len(documents)} 'document(s)'.")
+            return documents
+        except Exception as e:
+            logger.error(f"Error reading or processing documents: {str(e)}")
+            return []
 def on_rm_error(func: Callable, path: str, exc_info: Tuple):
     """
     Error handler for `shutil.rmtree` to handle permission errors.
@@ -137,16 +135,16 @@ def read_github_repo_as_documents(
         # Clone or pull the GitHub repository to get the latest documents
         try:
         clone_or_pull_repository(git_repo_url, temp_dir)
-        logger.info(f"Successfully cloned/pulled the GitHub repository.")
+        logger.info(f"Clone/pull operation completed successfully.")
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
-        logger.info(f"Successfully read and processed the documents from the GitHub repository.")
+        logger.info(f"Read and processed documents from the GitHub repository successfully.")
     except Exception as e:
         logger.error(f"Error during cloning/pulling: {str(e)}")
         documents = []
     finally:
         shutil.rmtree(temp_dir, onerror=on_rm_error)
-        logger.info(f"Temporary directory {temp_dir} successfully deleted.")
+        logger.info(f"Temporary directory {temp_dir} deleted successfully.")
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
@@ -154,7 +152,7 @@ def read_github_repo_as_documents(
         # Read and process the documents
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
         # Logging (assuming logger is configured)
-        logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
+        logger.info(f"Operation complete, deleting temporary directory {temp_dir}..")
     finally:
         # Delete the temporary directory
         shutil.rmtree(temp_dir, onerror=on_rm_error)
@@ -180,7 +178,7 @@ def read_website_as_documents(
         List[Document]: A list of Document objects containing content and metadata.
 
     Raises:
-        ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
+        ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided, or if an error occurs during website scraping or document reading.
     """
     if (parent_url is None and sitemap_url is None) or (parent_url is not None and sitemap_url is not None):
         raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
