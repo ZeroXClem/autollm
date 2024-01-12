@@ -17,7 +17,7 @@ from autollm.utils.document_reading import on_rm_error
 from autollm.utils.logging import logger
 
 
-def read_files_as_documents(
+def read_files_as_documents_and_handle_errors(
         input_dir: Optional[str] = None,
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
@@ -27,7 +27,7 @@ def read_files_as_documents(
         show_progress: bool = True,
         **kwargs) -> Sequence[Document]:
     """
-    Process markdown files to extract documents using SimpleDirectoryReader.
+    Read markdown files as documents and handle errors using SimpleDirectoryReader.
 
     Parameters:
         input_dir (str): Path to the directory containing the markdown files.
@@ -47,6 +47,7 @@ def read_files_as_documents(
     }
 
     # Initialize SimpleDirectoryReader
+    try:
     reader = SimpleDirectoryReader(
         input_dir=input_dir,
         exclude_hidden=exclude_hidden,
@@ -64,7 +65,11 @@ def read_files_as_documents(
     documents = reader.load_data(show_progress=show_progress)
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
-    return documents
+        
+except Exception as e:
+    logger.error(f'An error occurred while reading files as documents: {e}')
+    return []
+    
 
 
 # From http://stackoverflow.com/a/4829285/548792
