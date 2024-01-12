@@ -9,7 +9,7 @@ from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
-from autollm.utils.markdown_reader import MarkdownReader
+from autollm.utils.markdown_reader import MarkdownReader as MR
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
@@ -40,18 +40,18 @@ def read_files_as_documents(
     """
     # Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
-        ".md": MarkdownReader(read_as_single_doc=True),
-        ".pdf": LangchainPDFReader(extract_images=False)
+        ".md": MR(read_as_single_doc=True),
+        ".pdf": LangchainPDFReader(extract_images=True)
     }
 
     # Initialize SimpleDirectoryReader
     reader = SimpleDirectoryReader(
         input_dir=input_dir,
-        exclude_hidden=exclude_hidden,
+        exclude_hidden=exclude_hidden, input_dir=input_dir,
         file_extractor=file_extractor,
         input_files=input_files,
         filename_as_id=filename_as_id,
-        recursive=recursive,
+        recursive=recursive, required_exts=required_exts,
         required_exts=required_exts,
         **kwargs)
 
@@ -61,7 +61,7 @@ def read_files_as_documents(
     # Read and process the documents
     documents = reader.load_data(show_progress=show_progress)
 
-    logger.info(f"Found {len(documents)} 'document(s)'.")
+    logger.info(f"Processed {len(documents)} documents from the file(s).")
     return documents
 
 
