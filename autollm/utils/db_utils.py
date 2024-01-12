@@ -5,6 +5,7 @@ from llama_index import Document, StorageContext, VectorStoreIndex
 from llama_index.vector_stores import PineconeVectorStore, QdrantVectorStore
 
 from autollm.utils.env_utils import read_env_variable
+from autollm.utils.env_utils import read_env_variable
 from autollm.utils.logging import logger
 
 
@@ -48,7 +49,9 @@ def connect_vectorstore(vector_store, **params):
     # Logic to connect to vector store based on the specific type of vector store
     if isinstance(vector_store, PineconeVectorStore):
         vector_store.pinecone_index = pinecone.Index(params['index_name'])
+        vector_store.pinecone_index = pinecone.Index(params['index_name'])
     elif isinstance(vector_store, QdrantVectorStore):
+        vector_store.client = QdrantClient(url=params['url'], api_key=params['api_key'])
         vector_store.client = QdrantClient(url=params['url'], api_key=params['api_key'])
     # TODO: Add more elif conditions for other vector stores as needed
 
@@ -124,7 +127,7 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
 
 #     logger.info('Updating vector store with documents')
 
-#     update_vector_store_index(vector_store, documents)
+#     vector_store_index.insert(documents)
 
 #     logger.info('Vector database successfully initialized.')
 

@@ -30,6 +30,8 @@ class MarkdownReader(BaseReader):
     ) -> None:
         """Init params."""
         super().__init__(*args, **kwargs)
+        remove_hyperlinks: bool = True,
+        remove_images: bool = True,
         self._remove_hyperlinks = remove_hyperlinks
         self._remove_images = remove_images
         self._read_as_single_doc = read_as_single_doc
