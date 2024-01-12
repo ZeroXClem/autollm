@@ -31,6 +31,8 @@ def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = '
     # Initialize client
     url = read_env_variable('QDRANT_URL')
     api_key = read_env_variable('QDRANT_API_KEY')
+    url = read_env_variable('QDRANT_URL')
+    api_key = read_env_variable('QDRANT_API_KEY')
 
     client = QdrantClient(url=url, api_key=api_key)
 
