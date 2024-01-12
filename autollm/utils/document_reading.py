@@ -40,18 +40,18 @@ def read_files_as_documents(
     """
     # Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
-        ".md": MarkdownReader(read_as_single_doc=True),
-        ".pdf": LangchainPDFReader(extract_images=False)
+        ".md": MR(read_as_single_doc=True),
+        ".pdf": LangchainPDFReader(extract_images=True)
     }
 
     # Initialize SimpleDirectoryReader
     reader = SimpleDirectoryReader(
         input_dir=input_dir,
-        exclude_hidden=exclude_hidden,
+        exclude_hidden=exclude_hidden, input_dir=input_dir,
         file_extractor=file_extractor,
         input_files=input_files,
         filename_as_id=filename_as_id,
-        recursive=recursive,
+        recursive=recursive, required_exts=required_exts,
         required_exts=required_exts,
         **kwargs)
 
