@@ -17,9 +17,15 @@ def initialize_pinecone_index(
     environment = read_env_variable('PINECONE_ENVIRONMENT')
 
     # Initialize Pinecone
-    pinecone.init(api_key=api_key, environment=environment)
-    pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
+    try:
+        pinecone.init(api_key=api_key, environment=environment)
+        pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
+    except pinecone.ClientException as e:
+        logger.error('Pinecone initialization failed. Error: %s' % e)
+        raise
 
+
+import logging
 
 def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = 'EUCLID'):
     """Initialize Qdrant index."""
@@ -66,7 +72,11 @@ def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: S
     """
     for document in documents:
         delete_documents_by_id(vector_store_index, [document.id_])
-        vector_store_index.insert(document)
+        try:
+            vector_store_index.insert(document)
+        except Exception as e:
+            logger.error('Error occurred while updating vector store index: %s' % e)
+            raise
 
 
 def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
@@ -84,7 +94,11 @@ def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
     storage_context = StorageContext.from_defaults(vector_store=vector_store)
 
     # Create index, which will insert documents/vectors to vector store
-    _ = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
+    try:
+        _ = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
+    except Exception as e:
+        logger.error('Error occurred during vector store index overwrite: %s' % e)
+        raise
 
 
 def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: Sequence[str]):
@@ -110,7 +124,7 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
 # TODO: refactor and update.
 # def initialize_database(
 #         documents: Sequence[Document], vector_store_class_name: str, **vector_store_params) -> None:
-#     logger.info('Initializing vector store')
+logger.info('Initializing PineconeVectorStore')
 
 #     vector_store = AutoVectorStore.from_defaults(vector_store_class_name, **vector_store_params)
 
