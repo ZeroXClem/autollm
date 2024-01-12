@@ -210,7 +210,16 @@ def read_website_as_documents(
     return documents
 
 
-def read_webpage_as_documents(url: str) -> List[Document]:
+def read_webpage_as_documents(url: str) -> Union[Sequence[Document], None]:
+    """
+    Read documents from a single webpage URL using the WebPageReader.
+
+    Parameters:
+        url (str): The URL of the web page to read.
+
+    Returns:
+        Sequence[Document]: A sequence of Document objects containing content and metadata from the web page.
+    """
     """
     Read documents from a single webpage URL using the WebPageReader.
 
