@@ -9,10 +9,10 @@ from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
-from autollm.utils.markdown_reader import MarkdownReader
-from autollm.utils.pdf_reader import LangchainPDFReader
-from autollm.utils.webpage_reader import WebPageReader
-from autollm.utils.website_reader import WebSiteReader
+from llama_index.readers.file.markdown_reader import MarkdownReader
+from llama_index.readers.file.pdf_reader import LangchainPDFReader
+from llama_index.readers.webpage_reader import WebPageReader
+from llama_index.readers.website_reader import WebSiteReader
 
 
 def read_files_as_documents(
@@ -41,8 +41,8 @@ def read_files_as_documents(
     # Configure file_extractor to use MarkdownReader for md files
     file_extractor = 
     {
-        ".md": MarkdownReader(read_as_single_doc=False),
-        ".pdf": LangchainPDFReader(extract_images=False)
+        ".md": MarkdownReader(read_as_single_doc=True),
+        ".pdf": LangchainPDFReader(extract_images=True)
     
         ".md": MarkdownReader(read_as_single_doc=True),
         ".pdf": LangchainPDFReader(extract_images=False)
@@ -101,13 +101,20 @@ def read_github_repo_as_documents(
 
     # Ensure the temp_dir directory exists
     temp_dir = Path("autollm/temp/")
-    temp_dir.mkdir(parents=True, exist_ok=True)
+    # temp_dir.mkdir(parents=True, exist_ok=True)
+    temp_dir = temp_dir.resolve() if relative_folder_path else temp_dir
+print(temp_dir)
+print(temp_dir.exists())
+print((temp_dir / Path(relative_folder_path)).exists())
+    temp_dir = temp_dir.resolve() if relative_folder_path else temp_dir
+    check if temp_dir.exists()
+    check if relative_folder_path exists in temp_dir
 
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
-        clone_or_pull_repository(git_repo_url, temp_dir)
+        clone_or_pull_repository(git_repo_url, temp_dir, force_clone=True)
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
