@@ -17,7 +17,15 @@ def initialize_pinecone_index(
     environment = read_env_variable('PINECONE_ENVIRONMENT')
 
     # Initialize Pinecone
-    pinecone.init(api_key=api_key, environment=environment)
+    api_key = read_env_variable('PINECONE_API_KEY')
+    environment = read_env_variable('PINECONE_ENVIRONMENT')
+    if api_key is None or environment is None:
+        logger.error('PINECONE_API_KEY or PINECONE_ENVIRONMENT environment variables are not set')
+    else:
+        try:
+            pinecone.init(api_key=api_key, environment=environment)
+        except pinecone.exceptions.PineconeException as e:
+            logger.error(f'Error initializing Pinecone index: {e}')
     pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
 
 
