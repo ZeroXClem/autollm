@@ -17,8 +17,12 @@ def initialize_pinecone_index(
     environment = read_env_variable('PINECONE_ENVIRONMENT')
 
     # Initialize Pinecone
-    pinecone.init(api_key=api_key, environment=environment)
-    pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
+    try:
+        pinecone.init(api_key=api_key, environment=environment)
+        pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
+    except pinecone.ClientException as e:
+        logger.error('Pinecone initialization failed. Error: %s' % e)
+        raise
 
 
 def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = 'EUCLID'):
@@ -110,7 +114,7 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
 # TODO: refactor and update.
 # def initialize_database(
 #         documents: Sequence[Document], vector_store_class_name: str, **vector_store_params) -> None:
-#     logger.info('Initializing vector store')
+logger.info('Initializing PineconeVectorStore')
 
 #     vector_store = AutoVectorStore.from_defaults(vector_store_class_name, **vector_store_params)
 
