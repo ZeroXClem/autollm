@@ -10,6 +10,7 @@ from llama_index.schema import Document
 from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
 import sys
+from autollm.utils.error_handling import handle_exception, handle_error, handle_warning, handle_info, handle_debug
 from autollm.utils.error_handling import handle_exception, handle_error, handle_warning, handle_info, handle_debug, handle_exception, handle_error, handle_warning, handle_info, handle_debug
 from autollm.utils.error_handling import handle_exception
 from autollm.utils.markdown_reader import MarkdownReader
@@ -105,6 +106,10 @@ def read_github_repo_as_documents(
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
 
     try:
+        # Read and process the documents
+        documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+        # Logging (assuming logger is configured)
+        logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
         # Clone or pull the GitHub repository to get the latest documents
         clone_or_pull_repository(git_repo_url, temp_dir)
 
@@ -116,6 +121,7 @@ def read_github_repo_as_documents(
         # Logging (assuming logger is configured)
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     except Exception as e:
+        
         handle_exception(*sys.exc_info())
 
     return documents
@@ -126,6 +132,21 @@ def read_website_as_documents(
         sitemap_url: Optional[str] = None,
         include_filter_str: Optional[str] = None,
         exclude_filter_str: Optional[str] = None) -> List[Document]:
+    """
+    Read documents from a website or a sitemap.
+
+    Parameters:
+        parent_url (str, optional): The starting URL from which to scrape documents.
+        sitemap_url (str, optional): The URL of the sitemap to process.
+        include_filter_str (str, optional): Filter string to include certain URLs.
+        exclude_filter_str (str, optional): Filter string to exclude certain URLs.
+
+    Returns:
+        List[Document]: A list of Document objects containing content and metadata.
+
+    Raises:
+        ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
+    """
     """
     Read documents from a website or a sitemap.
 
