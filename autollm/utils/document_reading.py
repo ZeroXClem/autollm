@@ -13,6 +13,7 @@ from autollm.utils.error_handling import handle_exception, handle_fatal
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
+from autollm.utils.error_handling import handle_exception
 from autollm.utils.website_reader import WebSiteReader
 
 
@@ -139,12 +140,14 @@ def read_github_repo_as_documents(
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     finally:
         # Delete the temporary directory
-        shutil.rmtree(temp_dir, onerror=on_rm_error)
+        # Log and handle the error
+        except Exception as e:
+            handle_exception(type(e), e, sys.exc_info()[2])
 
     return documents
 
 
-def read_website_as_documents(
+def read_website_as_documents_safe(
         parent_url: Optional[str] = None,
         sitemap_url: Optional[str] = None,
         include_filter_str: Optional[str] = None,
