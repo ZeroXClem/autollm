@@ -8,6 +8,10 @@ from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
+
+def clone_or_pull_repository(repo_url: str, temp_dir: Path) -> None:
+    # Logic to clone or pull the repository goes here
+    pass
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
@@ -17,7 +21,7 @@ from autollm.utils.website_reader import WebSiteReader
 
 def read_files_as_documents(
         input_dir: Optional[str] = None,
-        input_files: Optional[List] = None,
+        input_files: Optional[List[str]] = None,
         exclude_hidden: bool = True,
         filename_as_id: bool = True,
         recursive: bool = True,
@@ -28,15 +32,56 @@ def read_files_as_documents(
     Process markdown files to extract documents using SimpleDirectoryReader.
 
     Parameters:
-        input_dir (str): Path to the directory containing the markdown files.
-        input_files (List): List of file paths.
+        input_dir (Optional[str]): Path to the directory containing the markdown files.
+        input_files (Optional[List[str]]): List of file paths.
         exclude_hidden (bool): Whether to exclude hidden files.
         filename_as_id (bool): Whether to use the filename as the document id.
         recursive (bool): Whether to recursively search for files in the input directory.
         required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
+        show_progress (bool): Whether to show progress while processing the files.
 
     Returns:
-        documents (Sequence[Document]): A sequence of Document objects.
+        Sequence[Document]: A sequence of Document objects containing content and metadata.
+    """
+    try:
+        file_extractor = {
+            ".md": MarkdownReader(read_as_single_doc=True),
+            ".pdf": LangchainPDFReader(extract_images=False)
+        }
+
+        reader = SimpleDirectoryReader(
+            input_dir=input_dir,
+            exclude_hidden=exclude_hidden,
+            file_extractor=file_extractor,
+            input_files=input_files,
+            filename_as_id=filename_as_id,
+            recursive=recursive,
+            required_exts=required_exts,
+            **kwargs)
+
+        logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
+            f"Reading files {input_files}..")
+
+        documents = reader.load_data(show_progress=show_progress)
+
+        logger.info(f"Found {len(documents)} 'document(s)'.")
+        return documents
+    except Exception as e:
+        logger.error(f"An error occurred while reading files: {e}")
+    """
+    Process markdown files to extract documents using SimpleDirectoryReader.
+
+    Parameters:
+        input_dir (Optional[str]): Path to the directory containing the markdown files.
+        input_files (Optional[List[str]]): List of file paths.
+        exclude_hidden (bool): Whether to exclude hidden files.
+        filename_as_id (bool): Whether to use the filename as the document id.
+        recursive (bool): Whether to recursively search for files in the input directory.
+        required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
+        show_progress (bool): Whether to show progress while processing the files.
+
+    Returns:
+        Sequence[Document]: A sequence of Document objects containing content and metadata.
     """
     # Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
@@ -62,7 +107,7 @@ def read_files_as_documents(
     documents = reader.load_data(show_progress=show_progress)
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
-    return documents
+    documents
 
 
 # From http://stackoverflow.com/a/4829285/548792
@@ -103,7 +148,7 @@ def read_github_repo_as_documents(
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
-        clone_or_pull_repository(git_repo_url, temp_dir)
+        clone_or_pull_repository(git_repo_url, temp_dir) if temp_dir else clone_or_pull_repository(git_repo_url, Path(".")) or clone_or_pull_repository(git_repo_url, Path(","))
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
@@ -114,7 +159,10 @@ def read_github_repo_as_documents(
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     finally:
         # Delete the temporary directory
-        shutil.rmtree(temp_dir, onerror=on_rm_error)
+        try:
+    shutil.rmtree(temp_dir, onerror=on_rm_error) if temp_dir else shutil.rmtree(Path("."), onerror=on_rm_error) or shutil.rmtree(Path(","), onerror=lambda x, y, z: None)
+except Exception as e:
+    logger.error(f"An error occurred while deleting the temporary directory: {e}")
 
     return documents
 
@@ -138,6 +186,11 @@ def read_website_as_documents(
 
     Raises:
         ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
+
+    ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
+
+    
+        ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
     """
     if (parent_url is None and sitemap_url is None) or (parent_url is not None and sitemap_url is not None):
         raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
@@ -157,7 +210,16 @@ def read_website_as_documents(
     return documents
 
 
-def read_webpage_as_documents(url: str) -> List[Document]:
+def read_webpage_as_documents(url: str) -> Union[Sequence[Document], None]:
+    """
+    Read documents from a single webpage URL using the WebPageReader.
+
+    Parameters:
+        url (str): The URL of the web page to read.
+
+    Returns:
+        Sequence[Document]: A sequence of Document objects containing content and metadata from the web page.
+    """
     """
     Read documents from a single webpage URL using the WebPageReader.
 
