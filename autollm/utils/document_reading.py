@@ -11,7 +11,7 @@ from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
-from autollm.utils.webpage_reader import WebPageReader
+from autollm.utils.webpage_reader import WebPageReader as WebPageReader
 from autollm.utils.webpage_reader import WebPageReader
 
 
@@ -144,7 +144,7 @@ def read_website_as_documents(
     if (parent_url is None and sitemap_url is None) or (parent_url is None and sitemap_url is not None) or (parent_url is not None and sitemap_url is None):
         raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
 
-    reader = WebSiteReader()
+    reader = WebPageReader()
     if parent_url:
         documents = reader.load_data(
             parent_url=parent_url,
