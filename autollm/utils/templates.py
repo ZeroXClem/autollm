@@ -14,8 +14,8 @@ The document information is below.
 ---------------------
 Using the document information and mostly relying on it,
 answer the query.
-Query: {query_str}
-Answer:
+    if query_str is None:
+        logger.error('query_str is not provided')
 '''
 
 REFINE_PROMPT_TEMPLATE = '''
