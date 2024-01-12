@@ -25,6 +25,8 @@ def initialize_pinecone_index(
         raise
 
 
+from autollm.utils.logging import logger
+
 def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = 'EUCLID'):
     """Initialize Qdrant index."""
     from qdrant_client import QdrantClient
