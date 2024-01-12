@@ -17,8 +17,8 @@ def initialize_pinecone_index(
     environment = read_env_variable('PINECONE_ENVIRONMENT')
 
     # Initialize Pinecone
-    pinecone.init(api_key=api_key, environment=environment)
-    pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
+    pinecone.init(api_key=api_key, environment=environment, host='api.pinecone.io')
+    pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type, shards=1)
 
 
 def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = 'EUCLID'):
@@ -36,8 +36,8 @@ def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = '
     distance = Distance[distance]
 
     # Create index
-    client.recreate_collection(
-        collection_name=index_name, vectors_config=VectorParams(size=size, distance=distance))
+    client.create_collection(
+        collection_name=index_name, collection_params=VectorParams(size=size, distance=distance))
 
 
 def connect_vectorstore(vector_store, **params):
@@ -49,7 +49,7 @@ def connect_vectorstore(vector_store, **params):
     if isinstance(vector_store, PineconeVectorStore):
         vector_store.pinecone_index = pinecone.Index(params['index_name'])
     elif isinstance(vector_store, QdrantVectorStore):
-        vector_store.client = QdrantClient(url=params['url'], api_key=params['api_key'])
+        vector_store.client = QdrantClient(url=params['url'], api_key=params['api_key'], timeout=10)
     # TODO: Add more elif conditions for other vector stores as needed
 
 
@@ -65,7 +65,7 @@ def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: S
         None
     """
     for document in documents:
-        delete_documents_by_id(vector_store_index, [document.id_])
+        vector_store_index.delete_documents_by_id([document.id_])
         vector_store_index.insert(document)
 
 
@@ -84,7 +84,7 @@ def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
     storage_context = StorageContext.from_defaults(vector_store=vector_store)
 
     # Create index, which will insert documents/vectors to vector store
-    _ = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
+    update_vector_store_index(vector_store, documents)
 
 
 def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: Sequence[str]):
@@ -104,7 +104,7 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
 
     # Proceed with deletion.
     for document_id in document_ids:
-        vector_store_index.delete_ref_doc(document_id, delete_from_docstore=True)
+        vector_store_index.delete_documents_by_id([document_id])
 
 
 # TODO: refactor and update.
@@ -124,7 +124,7 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
 
 #     logger.info('Updating vector store with documents')
 
-#     update_vector_store_index(vector_store, documents)
+#     update_vector_store_index(vector_store_index, documents)
 
 #     logger.info('Vector database successfully initialized.')
 
