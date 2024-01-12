@@ -5,7 +5,7 @@ import stat
 from autollm.utils.simple_directory_reader import SimpleDirectoryReader
 from llama_index.schema import Document
 from autollm.utils.pdf_reader import LangchainPDFReader
-from autollm.utils.webpage_reader import WebPageReader
+from autollm.utils.webpage_reader import WebPageReader, Document
 from autollm.utils.website_reader import WebSiteReader
 from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
@@ -243,5 +243,11 @@ def read_webpage_as_documents(url: str) -> List[Document]:
         List[Document]: A list of Document objects containing content and metadata from the web page.
     """
     reader = WebPageReader()
-    documents = reader.load_data(url)
+    try:
+        documents = reader.load_data(url)
+    except Exception as e:
+        logger.error(f"An error occurred while reading and processing the documents: {e}")
+        return []
+    logger.info(f"Found {len(documents)} 'document(s)'.")
+    return documents
     return documents
