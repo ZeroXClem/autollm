@@ -103,7 +103,7 @@ def read_files_as_documents(
     documents = reader.load_data(show_progress=show_progress)
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
-    return documents
+    documents
 
 
 # From http://stackoverflow.com/a/4829285/548792
