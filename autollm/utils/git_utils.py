@@ -1,3 +1,4 @@
+import pinecone
 from pathlib import Path
 
 from autollm.utils.logging import logger
