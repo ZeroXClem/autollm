@@ -1,4 +1,6 @@
 from sys import sys
+import logging
+from autollm.utils.error_handling import handle_exception, handle_custom
 import os
 import shutil
 import stat
@@ -177,8 +179,14 @@ def read_webpage_as_documents(url: str) -> List[Document]:
     Returns:
         List[Document]: A list of Document objects containing content and metadata from the web page.
     """
-    reader = WebPageReader()
-    documents = reader.load_data(url)
+    try:
+        reader = WebPageReader()
+        documents = reader.load_data(url)
+    except Exception as e:
+        handle_exception(*sys.exc_info())
+        handle_custom(logging.ERROR, f"Error occurred: {e}")
+        logger.error(f"Error occurred: {e}", exc_info=True)
+        documents = []
     except Exception as e:
         # Log the error message and traceback using the logger
         handle_exception(*sys.exc_info())
