@@ -14,6 +14,7 @@ from autollm.utils.error_handling import handle_exception, handle_custom, handle
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
+from autollm.utils.error_handling import handle_exception, handle_custom, handle_error, handle_warning, handle_info, handle_debug, handle_critical, handle_fatal
 from autollm.utils.website_reader import WebSiteReader
 
 
@@ -178,4 +179,10 @@ def read_webpage_as_documents(url: str) -> List[Document]:
     """
     reader = WebPageReader()
     documents = reader.load_data(url)
+    except Exception as e:
+        # Log the error message and traceback using the logger
+        handle_exception(*sys.exc_info())
+        handle_custom(logging.ERROR, f"Error occurred: {e}")
+        logger.error(f"Error occurred: {e}", exc_info=True)
+        documents = []
     return documents
