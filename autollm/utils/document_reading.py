@@ -3,6 +3,8 @@ import shutil
 import stat
 from pathlib import Path
 from typing import Callable, List, Optional, Sequence, Tuple
+import pinecone
+from git import InvalidGitRepositoryError, Repo
 
 from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document

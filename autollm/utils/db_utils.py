@@ -19,6 +19,7 @@ def initialize_pinecone_index(
     # Initialize Pinecone
     pinecone.init(api_key=api_key, environment=environment)
     pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
+    pinecone.deinit()
 
 
 def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = 'EUCLID'):
@@ -38,6 +39,7 @@ def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = '
     # Create index
     client.recreate_collection(
         collection_name=index_name, vectors_config=VectorParams(size=size, distance=distance))
+    client.close()
 
 
 def connect_vectorstore(vector_store, **params):
@@ -60,7 +62,6 @@ def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: S
     Parameters:
         vector_store_index: An instance of AutoVectorStoreIndex or any compatible vector store.
         documents (Sequence[Document]): List of documents to update.
-
     Returns:
         None
     """
