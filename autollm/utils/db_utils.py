@@ -65,7 +65,7 @@ def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: S
         None
     """
     for document in documents:
-        delete_documents_by_id(vector_store_index, [document.id_])
+        vector_store_index.delete_documents_by_id([document.id_])
         vector_store_index.insert(document)
 
 
@@ -124,7 +124,7 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
 
 #     logger.info('Updating vector store with documents')
 
-#     update_vector_store_index(vector_store, documents)
+#     update_vector_store_index(vector_store_index, documents)
 
 #     logger.info('Vector database successfully initialized.')
 
