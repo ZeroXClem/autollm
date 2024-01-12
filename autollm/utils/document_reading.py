@@ -13,9 +13,22 @@ from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
+from autollm.utils.logging import logger
+from typing import List, Optional
+from autollm.utils.logging import logger
+from typing import List, Optional
+from autollm.utils.logging import logger
 
 
 def read_files_as_documents(
+        input_dir: Optional[str] = None,
+        input_files: Optional[List[str]] = None,
+        exclude_hidden: bool = True,
+        filename_as_id: bool = True,
+        recursive: bool = True,
+        required_exts: Optional[List[str]] = None,
+        show_progress: bool = True,
+        **kwargs) -> Sequence[Document]:
         input_dir: Optional[str] = None,
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
@@ -35,7 +48,11 @@ def read_files_as_documents(
         recursive (bool): Whether to recursively search for files in the input directory.
         required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
 
+        Raises:
+        Exception: If an error occurs during file reading or processing.
+
     Returns:
+        documents (Sequence[Document]): A sequence of Document objects representing the extracted content.
         documents (Sequence[Document]): A sequence of Document objects.
     """
     # Configure file_extractor to use MarkdownReader for md files
@@ -58,14 +75,15 @@ def read_files_as_documents(
     logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
         f"Reading files {input_files}..")
 
-    # Read and process the documents
-    documents = reader.load_data(show_progress=show_progress)
+        try:
+            # Read and process the documents
+            documents = reader.load_data(show_progress=show_progress)
 
-    logger.info(f"Found {len(documents)} 'document(s)'.")
-    return documents
-
-
-# From http://stackoverflow.com/a/4829285/548792
+            logger.info(f"Processed {len(documents)} document(s) from the webpage at {url}")
+            return documents
+        except Exception as e:
+            logger.error(f"Error reading or processing documents: {str(e)}")
+            return []
 def on_rm_error(func: Callable, path: str, exc_info: Tuple):
     """
     Error handler for `shutil.rmtree` to handle permission errors.
@@ -80,11 +98,23 @@ def on_rm_error(func: Callable, path: str, exc_info: Tuple):
 
 
 def read_github_repo_as_documents(
+    
+        git_repo_url: str,
+        relative_folder_path: Optional[str] = None,
+        required_exts: Optional[List[str]] = None) -> Sequence[Document]:
         git_repo_url: str,
         relative_folder_path: Optional[str] = None,
         required_exts: Optional[List[str]] = None) -> Sequence[Document]:
     """
-    A document provider that fetches documents from a specific folder within a GitHub repository.
+    Fetches documents from a specific folder within a GitHub repository.
+
+    Args:
+        git_repo_url (str): The URL of the GitHub repository.
+        relative_folder_path (str, optional): The relative path from the repository root to the folder containing documents.
+        required_exts (Optional[List[str]]): List of required extensions.
+
+    Returns:
+        Sequence[Document]: A sequence of Document objects representing the fetched content.
 
     Parameters:
         git_repo_url (str): The URL of the GitHub repository.
@@ -99,11 +129,22 @@ def read_github_repo_as_documents(
     temp_dir = Path("autollm/temp/")
     temp_dir.mkdir(parents=True, exist_ok=True)
 
-    logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
+    logger.info(f"Cloning GitHub repository {git_repo_url} into the temporary directory {temp_dir}..")
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
+        try:
         clone_or_pull_repository(git_repo_url, temp_dir)
+        logger.info(f"Clone/pull operation completed successfully.")
+        docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
+        documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+        logger.info(f"Read and processed documents from the GitHub repository successfully.")
+    except Exception as e:
+        logger.error(f"Error during cloning/pulling: {str(e)}")
+        documents = []
+    finally:
+        shutil.rmtree(temp_dir, onerror=on_rm_error)
+        logger.info(f"Temporary directory {temp_dir} deleted successfully.")
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
@@ -111,7 +152,7 @@ def read_github_repo_as_documents(
         # Read and process the documents
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
         # Logging (assuming logger is configured)
-        logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
+        logger.info(f"Operation complete, deleting temporary directory {temp_dir}..")
     finally:
         # Delete the temporary directory
         shutil.rmtree(temp_dir, onerror=on_rm_error)
@@ -137,7 +178,7 @@ def read_website_as_documents(
         List[Document]: A list of Document objects containing content and metadata.
 
     Raises:
-        ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
+        ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided, or if an error occurs during website scraping or document reading.
     """
     if (parent_url is None and sitemap_url is None) or (parent_url is not None and sitemap_url is not None):
         raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
@@ -157,9 +198,20 @@ def read_website_as_documents(
     return documents
 
 
+from typing import List
+from autollm.utils.webpage_reader import WebPageReader
+from llama_index.schema import Document
+from autollm.utils.logging import logger
+
 def read_webpage_as_documents(url: str) -> List[Document]:
     """
     Read documents from a single webpage URL using the WebPageReader.
+
+    Args:
+        url (str): The URL of the web page to read.
+
+    Returns:
+        List[Document]: A list of Document objects containing content and metadata from the web page.
 
     Parameters:
         url (str): The URL of the web page to read.
