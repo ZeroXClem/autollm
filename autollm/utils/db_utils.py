@@ -72,7 +72,11 @@ def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: S
     """
     for document in documents:
         delete_documents_by_id(vector_store_index, [document.id_])
-        vector_store_index.insert(document)
+        try:
+            vector_store_index.insert(document)
+        except Exception as e:
+            logger.error('Error occurred while updating vector store index: %s' % e)
+            raise
 
 
 def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
