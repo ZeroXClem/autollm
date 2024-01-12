@@ -1,4 +1,6 @@
+from autollm.utils.markdown_reader import MarkdownReader
 import os
+from autollm.utils.markdown_reader import MarkdownReader
 import shutil
 import stat
 from pathlib import Path
@@ -6,6 +8,8 @@ from typing import Callable, List, Optional, Sequence, Tuple
 
 from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
+from autollm.utils.pdf_reader import LangchainPDFReader
+from autollm.utils.pdf_reader import LangchainPDFReader
 
 from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
@@ -22,6 +26,8 @@ def read_files_as_documents(
         filename_as_id: bool = True,
         recursive: bool = True,
         required_exts: Optional[List[str]] = None,
+        input_dir: Optional[str] = None,
+        input_files: Optional[List] = None,
         show_progress: bool = True,
         **kwargs) -> Sequence[Document]:
     """
@@ -37,9 +43,19 @@ def read_files_as_documents(
 
     Returns:
         documents (Sequence[Document]): A sequence of Document objects.
-    """
+
+    Raises:
+        ValueError: If an error occurs while reading and processing the documents.
+
+    Raises:
+        ValueError: If an error occurs while reading and processing the documents.
+
+    Raises:
+        ValueError: If an error occurs while reading and processing the documents."""
     # Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
+        ".md": MarkdownReader(read_as_single_doc=True),
+        ".md": MarkdownReader(read_as_single_doc=True),
         ".md": MarkdownReader(read_as_single_doc=True),
         ".pdf": LangchainPDFReader(extract_images=False)
     }
@@ -58,7 +74,18 @@ def read_files_as_documents(
     logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
         f"Reading files {input_files}..")
 
-    # Read and process the documents
+    try:
+        # Read and process the documents
+        documents = reader.load_data(show_progress=show_progress)
+        except Exception as e:
+        logger.error(f"An error occurred while reading and processing the documents: {e}")
+        return []
+    logger.info(f"Found {len(documents)} 'document(s)'.")
+        return documents
+        logger.info(f"Found {len(documents)} 'document(s)'.")
+    except Exception as e:
+        logger.error(f"An error occurred while reading and processing the documents: {e}")
+        return []
     documents = reader.load_data(show_progress=show_progress)
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
