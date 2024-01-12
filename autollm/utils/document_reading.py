@@ -17,7 +17,7 @@ from autollm.utils.website_reader import WebSiteReader
 
 def read_files_as_documents(
         input_dir: Optional[str] = None,
-        input_files: Optional[List] = None,
+        input_files: Optional[List[str]] = None,
         exclude_hidden: bool = True,
         filename_as_id: bool = True,
         recursive: bool = True,
@@ -28,15 +28,56 @@ def read_files_as_documents(
     Process markdown files to extract documents using SimpleDirectoryReader.
 
     Parameters:
-        input_dir (str): Path to the directory containing the markdown files.
-        input_files (List): List of file paths.
+        input_dir (Optional[str]): Path to the directory containing the markdown files.
+        input_files (Optional[List[str]]): List of file paths.
         exclude_hidden (bool): Whether to exclude hidden files.
         filename_as_id (bool): Whether to use the filename as the document id.
         recursive (bool): Whether to recursively search for files in the input directory.
         required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
+        show_progress (bool): Whether to show progress while processing the files.
 
     Returns:
-        documents (Sequence[Document]): A sequence of Document objects.
+        Sequence[Document]: A sequence of Document objects containing content and metadata.
+    """
+    try:
+        file_extractor = {
+            ".md": MarkdownReader(read_as_single_doc=True),
+            ".pdf": LangchainPDFReader(extract_images=False)
+        }
+
+        reader = SimpleDirectoryReader(
+            input_dir=input_dir,
+            exclude_hidden=exclude_hidden,
+            file_extractor=file_extractor,
+            input_files=input_files,
+            filename_as_id=filename_as_id,
+            recursive=recursive,
+            required_exts=required_exts,
+            **kwargs)
+
+        logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
+            f"Reading files {input_files}..")
+
+        documents = reader.load_data(show_progress=show_progress)
+
+        logger.info(f"Found {len(documents)} 'document(s)'.")
+        return documents
+    except Exception as e:
+        logger.error(f"An error occurred while reading files: {e}")
+    """
+    Process markdown files to extract documents using SimpleDirectoryReader.
+
+    Parameters:
+        input_dir (Optional[str]): Path to the directory containing the markdown files.
+        input_files (Optional[List[str]]): List of file paths.
+        exclude_hidden (bool): Whether to exclude hidden files.
+        filename_as_id (bool): Whether to use the filename as the document id.
+        recursive (bool): Whether to recursively search for files in the input directory.
+        required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
+        show_progress (bool): Whether to show progress while processing the files.
+
+    Returns:
+        Sequence[Document]: A sequence of Document objects containing content and metadata.
     """
     # Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
