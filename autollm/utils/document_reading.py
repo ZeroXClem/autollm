@@ -1,18 +1,18 @@
+from autollm.utils.markdown_reader import MarkdownReader
 import os
 import shutil
 import stat
-from pathlib import Path
-from typing import Callable, List, Optional, Sequence, Tuple
-
-from llama_index.readers.file.base import SimpleDirectoryReader
+from autollm.utils.simple_directory_reader import SimpleDirectoryReader
 from llama_index.schema import Document
-
-from autollm.utils.git_utils import clone_or_pull_repository
-from autollm.utils.logging import logger
-from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
+from autollm.utils.webpage_reader import WebPageReader, Document
+from autollm.utils.website_reader import WebSiteReader
 from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
+from autollm.utils.simple_directory_reader import SimpleDirectoryReader
+from autollm.utils.logging import logger
+from autollm.utils.constants import WEBPAGE_READER_TIMEOUT
+from autollm.utils.webpage_reader import WebPageReader
 
 
 def read_files_as_documents(
@@ -22,6 +22,8 @@ def read_files_as_documents(
         filename_as_id: bool = True,
         recursive: bool = True,
         required_exts: Optional[List[str]] = None,
+        input_dir: Optional[str] = None,
+        input_files: Optional[List] = None,
         show_progress: bool = True,
         **kwargs) -> Sequence[Document]:
     """
@@ -37,9 +39,19 @@ def read_files_as_documents(
 
     Returns:
         documents (Sequence[Document]): A sequence of Document objects.
-    """
+
+    Raises:
+        ValueError: If an error occurs while reading and processing the documents.
+
+    Raises:
+        ValueError: If an error occurs while reading and processing the documents.
+
+    Raises:
+        ValueError: If an error occurs while reading and processing the documents."""
     # Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
+        ".md": MarkdownReader(read_as_single_doc=True),
+        ".md": MarkdownReader(read_as_single_doc=True),
         ".md": MarkdownReader(read_as_single_doc=True),
         ".pdf": LangchainPDFReader(extract_images=False)
     }
@@ -58,7 +70,18 @@ def read_files_as_documents(
     logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
         f"Reading files {input_files}..")
 
-    # Read and process the documents
+    try:
+        # Read and process the documents
+    try:
+        documents = reader.load_data(show_progress=show_progress)
+    except Exception as e:
+        logger.error(f"An error occurred while reading and processing the documents: {e}")
+        return []
+    logger.info(f"Found {len(documents)} 'document(s)'.")
+    return documents
+    except Exception as e:
+        logger.error(f"An error occurred while reading and processing the documents: {e}")
+        return []
     documents = reader.load_data(show_progress=show_progress)
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
@@ -78,11 +101,44 @@ def on_rm_error(func: Callable, path: str, exc_info: Tuple):
     os.chmod(path, stat.S_IWRITE)
     os.unlink(path)
 
-
 def read_github_repo_as_documents(
         git_repo_url: str,
         relative_folder_path: Optional[str] = None,
         required_exts: Optional[List[str]] = None) -> Sequence[Document]:
+    """
+    A document provider that fetches documents from a specific folder within a GitHub repository.
+
+    Parameters:
+        git_repo_url (str): The URL of the GitHub repository.
+        relative_folder_path (str, optional): The relative path from the repo root to the folder containing documents.
+        required_exts (Optional[List[str]]): List of required extensions.
+
+    Returns:
+        Sequence[Document]: A sequence of Document objects.
+    """
+
+    # Ensure the temp_dir directory exists
+    temp_dir = Path("autollm/temp/")
+    temp_dir.mkdir(parents=True, exist_ok=True)
+
+    logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
+
+    try:
+        # Clone or pull the GitHub repository to get the latest documents
+        clone_or_pull_repository(git_repo_url, temp_dir)
+
+        # Specify the path to the documents
+        docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
+
+        # Read and process the documents
+        documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+        # Logging (assuming logger is configured)
+        logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
+    finally:
+        # Delete the temporary directory
+        shutil.rmtree(temp_dir, onerror=on_rm_error)
+
+    return documents
     """
     A document provider that fetches documents from a specific folder within a GitHub repository.
 
@@ -139,8 +195,27 @@ def read_website_as_documents(
     Raises:
         ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
     """
-    if (parent_url is None and sitemap_url is None) or (parent_url is not None and sitemap_url is not None):
-        raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
+        include_filter_str: Optional[str] = None,
+        exclude_filter_str: Optional[str] = None) -> List[Document]:
+    """
+    Read documents from a website or a sitemap.
+
+    Parameters:
+        parent_url (str, optional): The starting URL from which to scrape documents.
+        sitemap_url (str, optional): The URL of the sitemap to process.
+        include_filter_str (str, optional): Filter string to include certain URLs.
+        exclude_filter_str (str, optional): Filter string to exclude certain URLs.
+
+    Returns:
+        List[Document]: A list of Document objects containing content and metadata.
+
+    Raises:
+        ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
+    """
+    if parent_url is None and sitemap_url is None:
+        raise ValueError("Please provide either parent_url or sitemap_url, not none.")
+    if parent_url and sitemap_url:
+        raise ValueError("Please provide either parent_url or sitemap_url, not both.")
 
     reader = WebSiteReader()
     if parent_url:
@@ -168,5 +243,11 @@ def read_webpage_as_documents(url: str) -> List[Document]:
         List[Document]: A list of Document objects containing content and metadata from the web page.
     """
     reader = WebPageReader()
-    documents = reader.load_data(url)
+    try:
+        documents = reader.load_data(url)
+    except Exception as e:
+        logger.error(f"An error occurred while reading and processing the documents: {e}")
+        return []
+    logger.info(f"Found {len(documents)} 'document(s)'.")
+    return documents
     return documents
