@@ -12,7 +12,7 @@ from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
-from autollm.utils.website_reader import WebSiteReader
+from autollm.utils.website_reader import WebSiteReader, WebPageReader
 
 
 def read_files_as_documents(
@@ -142,7 +142,7 @@ def read_website_as_documents(
     if (parent_url is None and sitemap_url is None) or (parent_url is not None and sitemap_url is not None):
         raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
 
-    reader = WebSiteReader()
+    reader = WebSiteReader(parent_url=parent_url, sitemap_url=sitemap_url, include_filter_str=include_filter_str, exclude_filter_str=exclude_filter_str)
     if parent_url:
         documents = reader.load_data(
             parent_url=parent_url,
