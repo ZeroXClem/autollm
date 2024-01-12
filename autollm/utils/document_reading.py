@@ -1,24 +1,18 @@
 from autollm.utils.markdown_reader import MarkdownReader
 import os
-from autollm.utils.markdown_reader import MarkdownReader
 import shutil
 import stat
-from pathlib import Path
-from typing import Callable, List, Optional, Sequence, Tuple
-
-from llama_index.readers.file.base import SimpleDirectoryReader
+from autollm.utils.simple_directory_reader import SimpleDirectoryReader
 from llama_index.schema import Document
-from autollm.utils.pdf_reader import LangchainPDFReader
-from autollm.utils.pdf_reader import LangchainPDFReader
-
-from autollm.utils.git_utils import clone_or_pull_repository
-from autollm.utils.logging import logger
-from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
+from autollm.utils.webpage_reader import WebPageReader
+from autollm.utils.website_reader import WebSiteReader
 from autollm.utils.simple_directory_reader import SimpleDirectoryReader
-from llama_index.schema import Document
+from autollm.utils.logging import logger
+from autollm.utils.constants import WEBPAGE_READER_TIMEOUT
+from autollm.utils.webpage_reader import WebPageReader
 
 
 def read_files_as_documents(
@@ -78,12 +72,13 @@ def read_files_as_documents(
 
     try:
         # Read and process the documents
+    try:
         documents = reader.load_data(show_progress=show_progress)
-        except Exception as e:
-            logger.error(f"An error occurred while reading and processing the documents: {e}")
-            return []
-        logger.info(f"Found {len(documents)} 'document(s)'.")
-        return documents
+    except Exception as e:
+        logger.error(f"An error occurred while reading and processing the documents: {e}")
+        return []
+    logger.info(f"Found {len(documents)} 'document(s)'.")
+    return documents
     except Exception as e:
         logger.error(f"An error occurred while reading and processing the documents: {e}")
         return []
@@ -217,8 +212,10 @@ def read_website_as_documents(
     Raises:
         ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
     """
-    if (parent_url is None and sitemap_url is None) or (parent_url is not None and sitemap_url is not None):
-        raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
+    if parent_url is None and sitemap_url is None:
+        raise ValueError("Please provide either parent_url or sitemap_url, not none.")
+    if parent_url and sitemap_url:
+        raise ValueError("Please provide either parent_url or sitemap_url, not both.")
 
     reader = WebSiteReader()
     if parent_url:
