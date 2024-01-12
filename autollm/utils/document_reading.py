@@ -107,8 +107,14 @@ def read_github_repo_as_documents(
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
 
     try:
+        # Add a try-except block to handle exceptions during cloning or pulling
+        try:
         # Clone or pull the GitHub repository to get the latest documents
-        clone_or_pull_repository(git_repo_url, temp_dir)
+        try:
+            clone_or_pull_repository(git_repo_url, temp_dir)
+        except Exception as e:
+            # Log the exception and any relevant information
+            logger.error(f'An error occurred during cloning or pulling: {e}')
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
