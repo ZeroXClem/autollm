@@ -1,6 +1,9 @@
 # db_utils.py
 from typing import Sequence
 
+import pinecone
+from qdrant_client import QdrantClient
+from qdrant_client.models import Distance, VectorParams
 from llama_index import Document, StorageContext, VectorStoreIndex
 from llama_index.vector_stores import PineconeVectorStore, QdrantVectorStore
 
