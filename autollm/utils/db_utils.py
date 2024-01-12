@@ -6,6 +6,7 @@ from llama_index.vector_stores import PineconeVectorStore, QdrantVectorStore
 
 from autollm.utils.env_utils import read_env_variable
 from autollm.utils.env_utils import read_env_variable
+from autollm.utils.env_utils import read_env_variable
 from autollm.utils.logging import logger
 
 
@@ -28,6 +29,8 @@ def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = '
     from qdrant_client.models import Distance, VectorParams
 
     # Initialize client
+    url = read_env_variable('QDRANT_URL')
+    api_key = read_env_variable('QDRANT_API_KEY')
     url = read_env_variable('QDRANT_URL')
     api_key = read_env_variable('QDRANT_API_KEY')
 
