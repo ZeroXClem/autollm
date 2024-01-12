@@ -162,9 +162,8 @@ def read_website_as_documents(
             parent_url=parent_url,
             include_filter_str=include_filter_str,
             exclude_filter_str=exclude_filter_str)
-    else:
-        documents = reader.load_data(
-            sitemap_url=sitemap_url,
+    documents = reader.load_data(
+            parent_url=parent_url,
             include_filter_str=include_filter_str,
             exclude_filter_str=exclude_filter_str)
     
