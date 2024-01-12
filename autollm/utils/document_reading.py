@@ -9,9 +9,11 @@ from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
+from autollm.utils.error_handling import handle_exception, handle_fatal, handle_exception, handle_fatal
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
+from autollm.utils.error_handling import handle_exception
 from autollm.utils.website_reader import WebSiteReader
 
 
@@ -58,7 +60,8 @@ def read_files_as_documents(
     logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
         f"Reading files {input_files}..")
 
-    # Read and process the documents
+    try:
+        # Read and process the documents
     documents = reader.load_data(show_progress=show_progress)
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
@@ -105,7 +108,30 @@ def read_github_repo_as_documents(
         # Clone or pull the GitHub repository to get the latest documents
         clone_or_pull_repository(git_repo_url, temp_dir)
 
+        try:
+        try:
         # Specify the path to the documents
+        docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
+        # Read and process the documents
+        documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+        # Logging (assuming logger is configured)
+        logger.info(f'Operations complete, deleting temporary directory {temp_dir}..')
+    finally:
+        # Log and handle the error
+        except Exception as e:
+            handle_exception(type(e), e, sys.exc_info()[2])
+        docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
+        # Read and process the documents
+        documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+        # Logging (assuming logger is configured)
+        logger.info(f'Operations complete, deleting temporary directory {temp_dir}..')
+    finally:
+        # Log and handle the error
+        except Exception as e:
+            handle_exception(type(e), e, sys.exc_info()[2])
+    finally:
+        # Delete the temporary directory
+        shutil.rmtree(temp_dir, onerror=on_rm_error)
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
 
         # Read and process the documents
@@ -114,12 +140,14 @@ def read_github_repo_as_documents(
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     finally:
         # Delete the temporary directory
-        shutil.rmtree(temp_dir, onerror=on_rm_error)
+        # Log and handle the error
+        except Exception as e:
+            handle_exception(type(e), e, sys.exc_info()[2])
 
     return documents
 
 
-def read_website_as_documents(
+def read_website_as_documents_safe(
         parent_url: Optional[str] = None,
         sitemap_url: Optional[str] = None,
         include_filter_str: Optional[str] = None,
@@ -168,5 +196,9 @@ def read_webpage_as_documents(url: str) -> List[Document]:
         List[Document]: A list of Document objects containing content and metadata from the web page.
     """
     reader = WebPageReader()
-    documents = reader.load_data(url)
+    try:
+        documents = reader.load_data(url)
+    except Exception as e:
+        handle_exception(type(e), e, sys.exc_info()[2])
+        logger.error('An error occurred:', exc_info=True)
     return documents
