@@ -9,7 +9,7 @@ from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
-from autollm.utils.error_handling import handle_exception, handle_fatal
+from autollm.utils.error_handling import handle_exception, handle_fatal, handle_exception, handle_fatal
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
@@ -196,5 +196,9 @@ def read_webpage_as_documents(url: str) -> List[Document]:
         List[Document]: A list of Document objects containing content and metadata from the web page.
     """
     reader = WebPageReader()
-    documents = reader.load_data(url)
+    try:
+        documents = reader.load_data(url)
+    except Exception as e:
+        handle_exception(type(e), e, sys.exc_info()[2])
+        logger.error('An error occurred:', exc_info=True)
     return documents
