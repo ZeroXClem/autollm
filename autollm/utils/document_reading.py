@@ -11,6 +11,7 @@ from autollm.utils.git_utils import clone_or_pull_repository, init_repo
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
+from autollm.utils.document_reading import read_files_as_documents, read_github_repo_as_documents
 from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
 
