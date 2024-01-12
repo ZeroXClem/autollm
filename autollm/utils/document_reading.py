@@ -9,6 +9,7 @@ from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
+from autollm.utils.error_handling import handle_exception, handle_custom
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
@@ -102,6 +103,8 @@ def read_github_repo_as_documents(
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
 
     try:
+        # Add error handling and logging to catch any exceptions
+        # Add error handling and logging to catch any exceptions
         # Clone or pull the GitHub repository to get the latest documents
         clone_or_pull_repository(git_repo_url, temp_dir)
 
