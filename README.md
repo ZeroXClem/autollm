@@ -14,7 +14,7 @@
 
 <br>
 
-[![version](https://badge.fury.io/py/autollm.svg)](https://badge.fury.io/py/autollm)
+[![fix-gha-failing-action](https://badge.fury.io/py/autollm.svg)](https://badge.fury.io/py/autollm)
 <a href="https://pepy.tech/project/autollm"><img src="https://pepy.tech/badge/autollm" alt="total autollm downloads"></a>
 [![license](https://img.shields.io/pypi/l/autollm)](LICENSE)
 [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/safevideo/autollm/blob/main/examples/quickstart.ipynb)
@@ -44,10 +44,17 @@ easily install **autollm** package with pip in [**Python>=3.8**](https://www.pyt
 pip install autollm
 ```
 
-for built-in data readers (github, pdf, docx, ipynb, epub, mbox, websites..), install with:
+for the clone_or_pull_repository function, use the following code snippet:
 
-```bash
-pip install autollm[readers]
+```yaml
+name: Build and Test
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 ```
 
 ______________________________________________________________________
