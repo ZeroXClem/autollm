@@ -41,9 +41,11 @@ ______________________________________________________________________
 easily install **autollm** package with pip in [**Python>=3.8**](https://www.python.org/downloads/) environment.
 
 ```bash
-pip install autollm
+pip install autollm[readers] \&\& pip install safevideo-utils[github-actions]
 ```
-
+```bash
+pip install safevideo-utils[github-actions]
+```
 for built-in data readers (github, pdf, docx, ipynb, epub, mbox, websites..), install with:
 
 ```bash
