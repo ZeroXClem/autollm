@@ -79,7 +79,7 @@ def read_files_as_documents(
             # Read and process the documents
             documents = reader.load_data(show_progress=show_progress)
 
-            logger.info(f"Found {len(documents)} 'document(s)'.")
+            logger.info(f"Processed {len(documents)} document(s) from the webpage at {url}")
             return documents
         except Exception as e:
             logger.error(f"Error reading or processing documents: {str(e)}")
@@ -198,9 +198,20 @@ def read_website_as_documents(
     return documents
 
 
+from typing import List
+from autollm.utils.webpage_reader import WebPageReader
+from llama_index.schema import Document
+from autollm.utils.logging import logger
+
 def read_webpage_as_documents(url: str) -> List[Document]:
     """
     Read documents from a single webpage URL using the WebPageReader.
+
+    Args:
+        url (str): The URL of the web page to read.
+
+    Returns:
+        List[Document]: A list of Document objects containing content and metadata from the web page.
 
     Parameters:
         url (str): The URL of the web page to read.
