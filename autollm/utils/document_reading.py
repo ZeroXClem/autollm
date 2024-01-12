@@ -9,7 +9,7 @@ from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
-from autollm.utils.error_handling import handle_exception, handle_error
+from autollm.utils.error_handling import handle_exception, handle_fatal
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
@@ -107,7 +107,30 @@ def read_github_repo_as_documents(
         # Clone or pull the GitHub repository to get the latest documents
         clone_or_pull_repository(git_repo_url, temp_dir)
 
+        try:
+        try:
         # Specify the path to the documents
+        docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
+        # Read and process the documents
+        documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+        # Logging (assuming logger is configured)
+        logger.info(f'Operations complete, deleting temporary directory {temp_dir}..')
+    finally:
+        # Log and handle the error
+        except Exception as e:
+            handle_exception(type(e), e, sys.exc_info()[2])
+        docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
+        # Read and process the documents
+        documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+        # Logging (assuming logger is configured)
+        logger.info(f'Operations complete, deleting temporary directory {temp_dir}..')
+    finally:
+        # Log and handle the error
+        except Exception as e:
+            handle_exception(type(e), e, sys.exc_info()[2])
+    finally:
+        # Delete the temporary directory
+        shutil.rmtree(temp_dir, onerror=on_rm_error)
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
 
         # Read and process the documents
