@@ -15,7 +15,7 @@ from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
 
 
-def read_files_as_documents(
+def read_files_as_documents_new(
         input_dir: Optional[str] = None,
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
@@ -59,7 +59,11 @@ def read_files_as_documents(
         f"Reading files {input_files}..")
 
     # Read and process the documents
-    documents = reader.load_data(show_progress=show_progress)
+    try:
+      documents = reader.load_data(show_progress=show_progress)
+  except Exception as e:
+      logger.exception(f'An error occurred while loading data: {e}')
+      documents = []
 
     logger.info(f"Processed {len(documents)} documents from the file(s).")
     return documents
