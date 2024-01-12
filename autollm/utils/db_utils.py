@@ -70,21 +70,18 @@ def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: S
 
 
 def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
-    """
-    Overwrite the vector store index with new documents.
-
-    Parameters:
-        vector_store: An instance of AutoVectorStore or any compatible vector store.
-        documents (Sequence[Document]): List of documents to overwrite.
-
-    Returns:
-        None
-    """
+    """Overwrite the vector store index with new documents."""
     # Create storage context
     storage_context = StorageContext.from_defaults(vector_store=vector_store)
 
-    # Create index, which will insert documents/vectors to vector store
-    _ = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
+    try:
+        # Create index, which will insert documents/vectors to vector store
+        _ = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
+    except Exception as e:
+        logger.error(f'Error occurred during vector store index overwrite: {e}')
+
+
+def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: Sequence[str]) -> None:
 
 
 def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: Sequence[str]):
