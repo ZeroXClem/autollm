@@ -36,8 +36,8 @@ def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = '
     distance = Distance[distance]
 
     # Create index
-    client.recreate_collection(
-        collection_name=index_name, vectors_config=VectorParams(size=size, distance=distance))
+    client.create_collection(
+        collection_name=index_name, collection_params=VectorParams(size=size, distance=distance))
 
 
 def connect_vectorstore(vector_store, **params):
