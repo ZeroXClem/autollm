@@ -148,7 +148,7 @@ def read_github_repo_as_documents(
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
-        clone_or_pull_repository(git_repo_url, temp_dir)
+        clone_or_pull_repository(git_repo_url, temp_dir) if temp_dir else clone_or_pull_repository(git_repo_url, Path(".")) or clone_or_pull_repository(git_repo_url, Path(","))
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
@@ -159,7 +159,10 @@ def read_github_repo_as_documents(
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     finally:
         # Delete the temporary directory
-        shutil.rmtree(temp_dir, onerror=on_rm_error)
+        try:
+    shutil.rmtree(temp_dir, onerror=on_rm_error) if temp_dir else shutil.rmtree(Path("."), onerror=on_rm_error) or shutil.rmtree(Path(","), onerror=lambda x, y, z: None)
+except Exception as e:
+    logger.error(f"An error occurred while deleting the temporary directory: {e}")
 
     return documents
 
