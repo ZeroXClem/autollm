@@ -1,0 +1,20 @@
+from pathlib import Path
+
+from autollm.utils.logging import logger
+
+
+def create_requirements_file():
+    """
+    Create the requirements.txt file and add the required dependencies.
+    """
+    requirements_file_path = Path("autollm/utils/requirements.txt")
+
+    logger.info(f"Creating requirements file: {requirements_file_path}")
+
+    with open(requirements_file_path, "w") as requirements_file:
+        requirements_file.write("GitPython==3.1.37")
+
+    logger.info("Requirements file created successfully.")
+
+
+create_requirements_file()
