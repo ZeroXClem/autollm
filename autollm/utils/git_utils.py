@@ -14,7 +14,7 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
     # Lazy import to avoid dependency on GitPython
     try:
         from git import InvalidGitRepositoryError, Repo
-    except ImportError:
+    except ImportError as e:
         logger.error(
             'GitPython is not installed. Please "pip install gitpython==3.1.37" to use this feature.')
         raise
@@ -25,6 +25,6 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
             repo.remotes.origin.pull()
         except InvalidGitRepositoryError:
             # The existing directory is not a valid git repo, clone anew
-            Repo.clone_from(git_url, str(local_path))
+            logger.error('Error: Missing or invalid repository URL')
     else:
         Repo.clone_from(git_url, str(local_path))
