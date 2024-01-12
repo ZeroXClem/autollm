@@ -1,5 +1,4 @@
-import pinecone
-from pathlib import Path
+from git import InvalidGitRepositoryError, Repo, Path
 
 from autollm.utils.logging import logger
 
