@@ -98,10 +98,13 @@ def read_github_repo_as_documents(
     """
 
     # Ensure the temp_dir directory exists
-    temp_dir = Path("autollm/temp/")
-    temp_dir.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory() as temp_dir
+    try:
+        logger.info(f'Creating temporary directory..')
+    except Exception as e:
+        logger.error(f'Error occurred during creating temporary directory: {e}')
 
-    logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
+    logger.info(f"Cloning github repo {git_repo_url}..")
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
@@ -114,7 +117,9 @@ def read_github_repo_as_documents(
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
         # Logging (assuming logger is configured)
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
-        finally:
+        # Delete the temporary directory
+        shutil.rmtree(temp_dir, onerror=on_rm_error)
+    finally:
         # Delete the temporary directory
         shutil.rmtree(temp_dir, onerror=on_rm_error)
 
