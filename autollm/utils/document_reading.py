@@ -40,6 +40,10 @@ def read_files_as_documents(
         documents (Sequence[Document]): A sequence of Document objects.
     """
     # Configure file_extractor to use MarkdownReader for md files
+    if input_dir is None:
+        input_dir = ""
+    
+    # Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
         ".md": MarkdownReader(read_as_single_doc=True),
         ".pdf": LangchainPDFReader(extract_images=False)
