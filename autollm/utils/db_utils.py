@@ -1,11 +1,13 @@
 # db_utils.py
 from typing import Sequence
 
+from autollm.utils.logging import logger
+
 from llama_index import Document, StorageContext, VectorStoreIndex
 from llama_index.vector_stores import PineconeVectorStore, QdrantVectorStore
 
 from autollm.utils.env_utils import read_env_variable
-import autollm.utils.logging as logging
+from autollm.utils.logging import logger
 
 
 def initialize_pinecone_index(
