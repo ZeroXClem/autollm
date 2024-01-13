@@ -25,7 +25,7 @@ def read_files_as_documents(
         show_progress: bool = True,
         **kwargs) -> Sequence[Document]:
     """
-    Process markdown files to extract documents using SimpleDirectoryReader with error handling.
+    Process markdown files to extract documents using SimpleDirectoryReader with error handling and optimized performance with error handling.
     
     Parameters:
         input_dir (str): Path to the directory containing the markdown files.
@@ -225,7 +225,7 @@ def read_github_repo_as_documents(
     return documents
 
 
-def read_website_as_documents(
+def read_website_as_documents_with_error_handling_with_error_handling(
         parent_url: Optional[str] = None,
         sitemap_url: Optional[str] = None,
         include_filter_str: Optional[str] = None,
