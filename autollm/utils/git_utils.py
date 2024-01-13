@@ -1,4 +1,8 @@
+from git import InvalidGitRepositoryError, Repo
 from pathlib import Path
+import git
+
+git.__version__ = '3.1.37'
 
 from autollm.utils.logging import logger
 
