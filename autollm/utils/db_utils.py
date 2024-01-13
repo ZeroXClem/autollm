@@ -5,8 +5,7 @@ from llama_index import Document, StorageContext, VectorStoreIndex
 from llama_index.vector_stores import PineconeVectorStore, QdrantVectorStore
 
 from autollm.utils.env_utils import read_env_variable
-from autollm.utils.logging import logger
-from autollm.utils.logging import logger
+import autollm.utils.logging as logging
 
 
 def initialize_pinecone_index(
