@@ -7,7 +7,7 @@ openapi_url = "/api/v2/openapi.json"
 terms_of_service = "Deployment Policy, All Rights Reserved."
 tags_metadata = [
     {
-        "name": "search",
+        "name": "header-documents",
         "description": "Operations related to querying the header-documents."
     },
 ]
