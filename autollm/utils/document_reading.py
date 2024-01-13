@@ -2,9 +2,10 @@ import os
 import shutil
 import stat
 from pathlib import Path
+from autollm.utils.directory_reader import SimpleDirectoryReader
 from typing import Callable, List, Optional, Sequence, Tuple
 
-from llama_index.readers.file.base import SimpleDirectoryReader, MarkdownReader, LangchainPDFReader
+from autollm.utils.directory_reader import SimpleDirectoryReader
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
