@@ -106,6 +106,8 @@ def read_github_repo_as_documents(
     # Ensure the temp_dir directory exists
     temp_dir = Path("autollm/temp/")
     temp_dir.mkdir(parents=True, exist_ok=True)
+    temp_dir = Path("autollm/temp/")
+    temp_dir.mkdir(parents=True, exist_ok=True)
 
     if not git_repo_url:
         raise ValueError('git_repo_url is required.')
