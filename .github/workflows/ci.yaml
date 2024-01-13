@@ -55,7 +55,7 @@ jobs:
           restore-keys: ${{ matrix.operating-system }}-${{ matrix.python-version }}-
 
       - name: Update pip
-        run: python -m pip install --upgrade pip
+    run: python -m pip install --upgrade pip
 
       - name: Install local package with dev and readers dependencies
         run: pip install -e .[dev,readers]
