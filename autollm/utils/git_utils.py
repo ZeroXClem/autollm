@@ -1,4 +1,6 @@
 import git
+import pinecone
+from qdrant_client import QdrantClient
 from pathlib import Path
 
 import git
