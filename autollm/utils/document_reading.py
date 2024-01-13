@@ -25,7 +25,48 @@ def read_files_as_documents(
         show_progress: bool = True,
         **kwargs) -> Sequence[Document]:
     """
-    Process markdown files to extract documents using SimpleDirectoryReader.
+    Process markdown files to extract documents using SimpleDirectoryReader with error handling and optimized performance with error handling.
+    
+    Parameters:
+        input_dir (str): Path to the directory containing the markdown files.
+        input_files (List): List of file paths.
+        exclude_hidden (bool): Whether to exclude hidden files.
+        filename_as_id (bool): Whether to use the filename as the document id.
+        recursive (bool): Whether to recursively search for files in the input directory.
+        required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
+    
+    Returns:
+        documents (Sequence[Document]): A sequence of Document objects.
+    """
+    try:
+        # Configure file_extractor to use MarkdownReader for md files
+        file_extractor = {
+            ".md": MarkdownReader(read_as_single_doc=True),
+            ".pdf": LangchainPDFReader(extract_images=False)
+        }
+    
+        # Initialize SimpleDirectoryReader
+        reader = SimpleDirectoryReader(
+            input_dir=input_dir,
+            exclude_hidden=exclude_hidden,
+            file_extractor=file_extractor,
+            input_files=input_files,
+            filename_as_id=filename_as_id,
+            recursive=recursive,
+            required_exts=required_exts,
+            **kwargs)
+    
+        logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
+            f"Reading files {input_files}..")
+    
+        # Read and process the documents
+        documents = reader.load_data(show_progress=show_progress)
+    
+        logger.info(f"Found {len(documents)} 'document(s)'.")
+        return documents
+    except Exception as e:
+        logger.error(f"An error occurred while reading files: {str(e)}")
+        raise
 
     Parameters:
         input_dir (str): Path to the directory containing the markdown files.
@@ -38,7 +79,48 @@ def read_files_as_documents(
     Returns:
         documents (Sequence[Document]): A sequence of Document objects.
     """
-    # Configure file_extractor to use MarkdownReader for md files
+    Process markdown files to extract documents using SimpleDirectoryReader with error handling.
+    
+    Parameters:
+        input_dir (str): Path to the directory containing the markdown files.
+        input_files (List): List of file paths.
+        exclude_hidden (bool): Whether to exclude hidden files.
+        filename_as_id (bool): Whether to use the filename as the document id.
+        recursive (bool): Whether to recursively search for files in the input directory.
+        required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
+    
+    Returns:
+        documents (Sequence[Document]): A sequence of Document objects.
+    """
+    try:
+        # Configure file_extractor to use MarkdownReader for md files
+        file_extractor = {
+            ".md": MarkdownReader(read_as_single_doc=True),
+            ".pdf": LangchainPDFReader(extract_images=False)
+        }
+    
+        # Initialize SimpleDirectoryReader
+        reader = SimpleDirectoryReader(
+            input_dir=input_dir,
+            exclude_hidden=exclude_hidden,
+            file_extractor=file_extractor,
+            input_files=input_files,
+            filename_as_id=filename_as_id,
+            recursive=recursive,
+            required_exts=required_exts,
+            **kwargs)
+    
+        logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
+            f"Reading files {input_files}..")
+    
+        # Read and process the documents
+        documents = reader.load_data(show_progress=show_progress)
+    
+        logger.info(f"Found {len(documents)} 'document(s)'.")
+        return documents
+    except Exception as e:
+        logger.error(f"An error occurred while reading files: {str(e)}")
+        raise
     file_extractor = {
         ".md": MarkdownReader(read_as_single_doc=True),
         ".pdf": LangchainPDFReader(extract_images=False)
@@ -59,6 +141,28 @@ def read_files_as_documents(
         f"Reading files {input_files}..")
 
     # Read and process the documents
+def on_rm_error(func: Callable, path: str, exc_info: Tuple):
+    """
+    Error handler for `shutil.rmtree` to handle permission errors.
+
+    Parameters:
+        func (Callable): The function that raised the error.
+        path (str): The path to the file or directory which couldn't be removed.
+        exc_info (Tuple): Exception information returned by sys.exc_info().
+    """
+    os.chmod(path, stat.S_IWRITE)
+    os.unlink(path)
+def on_rm_error(func: Callable, path: str, exc_info: Tuple):
+    """
+    Error handler for `shutil.rmtree` to handle permission errors.
+
+    Parameters:
+        func (Callable): The function that raised the error.
+        path (str): The path to the file or directory which couldn't be removed.
+        exc_info (Tuple): Exception information returned by sys.exc_info().
+    """
+    os.chmod(path, stat.S_IWRITE)
+    os.unlink(path)
     documents = reader.load_data(show_progress=show_progress)
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
@@ -101,7 +205,9 @@ def read_github_repo_as_documents(
 
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
 
-    try:
+    except Exception as e:
+        logger.error(f"An error occurred while cloning or pulling the GitHub repository: {str(e)}")
+        raise
         # Clone or pull the GitHub repository to get the latest documents
         clone_or_pull_repository(git_repo_url=git_repo_url, temp_dir=temp_dir)
 
@@ -119,7 +225,7 @@ def read_github_repo_as_documents(
     return documents
 
 
-def read_website_as_documents(
+def read_website_as_documents_with_error_handling_with_error_handling(
         parent_url: Optional[str] = None,
         sitemap_url: Optional[str] = None,
         include_filter_str: Optional[str] = None,
@@ -167,6 +273,12 @@ def read_webpage_as_documents(url: str) -> List[Document]:
     Returns:
         List[Document]: A list of Document objects containing content and metadata from the web page.
     """
+    try:
     reader = WebPageReader()
+    documents = reader.load_data(url)
+    return documents
+except Exception as e:
+    logger.error(f"An error occurred while reading the webpage: {str(e)}")
+    raise
     documents = reader.load_data(url)
     return documents
