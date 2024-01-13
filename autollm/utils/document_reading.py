@@ -97,13 +97,20 @@ def read_github_repo_as_documents(
 
     # Ensure the temp_dir directory exists
     temp_dir = Path("autollm/temp/")
-    temp_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        temp_dir.mkdir(parents=True, exist_ok=True)
+    except Exception as e:
+        logger.error(f'Error creating temp directory: {e}')
 
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
+        try:
         clone_or_pull_repository(git_repo_url, temp_dir)
+    except Exception as e:
+        logger.error(f'Error while cloning or pulling the repository: {e}')
+        return []
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
