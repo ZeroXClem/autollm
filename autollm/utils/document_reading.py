@@ -1,4 +1,7 @@
 import os
+import git
+import pinecone
+from qdrant_client import QdrantClient
 import shutil
 import stat
 from pathlib import Path
@@ -8,6 +11,9 @@ from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
+import git
+import pinecone
+from qdrant_client import QdrantClient
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
