@@ -108,7 +108,8 @@ def read_github_repo_as_documents(
     try:
         # Clone or pull the GitHub repository to get the latest documents
         try:
-        clone_or_pull_repository(git_repo_url, temp_dir)
+        from autollm.utils.git_utils import clone_or_pull_repository
+        clone_or_pull_repository(git_repo_url, temp_dir, on_rm_error)
     except Exception as e:
         logging.error(f'Error while cloning or pulling the repository: {e}')
         return []
@@ -140,7 +141,6 @@ def read_website_as_documents(
         sitemap_url (str, optional): The URL of the sitemap to process.
         include_filter_str (str, optional): Filter string to include certain URLs.
         exclude_filter_str (str, optional): Filter string to exclude certain URLs.
-
     Returns:
         List[Document]: A list of Document objects containing content and metadata.
 
