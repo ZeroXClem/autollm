@@ -4,13 +4,13 @@ import stat
 from pathlib import Path
 from typing import Callable, List, Optional, Sequence, Tuple
 
-from llama_index.readers.file.base import SimpleDirectoryReader
+from llama_index.readers.file.base import SimpleDirectoryReader, MarkdownReader, LangchainPDFReader
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
 import git
 from autollm.utils.logging import logger
-from autollm.utils.markdown_reader import MarkdownReader
+from autollm.utils.markdown_reader import MarkdownReader, LangchainPDFReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
@@ -45,6 +45,8 @@ def read_files_as_documents(
     # Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
         ".md": MarkdownReader(read_as_single_doc=True),
+        ".md": MarkdownReader(read_as_single_doc=True),
+            ".md": MarkdownReader(read_as_single_doc=True),
         ".pdf": LangchainPDFReader(extract_images=False)
     }
 
