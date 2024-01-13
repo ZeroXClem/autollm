@@ -15,6 +15,8 @@ from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
+import shutil
+from autollm.utils.document_reading import on_rm_error
 from autollm.utils.webpage_reader import WebPageReader
 
 
