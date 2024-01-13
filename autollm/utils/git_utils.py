@@ -15,7 +15,7 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
     try:
         from git import InvalidGitRepositoryError, Repo
     except (InvalidGitRepositoryError, TypeError) as e:
-        logging.error(f'Error while cloning or pulling the repository: {e}')
+        raise ImportError(f'Error while cloning or pulling the repository: {e}')
         return None
     except ImportError as e:
         logger.error(f'Error: {e}. Please "pip install gitpython==3.1.37" to use this feature.')
