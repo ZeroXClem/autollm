@@ -1,9 +1,9 @@
 from pathlib import Path
 import os
 import stat
-from git import InvalidGitRepositoryError, Repo
+from autollm.utils.error_handling import handle_error
 
-from autollm.utils.logging import logger
+from autollm.utils.error_handling import handle_error
 
 from autollm.utils.logging import logger
 

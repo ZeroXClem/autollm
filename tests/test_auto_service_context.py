@@ -1,4 +1,7 @@
 from llama_index import Document, ServiceContext, VectorStoreIndex
+from autollm.auto.service_context import AutoServiceContext
+from autollm.utils.error_handling import handle_error
+import traceback
 
 from autollm.auto.service_context import AutoServiceContext
 
@@ -18,7 +21,7 @@ def test_auto_service_context():
     response = query_engine.query("What is the meaning of life?")
 
     # Check if the response is not None
-    assert response.response is not None
+    assert response and response.response is not None
 
     # Check if the cost calculating handler is working
     cost_caltulator = service_context.callback_manager.handlers[0]
