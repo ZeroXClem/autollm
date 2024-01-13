@@ -58,11 +58,13 @@ def read_files_as_documents(
     logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
         f"Reading files {input_files}..")
 
-    # Read and process the documents
-    documents = reader.load_data(show_progress=show_progress)
-
-    logger.info(f"Found {len(documents)} 'document(s)'.")
-    return documents
+    # Read and process the documents with error handling and logging
+    try:
+        documents = reader.load_data(show_progress=show_progress)
+        logger.info(f"Found {len(documents)} 'document(s)'.")
+    except Exception as e:
+        logger.error(f'Error occurred during document processing: {e}')
+        raise
 
 
 # From http://stackoverflow.com/a/4829285/548792
@@ -112,7 +114,7 @@ def read_github_repo_as_documents(
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
         # Logging (assuming logger is configured)
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
-    finally:
+        finally:
         # Delete the temporary directory
         shutil.rmtree(temp_dir, onerror=on_rm_error)
 
