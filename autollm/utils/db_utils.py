@@ -18,7 +18,7 @@ def initialize_pinecone_index(
     environment = read_env_variable('PINECONE_ENVIRONMENT')
 
     # Initialize Pinecone
-    pinecone.init(api_key=api_key, environment=environment)
+    pinecone.init(api_key=api_key, environment=environment, host='pinecone.default.svc.cluster.local')
     pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
 
 
