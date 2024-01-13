@@ -4,7 +4,7 @@ import stat
 from pathlib import Path
 from typing import Callable, List, Optional, Sequence, Tuple
 
-from llama_index.readers.file.base import SimpleDirectoryReader
+from llama_index.readers.file.base import from autollm.utils.git_utils import clone_or_pull_repository
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
@@ -103,7 +103,7 @@ def read_github_repo_as_documents(
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
-        clone_or_pull_repository(git_repo_url, temp_dir)
+        clone_or_pull_repository(git_repo_url=git_repo_url, temp_dir=temp_dir)
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))

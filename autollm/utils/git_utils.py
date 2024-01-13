@@ -1,3 +1,6 @@
+import os
+import stat
+
 from pathlib import Path
 
 from autollm.utils.logging import logger
