@@ -50,7 +50,7 @@ jobs:
         uses: actions/cache@v3
         if: matrix.operating-system == 'windows-latest'
         with:
-          path: ~\AppData\Local\pip\Cache
+                    path: ~\AppData\Local\pip\Cache
           key: ${{ matrix.operating-system }}-${{ matrix.python-version }}-${{ hashFiles('**/setup.py')}}
           restore-keys: ${{ matrix.operating-system }}-${{ matrix.python-version }}-
 
