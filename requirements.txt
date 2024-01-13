@@ -4,4 +4,19 @@ uvicorn
 fastapi
 python-dotenv
 httpx
-lancedb==0.3.3
+lancedb==  - llama-index==0.9.10
+  - litellm==1.1.1
+  - uvicorn
+  - fastapi
+  - python-dotenv
+  - httpx
+  - lancedb==  - llama-index==0.9.10
+  - litellm==1.1.1
+  - uvicorn
+  - fastapi
+  - python-dotenv
+  - httpx
+  - lancedb==0.3.3
+- litellm==1.1.1
+- uvicorn
+- llama-index==0.9.10
