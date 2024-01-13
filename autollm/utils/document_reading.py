@@ -7,14 +7,20 @@ from typing import Callable, List, Optional, Sequence, Tuple
 from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
-from autollm.utils.git_utils import clone_or_pull_repository
+import autollm.utils.git_utils
 import pinecone
 import pinecone.exceptions
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
-from autollm.utils.webpage_reader import WebPageReader
-from autollm.utils.webpage_reader import WebPageReader
+from git import Repo, InvalidGitRepositoryError
+from llama_index.readers.file.base import SimpleDirectoryReader
+from llama_index.schema import Document
+from autollm.utils.git_utils import clone_or_pull_repository
+from autollm.utils.logging import logger
+from autollm.utils.markdown_reader import MarkdownReader
+from autollm.utils.pdf_reader import LangchainPDFReader
+
 
 
 def read_files_as_documents(
@@ -61,7 +67,7 @@ def read_files_as_documents(
         f"Reading files {input_files}..")
 
     # Read and process the documents
-    documents = reader.load_data(show_progress=show_progress)
+        documents = reader.load_data(show_progress=show_progress)
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
     return documents
@@ -106,7 +112,12 @@ def read_github_repo_as_documents(
     try:
         try:
         # Get the latest documents from the GitHub repository
+        try:
         clone_or_pull_repository(git_repo_url, temp_dir)
+    except InvalidGitRepositoryError:
+        logger.error('Invalid Git repository')
+    except Exception as e:
+        logger.error(f'Repository cloning failed: {e}')
     except InvalidGitRepositoryError:
         # The existing directory is not a valid git repo, clone anew
         Repo.clone_from(git_repo_url, str(temp_dir))
@@ -121,7 +132,10 @@ def read_github_repo_as_documents(
     finally:
         # Delete the temporary directory
         try:
+        try:
         shutil.rmtree(temp_dir, onerror=on_rm_error)
+    except Exception as e:
+        logger.error(f'Error deleting temporary directory: {e}')
     except Exception as e:
         logger.error(f'Error deleting temporary directory: {e}')
 
