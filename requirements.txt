@@ -1,5 +1,10 @@
 llama-index==0.9.10
 litellm==1.1.1
+# New Dependencies
+
+gitpython==3.1.37
+pinecone
+qdrant-client
 uvicorn
 fastapi
 python-dotenv
