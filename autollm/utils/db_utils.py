@@ -40,7 +40,7 @@ def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = '
         collection_name=index_name, vectors_config=VectorParams(size=size, distance=distance))
 
 
-def connect_vectorstore(vector_store, **params):
+def connect_vectorstore(vector_store_index, **params):
     """Connect to an existing vector store."""
     import pinecone
     from qdrant_client import QdrantClient
@@ -104,7 +104,7 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
 
     # Proceed with deletion.
     for document_id in document_ids:
-        vector_store_index.delete_ref_doc(document_id, delete_from_docstore=True)
+        vector_store.delete_ref_doc(document_id, delete_from_docstore=True)
 
 
 # TODO: refactor and update.
