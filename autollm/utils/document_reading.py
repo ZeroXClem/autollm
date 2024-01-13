@@ -8,6 +8,7 @@ from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
+from git import InvalidGitRepositoryError, Repo
 import pinecone
 import pinecone.exceptions
 from autollm.utils.logging import logger
@@ -104,6 +105,7 @@ def read_github_repo_as_documents(
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
 
     try:
+        # Add a try-except block around the cloning process
         try:
         # Get the latest documents from the GitHub repository
         clone_or_pull_repository(git_repo_url, temp_dir)
