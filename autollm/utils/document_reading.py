@@ -7,7 +7,9 @@ from typing import Callable, List, Optional, Sequence, Tuple
 from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
-from autollm.utils.git_utils import clone_or_pull_repository, InvalidGitRepositoryError, Repo, shutil, os, stat
+from autollm.utils.git_utils import clone_or_pull_repository
+import pinecone
+import pinecone.exceptions
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
