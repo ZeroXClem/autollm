@@ -36,7 +36,8 @@ class AutoFastAPI:
             api_version: str = None,
             api_term_of_service: str = None) -> FastAPI:
         """
-        Create an FastAPI instance from config.yaml and optionally a .env file. The app has a single endpoint
+        
+        Start the FastAPI app and create an instance from config.yaml and optionally a .env file. The app has a single endpoint to handle the startup and shutdown events
         /query that takes a QueryPayload and returns a QueryResponse.
 
         ```python
