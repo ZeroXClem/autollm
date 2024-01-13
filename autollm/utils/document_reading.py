@@ -8,11 +8,13 @@ from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
+import pinecone
+import pinecone.exceptions
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
-from autollm.utils.website_reader import WebSiteReader
+from autollm.utils.webpage_reader import WebPageReader
 
 
 def read_files_as_documents(
@@ -102,8 +104,12 @@ def read_github_repo_as_documents(
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
 
     try:
-        # Clone or pull the GitHub repository to get the latest documents
+        try:
+        # Get the latest documents from the GitHub repository
         clone_or_pull_repository(git_repo_url, temp_dir)
+    except InvalidGitRepositoryError:
+        # The existing directory is not a valid git repo, clone anew
+        Repo.clone_from(git_repo_url, str(temp_dir))
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
@@ -114,7 +120,10 @@ def read_github_repo_as_documents(
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     finally:
         # Delete the temporary directory
+        try:
         shutil.rmtree(temp_dir, onerror=on_rm_error)
+    except Exception as e:
+        logger.error(f'Error deleting temporary directory: {e}')
 
     return documents
 
@@ -168,5 +177,9 @@ def read_webpage_as_documents(url: str) -> List[Document]:
         List[Document]: A list of Document objects containing content and metadata from the web page.
     """
     reader = WebPageReader()
-    documents = reader.load_data(url)
+    try:
+        documents = reader.load_data(url)
+    except Exception as e:
+        logger.error(f'Error reading webpage: {e}')
+        documents = []
     return documents
