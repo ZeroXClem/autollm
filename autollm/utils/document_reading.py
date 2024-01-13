@@ -110,8 +110,10 @@ def read_github_repo_as_documents(
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
 
         # Read and process the documents
-        documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+            logger.info(f'Loading and processing the documents..')
+    documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
         # Logging (assuming logger is configured)
+                logger.info(f"Found {len(documents)} 'document(s)'.")
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     finally:
         # Delete the temporary directory
