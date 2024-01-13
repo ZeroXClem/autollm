@@ -6,6 +6,8 @@ from llama_index.vector_stores import PineconeVectorStore, QdrantVectorStore
 
 from autollm.utils.env_utils import read_env_variable
 from autollm.utils.logging import logger
+from autollm.vectorstore import AutoVectorStore
+from llama_index import Document, StorageContext, VectorStoreIndex
 
 
 def initialize_pinecone_index(
@@ -124,11 +126,11 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
 
 #     logger.info('Updating vector store with documents')
 
-#     update_vector_store_index(vector_store, documents)
+#     update_vector_store_index(vector_store_index, documents)
 
-#     logger.info('Vector database successfully initialized.')
+logger.info('Vector database successfully initialized.')
 
-# # TODO: refactor and update.
+# pass
 # def update_database(documents: Sequence[Document], vectore_store_type: str) -> None:
 #     """
 #     Update the vector database to synchronize it with the provided list of documents.
@@ -147,7 +149,7 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
 #     Note:
 #         Ensure that the 'documents' list includes all documents that should remain in the database, as any missing items will be deleted.
 #     """
-#     logger.info('Updating vector store')
+logger.info('Updating vector store')
 
 #     # Get changed document ids using the hash of the documents available in the vector store index item metadata
 #     vector_store = AutoVectorStore.from_defaults(
@@ -158,4 +160,4 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
 #     vector_store.update_vectorindex(changed_documents)
 #     vector_store.delete_documents_by_id(deleted_document_ids)
 
-#     logger.info('Vector database successfully updated.')
+logger.info('Vector database successfully updated.')
