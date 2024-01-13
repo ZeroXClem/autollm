@@ -93,7 +93,7 @@ class AutoFastAPI:
             task_name_to_query_engine = load_config_and_initialize_engines(
                 config_file_path, env_file_path, documents)
 
-        @app.post("/query")
+        @app.post("/query", tags=['CORS'])
         async def query(payload: FromConfigQueryPayload):
             task = payload.task
             user_query = payload.user_query
@@ -155,7 +155,7 @@ class AutoFastAPI:
         if not isinstance(query_engine, BaseQueryEngine):
             raise ValueError("query_engine must be a llama_index query engine")
 
-        app = FastAPI(
+        app = FastAPI(debug=False,
             title=title if api_title is None else api_title,
             description=description if api_description is None else api_description,
             version=version if api_version is None else api_version,
