@@ -1,6 +1,8 @@
 # db_utils.py
 from typing import Sequence
 
+from autollm.utils.logging import logger
+
 from llama_index import Document, StorageContext, VectorStoreIndex
 from llama_index.vector_stores import PineconeVectorStore, QdrantVectorStore
 
@@ -17,7 +19,7 @@ def initialize_pinecone_index(
     environment = read_env_variable('PINECONE_ENVIRONMENT')
 
     # Initialize Pinecone
-    pinecone.init(api_key=api_key, environment=environment)
+    pinecone.init(api_key=api_key, environment=environment, host='pinecone.default.svc.cluster.local')
     pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
 
 
@@ -110,6 +112,7 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
 # TODO: refactor and update.
 # def initialize_database(
 #         documents: Sequence[Document], vector_store_class_name: str, **vector_store_params) -> None:
+    from autollm.utils.logging import logger
 #     logger.info('Initializing vector store')
 
 #     vector_store = AutoVectorStore.from_defaults(vector_store_class_name, **vector_store_params)

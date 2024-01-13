@@ -4,8 +4,8 @@ import stat
 from pathlib import Path
 from typing import Callable, List, Optional, Sequence, Tuple
 
-from llama_index.readers.file.base import SimpleDirectoryReader
-from llama_index.schema import Document
+from autollm.utils.directory_reader import SimpleDirectoryReader
+from autollm.utils.document import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
@@ -39,6 +39,10 @@ def read_files_as_documents(
     Returns:
         documents (Sequence[Document]): A sequence of Document objects.
     """
+    # Configure file_extractor to use MarkdownReader for md files
+    if input_dir is None:
+        input_dir = ""
+    
     # Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
         ".md": MarkdownReader(read_as_single_doc=True),
@@ -104,7 +108,7 @@ def read_github_repo_as_documents(
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
-        clone_or_pull_repository(git_repo_url, local_path)
+        clone_or_pull_repository(git_repo_url, temp_dir)
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
