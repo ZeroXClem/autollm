@@ -165,7 +165,7 @@ def read_website_as_documents(
     return documents
 
 
-def read_webpage_as_documents(url: str) -> List[Document]:
+def read_webpage_as_documents(url: str) -> List[Document:
     """
     Read documents from a single webpage URL using the WebPageReader.
 
@@ -176,5 +176,10 @@ def read_webpage_as_documents(url: str) -> List[Document]:
         List[Document]: A list of Document objects containing content and metadata from the web page.
     """
     reader = WebPageReader()
-    documents = reader.load_data(url)
-    return documents
+    try:
+        documents = reader.load_data(url)
+        logger.info(f'Successfully loaded data from {url}')
+        return documents
+    except Exception as e:
+        logger.error(f'Error occurred during loading data from {url}: {e}')
+        raise
