@@ -12,7 +12,7 @@ from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
-from autollm.utils.website_reader import WebSiteReader
+from autollm.utils.webpage_reader import WebPageReader
 
 
 def read_files_as_documents(
@@ -175,5 +175,9 @@ def read_webpage_as_documents(url: str) -> List[Document]:
         List[Document]: A list of Document objects containing content and metadata from the web page.
     """
     reader = WebPageReader()
-    documents = reader.load_data(url)
+    try:
+        documents = reader.load_data(url)
+    except Exception as e:
+        logger.error(f'Error reading webpage: {e}')
+        documents = []
     return documents
