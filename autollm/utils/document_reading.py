@@ -7,7 +7,7 @@ from typing import Callable, List, Optional, Sequence, Tuple
 from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
-from autollm.utils.git_utils import clone_or_pull_repository
+from autollm.utils.git_utils import clone_or_pull_repository, InvalidGitRepositoryError
 import pinecone
 import pinecone.exceptions
 from autollm.utils.logging import logger
@@ -112,7 +112,12 @@ def read_github_repo_as_documents(
     try:
         try:
         # Get the latest documents from the GitHub repository
+        try:
         clone_or_pull_repository(git_repo_url, temp_dir)
+    except InvalidGitRepositoryError:
+        logger.error('Invalid Git repository')
+    except Exception as e:
+        logger.error(f'Repository cloning failed: {e}')
     except InvalidGitRepositoryError:
         # The existing directory is not a valid git repo, clone anew
         Repo.clone_from(git_repo_url, str(temp_dir))
