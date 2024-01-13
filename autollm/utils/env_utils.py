@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 def find_dotenv_file(start_path: Path) -> Path:
     """Searches for the .env file from start_path moving upwards."""
     current_path = start_path
-    while current_path != Path('/'):
+    while current_path != Path('/') and current_path != current_path.parent:
         dotenv_path = current_path / '.env'
         if dotenv_path.exists():
             return dotenv_path
