@@ -6,6 +6,12 @@ from git import InvalidGitRepositoryError, Repo
 from autollm.utils.logging import logger
 
 
+from typing import Union, Optional, Sequence
+from autollm.utils.logging import logger
+from pathlib import Path
+import git
+from git import InvalidGitRepositoryError, Repo
+
 def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
     """
     Clone a Git repository or pull latest changes if it already exists.
@@ -16,7 +22,7 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
     """
     # Lazy import to avoid dependency on GitPython
     try:
-        from git import InvalidGitRepositoryError, Repo
+        from git import Repo
     except ImportError:
         logger.error(
             'GitPython is not installed. Please "pip install gitpython==3.1.37" to use this feature.')
