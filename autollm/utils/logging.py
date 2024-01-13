@@ -1,6 +1,8 @@
 # autollm/utils/logging.py
 
 import logging
+from autollm.utils.logging import logger
+import logging.handlers
 
 # Configure the logger
 logger = logging.getLogger('autollm')
