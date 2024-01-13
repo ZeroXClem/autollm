@@ -22,7 +22,7 @@ from git import Repo
         logger.error(f'Error: {e}. Please "pip install gitpython==3.1.37" to use this feature.')
         raise
 
-    if local_path.exists() or not local_path.exists():
+    if local_path.exists(): 
         try:
             repo = Repo(str(local_path))
             repo.remotes.origin.pull()
