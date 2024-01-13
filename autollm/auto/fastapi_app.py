@@ -6,9 +6,9 @@ from llama_index import Document
 from llama_index.indices.query.base import BaseQueryEngine
 from pydantic import BaseModel, Field
 
+from autollm.serve.docs import load_docs
 from autollm.serve.docs import description, openapi_url, tags_metadata, terms_of_service, title, version
-from autollm.serve.docs import description, openapi_url, tags_metadata, terms_of_service, title, version
-from autollm.serve.utils import load_config_and_initialize_engines, stream_text_data
+from autollm.serve.utils import load_config_and_initialize_engines, stream_text_data, Middleware
 
 
 class FromConfigQueryPayload(BaseModel):
