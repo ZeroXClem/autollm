@@ -29,6 +29,9 @@ from git import Repo
         except InvalidGitRepositoryError:
             # The existing directory is not a valid git repo, clone anew
             from git import Repo
-Repo.clone_from(git_url, str(local_path))
+repo.clone_from(git_url, str(local_path))
+        except InvalidGitRepositoryError:
+            # The existing directory is not a valid git repo, clone anew
+            logging.error('Error while pulling the repository: Failed to pull the latest changes')
     else:
         Repo.clone_from(git_url, str(local_path))
