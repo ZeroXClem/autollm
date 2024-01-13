@@ -7,8 +7,8 @@ from typing import Callable, List, Optional, Sequence, Tuple
 from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
-from autollm.utils.git_utils import clone_or_pull_repository
-from autollm.utils.logging import logger
+from autollm.utils.git_utils import clone_or_pull_repository, InvalidGitRepositoryError, Repo
+from autollm.utils.logging import logger, logging
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
@@ -79,8 +79,12 @@ def on_rm_error(func: Callable, path: str, exc_info: Tuple):
     os.unlink(path)
 
 
+# Add error handling and logging for cloning or pulling process
+
 def read_github_repo_as_documents(
-        git_repo_url: str,
+        git_repo_url: str,  # The URL of the GitHub repository
+        relative_folder_path: Optional[str] = None,  # The relative path from the repo root to the folder containing documents
+        required_exts: Optional[List[str]] = None) -> Sequence[Document]:  # List of required extensions
         relative_folder_path: Optional[str] = None,
         required_exts: Optional[List[str]] = None) -> Sequence[Document]:
     """
@@ -103,7 +107,13 @@ def read_github_repo_as_documents(
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
+        try:
+        # Clone or pull the GitHub repository to get the latest documents
         clone_or_pull_repository(git_repo_url, temp_dir)
+        logger.info(f'Cloning/pulling the GitHub repository {git_repo_url}...')
+        logger.info(f'Successfully cloned/pulled GitHub repository {git_repo_url}.')
+    except Exception as e:
+        logger.error(f'Error occurred while cloning/pulling the GitHub repository {git_repo_url}: {e}')
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
