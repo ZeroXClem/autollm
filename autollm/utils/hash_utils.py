@@ -1,6 +1,7 @@
 import hashlib
 from pathlib import Path
 from typing import List, Sequence, Tuple
+from autollm.utils.logging import logger
 
 from llama_index.schema import Document
 
@@ -18,7 +19,12 @@ def get_md5(file_path: Path) -> str:
         str: The MD5 hash of the file.
     """
     hasher = hashlib.md5()
-    with open(file_path, 'rb') as f:
+    try:
+        with open(file_path, 'rb') as f:
+            for chunk in iter(lambda: f.read(4096), b''):
+                hasher.update(chunk)
+    except Exception as e:
+        logger.error(f'Error occurred while computing the MD5 hash of file {file_path}: {e}')
         for chunk in iter(lambda: f.read(4096), b''):
             hasher.update(chunk)
     return hasher.hexdigest()

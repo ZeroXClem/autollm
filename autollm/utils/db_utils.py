@@ -1,4 +1,5 @@
 # db_utils.py
+from autollm.utils.logging import logger
 from typing import Sequence
 
 from llama_index import Document, StorageContext, VectorStoreIndex
