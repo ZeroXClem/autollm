@@ -11,9 +11,6 @@ from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
-import git
-import pinecone
-from qdrant_client import QdrantClient
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
@@ -105,7 +102,12 @@ def read_github_repo_as_documents(
     temp_dir = Path("autollm/temp/")
     temp_dir.mkdir(parents=True, exist_ok=True)
 
-    logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
+    try:
+        # Clone or pull the GitHub repository to get the latest documents
+        clone_or_pull_repository(git_repo_url, temp_dir)
+        logger.info(f"Cloned/pulled github repo {git_repo_url} into temporary directory {temp_dir}..")
+    except Exception as e:
+        logger.error(f"Error cloning/pulling github repo: {e}")
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
