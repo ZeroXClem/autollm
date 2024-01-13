@@ -11,6 +11,10 @@ from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
+from autollm.utils.logging import logger
+from autollm.utils.logging import logger
+from autollm.utils.markdown_reader import MarkdownReader
+from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
 
@@ -103,10 +107,13 @@ def read_github_repo_as_documents(
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
-        clone_or_pull_repository(git_repo_url, temp_dir)
+        try:
+            clone_or_pull_repository(git_repo_url, temp_dir)
+        except Exception as e:
+            raise Exception('An error occurred during cloning/pulling the repository')
 
         # Specify the path to the documents
-        docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
+        docs_path = temp_dir / (Path(relative_folder_path) if relative_folder_path is not None else Path())
 
         # Read and process the documents
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)

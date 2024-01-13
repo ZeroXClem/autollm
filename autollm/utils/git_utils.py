@@ -1,15 +1,9 @@
 import os
-import stat
 import os
-import stat
-from shutil import rmtree
-import os
-import stat
 from pathlib import Path
 
-import os
-import os
-import os
+from git import InvalidGitRepositoryError, Repo
+
 from autollm.utils.logging import logger
 
 
@@ -35,6 +29,12 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
             repo.remotes.origin.pull()
         except InvalidGitRepositoryError:
             # The existing directory is not a valid git repo, clone anew
-            Repo.clone_from(git_url, str(local_path))
+            try:
+                Repo.clone_from(git_url, str(local_path))
+            except InvalidGitRepositoryError:
+                raise Exception('Failed to clone the repository.')
     else:
-        Repo.clone_from(git_url, str(local_path))
+        try:
+            Repo.clone_from(git_url, str(local_path))
+        except InvalidGitRepositoryError:
+            raise Exception('Failed to clone the repository.')
