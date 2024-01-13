@@ -8,7 +8,7 @@ from llama_index.readers.file.base import SimpleDirectoryReader
 
 from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
-from autollm.utils.error_handling import handle_error
+from autollm.utils.error_handling import handle_error, on_rm_error
 import traceback
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
@@ -130,7 +130,7 @@ def read_github_repo_as_documents(
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     finally:
         # Delete the temporary directory
-        shutil.rmtree(temp_dir, onerror=on_rm_error)
+        shutil.rmtree(temp_dir, onerror=on_rm_error) # Add on_rm_error to handle permission errors during file removal
 
     return documents
 
