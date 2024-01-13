@@ -2,7 +2,7 @@ import os
 import shutil
 import stat
 from pathlib import Path
-from autollm.utils.directory_reader import SimpleDirectoryReader
+from autollm.utils.directory_reader import SimpleDirectoryReader, GitHubRepositoryModule1, GitHubRepositoryModule2
 from typing import Callable, List, Optional, Sequence, Tuple
 
 from autollm.utils.directory_reader import SimpleDirectoryReader
