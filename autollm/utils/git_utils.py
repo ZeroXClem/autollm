@@ -1,5 +1,7 @@
+import git
 from pathlib import Path
 
+import git
 from autollm.utils.logging import logger
 
 
