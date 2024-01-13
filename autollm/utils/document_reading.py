@@ -145,6 +145,7 @@ def read_website_as_documents(
 
     Raises:
         ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
+        Exception: If an error occurs during the loading of data from the website or sitemap.
     """
     if (parent_url is None and sitemap_url is None) or (parent_url is not None and sitemap_url is not None):
         raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
