@@ -7,6 +7,7 @@ from llama_index.indices.query.base import BaseQueryEngine
 from pydantic import BaseModel, Field
 
 from autollm.serve.docs import description, openapi_url, tags_metadata, terms_of_service, title, version
+from autollm.serve.docs import description, openapi_url, tags_metadata, terms_of_service, title, version
 from autollm.serve.utils import load_config_and_initialize_engines, stream_text_data
 
 
