@@ -6,8 +6,9 @@ from llama_index import Document
 from llama_index.indices.query.base import BaseQueryEngine
 from pydantic import BaseModel, Field
 
+from autollm.serve.docs import load_docs, ServiceContext, LLM
 from autollm.serve.docs import description, openapi_url, tags_metadata, terms_of_service, title, version
-from autollm.serve.utils import load_config_and_initialize_engines, stream_text_data
+from autollm.serve.utils import load_config_and_initialize_engines, stream_text_data, Middleware
 
 
 class FromConfigQueryPayload(BaseModel):
@@ -25,7 +26,7 @@ class AutoFastAPI:
     """Creates an FastAPI instance from config.yaml or Llama-Index query engine."""
 
     @staticmethod
-    def from_config(
+    def from_config(service_context: ServiceContext,
             config_file_path: Optional[str] = None,
             env_file_path: Optional[str] = None,
             task_name_to_query_engine: Optional[dict] = None,
@@ -35,7 +36,8 @@ class AutoFastAPI:
             api_version: str = None,
             api_term_of_service: str = None) -> FastAPI:
         """
-        Create an FastAPI instance from config.yaml and optionally a .env file. The app has a single endpoint
+        
+        Start the FastAPI app and create an instance from config.yaml and optionally a .env file. The app has a single endpoint to handle the startup and shutdown events
         /query that takes a QueryPayload and returns a QueryResponse.
 
         ```python
@@ -92,7 +94,7 @@ class AutoFastAPI:
             task_name_to_query_engine = load_config_and_initialize_engines(
                 config_file_path, env_file_path, documents)
 
-        @app.post("/query")
+        @app.post("/query", tags=['CORS'])
         async def query(payload: FromConfigQueryPayload):
             task = payload.task
             user_query = payload.user_query
@@ -154,7 +156,7 @@ class AutoFastAPI:
         if not isinstance(query_engine, BaseQueryEngine):
             raise ValueError("query_engine must be a llama_index query engine")
 
-        app = FastAPI(
+        app = FastAPI(debug=False,
             title=title if api_title is None else api_title,
             description=description if api_description is None else api_description,
             version=version if api_version is None else api_version,
