@@ -24,11 +24,13 @@ def initialize_pinecone_index(
 def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = 'EUCLID'):
     """Initialize Qdrant index."""
     from qdrant_client import QdrantClient
+    from pinecone import pinecone
     from qdrant_client.models import Distance, VectorParams
 
     # Initialize client
     url = read_env_variable('QDRANT_URL')
     api_key = read_env_variable('QDRANT_API_KEY')
+from qdrant_client.models import Distance, VectorParams
 
     client = QdrantClient(url=url, api_key=api_key)
 
