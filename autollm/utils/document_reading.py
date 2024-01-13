@@ -8,7 +8,7 @@ from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
-from autollm.utils.logging import logger
+import logging
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
@@ -66,6 +66,7 @@ def read_files_as_documents(
 
 
 # From http://stackoverflow.com/a/4829285/548792
+from document_reading import on_rm_error
 def on_rm_error(func: Callable, path: str, exc_info: Tuple):
     """
     Error handler for `shutil.rmtree` to handle permission errors.
@@ -107,9 +108,10 @@ def read_github_repo_as_documents(
     try:
         # Clone or pull the GitHub repository to get the latest documents
         try:
-        clone_or_pull_repository(git_repo_url, temp_dir)
+        from autollm.utils.git_utils import clone_or_pull_repository
+        clone_or_pull_repository(git_repo_url, temp_dir, on_rm_error)
     except Exception as e:
-        logger.error(f'Error while cloning or pulling the repository: {e}')
+        logging.error(f'Error while cloning or pulling the repository: {e}')
         return []
 
         # Specify the path to the documents
@@ -139,7 +141,6 @@ def read_website_as_documents(
         sitemap_url (str, optional): The URL of the sitemap to process.
         include_filter_str (str, optional): Filter string to include certain URLs.
         exclude_filter_str (str, optional): Filter string to exclude certain URLs.
-
     Returns:
         List[Document]: A list of Document objects containing content and metadata.
 
