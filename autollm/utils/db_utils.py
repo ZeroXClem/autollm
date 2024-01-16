@@ -18,7 +18,11 @@ def initialize_pinecone_index(
 
     # Initialize Pinecone
     pinecone.init(api_key=api_key, environment=environment)
-    pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
+    try:
+        pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
+        logger.info(f'Pinecone index {index_name} created successfully')
+    except Exception as e:
+        logger.error(f'Error creating Pinecone index {index_name}: {e}')
 
 
 def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = 'EUCLID'):
