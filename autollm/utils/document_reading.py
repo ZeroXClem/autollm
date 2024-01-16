@@ -1,4 +1,6 @@
 import os
+from autollm.utils.db_utils import initialize_pinecone_index
+from autollm.utils.db_utils import update_vector_store_index
 import shutil
 import stat
 from pathlib import Path
