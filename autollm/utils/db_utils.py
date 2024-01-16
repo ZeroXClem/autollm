@@ -17,9 +17,9 @@ def initialize_pinecone_index(
     environment = read_env_variable('PINECONE_ENVIRONMENT')
 
     # Initialize Pinecone
-    pinecone.init(api_key=api_key, environment=environment)
+    pinecone.init(api_key=api_key, environment=environment, show_progress=show_progress)
     try:
-        pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
+        pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type, show_progress=show_progress)
         logger.info(f'Pinecone index {index_name} created successfully')
     except Exception as e:
         logger.error(f'Error creating Pinecone index {index_name}: {e}')
@@ -41,7 +41,7 @@ def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = '
 
     # Create index
     client.recreate_collection(
-        collection_name=index_name, vectors_config=VectorParams(size=size, distance=distance))
+        collection_name=index_name, vectors_config=VectorParams(size=size, distance=distance, show_progress=show_progress))
 
 
 def connect_vectorstore(vector_store, **params):
@@ -64,7 +64,15 @@ def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: S
     Parameters:
         vector_store_index: An instance of AutoVectorStoreIndex or any compatible vector store.
         documents (Sequence[Document]): List of documents to update.
+    import pinecone
+    from qdrant_client import QdrantClient
 
+    # Logic to connect to vector store based on the specific type of vector store
+    if isinstance(vector_store, PineconeVectorStore):
+        vector_store.pinecone_index = pinecone.Index(params['index_name'], show_progress=show_progress)
+    elif isinstance(vector_store, QdrantVectorStore):
+        vector_store.client = QdrantClient(url=params['url'], api_key=params['api_key'])
+    # TODO: Add more elif conditions for other vector stores as needed
     Returns:
         None
     """
