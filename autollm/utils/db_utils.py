@@ -13,6 +13,12 @@ def initialize_pinecone_index(
     import pinecone
 
     # Read environment variables for Pinecone initialization
+    if not isinstance(index_name, str):
+        raise ValueError('index_name should be a string value')
+    if not isinstance(dimension, int) or dimension <= 0:
+        raise ValueError('dimension should be a positive integer value')
+    if metric not in ['angular', 'euclidean', 'cosine']:
+        raise ValueError("metric should be one of ['angular', 'euclidean', 'cosine']")
     api_key = read_env_variable('PINECONE_API_KEY')
     environment = read_env_variable('PINECONE_ENVIRONMENT')
 
