@@ -27,7 +27,7 @@ from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
 
 
-def read_files_as_documents(
+def read_files_as_documents_modified(
         input_dir: Optional[str] = None,
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
@@ -69,8 +69,11 @@ def read_files_as_documents(
         required_exts=required_exts,
         **kwargs)
 
-    if input_files is not None:
+    try:
+        if input_files is not None:
         logger.info(f"Reading files {input_files}..")
+    except Exception as e:
+        logger.error(f"An error occurred while reading files: {str(e)}")
     else:
         logger.info(f"Reading files from {input_dir}..")
 
