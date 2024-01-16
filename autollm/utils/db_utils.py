@@ -23,6 +23,12 @@ def initialize_pinecone_index(
     pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
 
 
+from autollm.utils.env_utils import read_env_variable
+import qdrant_client
+
+from autollm.utils.env_utils import read_env_variable
+import qdrant_client
+
 def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = 'EUCLID'):
     """Initialize Qdrant index."""
     from qdrant_client import QdrantClient
