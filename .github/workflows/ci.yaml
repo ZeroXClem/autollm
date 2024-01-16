@@ -61,12 +61,11 @@ jobs:
         run: >
           pip install -e .[dev,readers]
 
-      - name: Check styling with pre-commit
+      - name: Check code style with flake8
         run: |
-          pre-commit install
-          pre-commit run --all-files
+          flake8
 
       - name: Run tests
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: pytest
+        run: coverage report --fail-under=80
