@@ -7,7 +7,6 @@ from typing import Callable, List, Optional, Sequence, Tuple
 from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
-from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
@@ -36,6 +35,33 @@ def read_files_as_documents(
         required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
 
     Returns:
+        documents (Sequence[Document]): A sequence of Document objects.
+    """
+    # Configure file_extractor to use MarkdownReader for md files
+    file_extractor = {
+        ".md": MarkdownReader(read_as_single_doc=True),
+        ".pdf": LangchainPDFReader(extract_images=False)
+    }
+
+    # Initialize SimpleDirectoryReader
+    reader = SimpleDirectoryReader(
+        input_dir=input_dir,
+        exclude_hidden=exclude_hidden,
+        file_extractor=file_extractor,
+        input_files=input_files,
+        filename_as_id=filename_as_id,
+        recursive=recursive,
+        required_exts=required_exts,
+        **kwargs)
+
+    logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
+        f"Reading files {input_files}..")
+
+    # Read and process the documents
+    documents = reader.load_data(show_progress=show_progress)
+
+    logger.info(f"Found {len(documents)} 'document(s)'.")
+    return documents
         documents (Sequence[Document]): A sequence of Document objects.
     """
     # Configure file_extractor to use MarkdownReader for md files
