@@ -53,7 +53,7 @@ def connect_vectorstore(vector_store, **params):
     # TODO: Add more elif conditions for other vector stores as needed
 
 
-def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: Sequence[Document]):
+def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: Sequence[Document], vector_store_idx: VectorStoreIndex):
     """
     Update the vector store index with new documents.
 
