@@ -24,6 +24,7 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
             repo = Repo(str(local_path))
             repo.remotes.origin.pull()
         except InvalidGitRepositoryError as e:
+            logger.exception(f'Error pulling latest changes: {e}')
             logger.error(f'Error pulling latest changes: {e}')
             try:
                 Repo.clone_from(git_url, str(local_path))
