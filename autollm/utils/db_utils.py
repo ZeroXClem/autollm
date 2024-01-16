@@ -103,6 +103,9 @@ def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
     _ = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
 
 
+from typing import Sequence
+from llama_index import Document, VectorStoreIndex
+
 def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: Sequence[str]):
     """
     Delete documents from vector store by their ids.
