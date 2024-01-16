@@ -61,10 +61,9 @@ jobs:
         run: >
           pip install -e .[dev,readers]
 
-      - name: Check styling with pre-commit
+      - name: Check code style with flake8
         run: |
-          pre-commit install
-          pre-commit run --all-files --show-diff-on-failure
+          flake8
 
       - name: Run tests
         env:
