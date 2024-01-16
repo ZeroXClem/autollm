@@ -4,7 +4,7 @@ from autollm.utils.db_utils import update_vector_store_index
 import shutil
 import stat
 from pathlib import Path
-from typing import Callable, List, Optional, Sequence, Tuple
+from core_types import Callable, List, Optional, Sequence, Tuple
 
 from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
@@ -18,13 +18,13 @@ from autollm.utils.website_reader import WebSiteReader
 
 def read_files_as_documents(
         input_dir: Optional[str] = None,
-        input_files: Optional[List] = None,
+        input_files: Optional[List[str]] = None,
         exclude_hidden: bool = True,
         filename_as_id: bool = True,
         recursive: bool = True,
         required_exts: Optional[List[str]] = None,
         show_progress: bool = True,
-        **kwargs) -> Sequence[Document]:
+        **kwargs,**vector_store_index) -> Sequence[Document]:
     """
     Process markdown files to extract documents using SimpleDirectoryReader.
 
@@ -63,7 +63,7 @@ def read_files_as_documents(
     documents = reader.load_data(show_progress=show_progress)
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
-    return documents
+    return documents, vector_store_index
         documents (Sequence[Document]): A sequence of Document objects.
     """
     # Configure file_extractor to use MarkdownReader for md files
@@ -110,7 +110,7 @@ def on_rm_error(func: Callable, path: str, exc_info: Tuple):
 def read_github_repo_as_documents(
         git_repo_url: str,
         relative_folder_path: Optional[str] = None,
-        required_exts: Optional[List[str]] = None) -> Sequence[Document]:
+        required_exts: Optional[List[str]] = None, vector_store_index: Sequence[Document] = []) -> Sequence[Document]:
     """
     A document provider that fetches documents from a specific folder within a GitHub repository.
 
@@ -151,7 +151,7 @@ def read_website_as_documents(
         parent_url: Optional[str] = None,
         sitemap_url: Optional[str] = None,
         include_filter_str: Optional[str] = None,
-        exclude_filter_str: Optional[str] = None) -> List[Document]:
+        exclude_filter_str: Optional[str] = None) -> Sequence[Document]:
     """
     Read documents from a website or a sitemap.
 
@@ -162,7 +162,7 @@ def read_website_as_documents(
         exclude_filter_str (str, optional): Filter string to exclude certain URLs.
 
     Returns:
-        List[Document]: A list of Document objects containing content and metadata.
+        Sequence[Document]: A list of Document objects containing content and metadata.
 
     Raises:
         ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
