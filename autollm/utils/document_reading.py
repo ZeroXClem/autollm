@@ -3,7 +3,14 @@ import shutil
 import stat
 from pathlib import Path
 from typing import Callable, List, Optional, Sequence, Tuple
+from llama_index.readers.file.markdown import MarkdownReader
+from llama_index.readers.file.pdf import LangchainPDFReader
 
+from autollm.utils.git_utils import clone_or_pull_repository
+from autollm.utils.logging import logger
+from autollm.utils.webpage_reader import WebPageReader
+from autollm.utils.website_reader import WebSiteReader, WebPageReader, Document
+from typing import List, Optional
 from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
@@ -15,28 +22,36 @@ from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
 
 
-def read_files_as_documents(
+def read_website_as_documents(
         input_dir: Optional[str] = None,
-        input_files: Optional[List] = None,
+        input_files: Optional[List[str]] = None,
         exclude_hidden: bool = True,
         filename_as_id: bool = True,
         recursive: bool = True,
         required_exts: Optional[List[str]] = None,
-        show_progress: bool = True,
-        **kwargs) -> Sequence[Document]:
+        show_progress: bool = True) -> List[Document]
+        input_dir: Optional[str] = None,
+        input_files: Optional[List[str]] = None,
+        exclude_hidden: bool = True,
+        filename_as_id: bool = True,
+        recursive: bool = True,
+        required_exts: Optional[List[str]] = None,
+        show_progress: bool = True
+    ) -> List[Document]
     """
     Process markdown files to extract documents using SimpleDirectoryReader.
 
     Parameters:
-        input_dir (str): Path to the directory containing the markdown files.
-        input_files (List): List of file paths.
+        input_dir (str): Path to the directory containing the input files.
+        input_files (List[str]): List of file paths.
         exclude_hidden (bool): Whether to exclude hidden files.
         filename_as_id (bool): Whether to use the filename as the document id.
         recursive (bool): Whether to recursively search for files in the input directory.
         required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
+        show_progress (bool): Whether to display the progress of reading the files and operations of the function.
 
     Returns:
-        documents (Sequence[Document]): A sequence of Document objects.
+        documents (List[Document]): A list of Document objects.
     """
     # Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
@@ -53,12 +68,14 @@ def read_files_as_documents(
         filename_as_id=filename_as_id,
         recursive=recursive,
         required_exts=required_exts,
-        **kwargs)
+        file_extractor=file_extractor
+    )
+    logger.info('Successfully initialized SimpleDirectoryReader.')
 
     logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
         f"Reading files {input_files}..")
 
-    # Read and process the documents
+    logger.info('Reading and processing the documents and progress in detail...')
     documents = reader.load_data(show_progress=show_progress)
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
@@ -125,13 +142,13 @@ def read_website_as_documents(
         include_filter_str: Optional[str] = None,
         exclude_filter_str: Optional[str] = None) -> List[Document]:
     """
-    Read documents from a website or a sitemap.
+    Read and process documents from a website or a sitemap based on the provided URL(s) and filters.
 
     Parameters:
-        parent_url (str, optional): The starting URL from which to scrape documents.
-        sitemap_url (str, optional): The URL of the sitemap to process.
-        include_filter_str (str, optional): Filter string to include certain URLs.
-        exclude_filter_str (str, optional): Filter string to exclude certain URLs.
+        parent_url (str, optional): The URL of the website to fetch documents from.
+        sitemap_url (str, optional): The URL of the sitemap to fetch documents from.
+        include_filter_str (str, optional): Filter string to include specific URLs from the website or sitemap.
+        exclude_filter_str (str, optional): Filter string to exclude specific URLs from the website or sitemap.
 
     Returns:
         List[Document]: A list of Document objects containing content and metadata.
@@ -139,7 +156,8 @@ def read_website_as_documents(
     Raises:
         ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
     """
-    if (parent_url is None and sitemap_url is None) or (parent_url is not None and sitemap_url is not None):
+    if parent_url is None and sitemap_url is None:
+    raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
         raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
 
     reader = WebSiteReader()
@@ -167,6 +185,10 @@ def read_webpage_as_documents(url: str) -> List[Document]:
     Returns:
         List[Document]: A list of Document objects containing content and metadata from the web page.
     """
-    reader = WebPageReader()
-    documents = reader.load_data(url)
-    return documents
+    try:
+        reader = WebPageReader()
+        documents = reader.load_data(url)
+        return documents
+    except Exception as e:
+        logger.error(f'Failed to read documents from {url}: {e}')
+        return []
