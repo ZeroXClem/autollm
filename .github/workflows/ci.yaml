@@ -64,7 +64,7 @@ jobs:
       - name: Check styling with pre-commit
         run: |
           pre-commit install
-          pre-commit run --all-files
+          pre-commit run --all-files --show-diff-on-failure
 
       - name: Run tests
         env:
