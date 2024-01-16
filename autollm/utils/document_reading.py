@@ -21,6 +21,7 @@ def read_files_as_documents(
         exclude_hidden: bool = True,
         filename_as_id: bool = True,
         recursive: bool = True,
+        show_progress: bool = True,
         required_exts: Optional[List[str]] = None,
         show_progress: bool = True,
         **kwargs) -> Sequence[Document]:
@@ -59,7 +60,10 @@ def read_files_as_documents(
         f"Reading files {input_files}..")
 
     # Read and process the documents
-    documents = reader.load_data(show_progress=show_progress)
+    try:
+        documents = reader.load_data(show_progress=show_progress)
+    except Exception as e:
+        logger.error(f"Error reading files: {e}")
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
     return documents
