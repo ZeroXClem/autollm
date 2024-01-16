@@ -13,17 +13,16 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
     """
     # Lazy import to avoid dependency on GitPython
     try:
-        from git import InvalidGitRepositoryError, Repo
-    except ImportError:
-        logger.error(
-            'GitPython is not installed. Please "pip install gitpython==3.1.37" to use this feature.')
-        raise
+        from git import GitCommandError, Repo
+    except ImportError as e:
+        logger.error('An error occurred: {}'.format(str(e)))
+        raise e
 
     if local_path.exists():
         try:
             repo = Repo(str(local_path))
             repo.remotes.origin.pull()
-        except InvalidGitRepositoryError:
+        except GitCommandError:
             # The existing directory is not a valid git repo, clone anew
             Repo.clone_from(git_url, str(local_path))
     else:
