@@ -38,7 +38,8 @@ def read_files_as_documents(
     Returns:
         documents (Sequence[Document]): A sequence of Document objects.
     """
-    # Configure file_extractor to use MarkdownReader for md files
+    file_extractor = {".md": MarkdownReader(read_as_single_doc=True),".pdf": LangchainPDFReader(extract_images=False)
+}
     file_extractor = {
         ".md": MarkdownReader(read_as_single_doc=True),
         ".pdf": LangchainPDFReader(extract_images=False)
@@ -143,6 +144,8 @@ def read_website_as_documents(
         raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
 
     reader = WebSiteReader()
+if not (reader.file_extractor and type(reader.file_extractor.get('.md')) == MarkdownReader and type(reader.file_extractor.get('.pdf')) == LangchainPDFReader):
+    raise ValueError('Invalid file extractors for .md and .pdf files')
     if parent_url:
         documents = reader.load_data(
             parent_url=parent_url,
