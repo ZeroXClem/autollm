@@ -22,6 +22,7 @@ def read_files_as_documents(
         filename_as_id: bool = True,
         recursive: bool = True,
         show_progress: bool = True,
+        from autollm.utils.error_handling import log_error
         required_exts: Optional[List[str]] = None,
         show_progress: bool = True,
         **kwargs) -> Sequence[Document]:
@@ -61,7 +62,10 @@ def read_files_as_documents(
 
     # Read and process the documents
     try:
+        try:
         documents = reader.load_data(show_progress=show_progress)
+    except Exception as e:
+        log_error(f"Error reading files: {e}")
     except Exception as e:
         logger.error(f"Error reading files: {e}")
 
