@@ -6,17 +6,17 @@ Thank you for considering a contribution to AutoLLM. Your input is invaluable to
 
 To streamline the integration of your contributions:
 
-- **Start by Forking 🍴**: This allows you to work on your own copy of the project. See [these steps](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork) to open a PR from your fork.
+- **Start by forking the repository 🍴**: This allows you to work on your own copy of the project. Refer to the [GitHub documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork) for steps to open a PR from your fork.
 
-- **New Branch 🌱**: Always create a new branch for your PR. It keeps things neat and makes the review process smoother.
+- **New Branch 🌱**: Always create a new branch from the `main` branch for your PR. It keeps things neat and makes the review process smoother.
 
 - **Size Matters 📏**: Aim for smaller PRs. If you have a big feature in mind, consider breaking it up. It helps us understand your contribution better and gets you feedback quicker!
 
 - **Stay Current 🕰️**: Ensure your PR is synchronized with the latest updates from the `safevideo/autollm` `main` branch. If your branch is outdated, update it using the 'Update branch' button or by executing `git pull` and `git merge main`.
 
-## Code Standards 🛠️
+## Code Standards and Pre-commit Hooks 🛠️
 
-Maintaining a consistent codebase is crucial. We utilize tools such as [flake8](https://flake8.pycqa.org/en/latest/) and [isort](https://pycqa.github.io/isort/) to achieve this.
+Maintaining a consistent codebase is crucial. We utilize tools such as [flake8](https://flake8.pycqa.org/en/latest/) and [isort](https://pycqa.github.io/isort/) to achieve this. In addition, we use pre-commit hooks to automate code checks and formatting. See the `Pre-commit Hooks` section below for setup instructions.
 
 ### Pre-commit Hooks 🔗
 
