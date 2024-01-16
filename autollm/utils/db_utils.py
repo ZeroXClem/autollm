@@ -53,7 +53,7 @@ def connect_vectorstore(vector_store, **params):
     # TODO: Add more elif conditions for other vector stores as needed
 
 
-def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: Sequence[Document]):
+def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: Sequence[Document], vector_store_idx: VectorStoreIndex):
     """
     Update the vector store index with new documents.
 
@@ -69,7 +69,7 @@ def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: S
         vector_store_index.insert(document)
 
 
-def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
+def overwrite_vectorindex(vector_store, documents: Sequence[Document], vector_store_index: VectorStoreIndex):
     """
     Overwrite the vector store index with new documents.
 
@@ -130,6 +130,13 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
 
 # # TODO: refactor and update.
 # def update_database(documents: Sequence[Document], vectore_store_type: str) -> None:
+    # Check if there are any document IDs to delete.
+    if not document_ids:
+        return
+
+    # Proceed with deletion.
+    for document_id in document_ids:
+        vector_store_index.delete_ref_doc(document_id, delete_from_docstore=True)
 #     """
 #     Update the vector database to synchronize it with the provided list of documents.
 
