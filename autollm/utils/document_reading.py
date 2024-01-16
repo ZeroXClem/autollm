@@ -104,7 +104,7 @@ def on_rm_error(func: Callable, path: str, exc_info: Tuple):
         exc_info (Tuple): Exception information returned by sys.exc_info().
     """
     os.chmod(path, stat.S_IWRITE)
-    os.unlink(path)
+    os.unlink(path) # clone_or_pull_repository(git_repo_url, temp_dir / Path(relative_folder_path))
 
 
 def read_github_repo_as_documents(
