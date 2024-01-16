@@ -59,7 +59,7 @@ def read_files_as_documents(
     logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
         f"Reading files {input_files}..")
 
-    # Read and process the documents
+    # Add try-except block around reading and processing the documents
     try:
         documents = reader.load_data(show_progress=show_progress)
     except Exception as e:
