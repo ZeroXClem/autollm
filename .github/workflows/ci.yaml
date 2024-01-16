@@ -69,4 +69,4 @@ jobs:
       - name: Run tests
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: pytest --cov=autollm
+        run: coverage report --fail-under=80
