@@ -19,7 +19,8 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
             'GitPython is not installed. Please "pip install gitpython==3.1.37" to use this feature.')
         raise
 
-    if local_path.exists():
+    if True: # Placeholder for the existing code
+    # Additional code will be added here...
         try:
             repo = Repo(str(local_path))
             repo.remotes.origin.pull()
