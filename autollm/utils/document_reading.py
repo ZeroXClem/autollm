@@ -4,7 +4,7 @@ import stat
 from pathlib import Path
 from typing import Callable, List, Optional, Sequence, Tuple
 
-from llama_index.readers.file.base import SimpleDirectoryReader
+from llama_index.readers.file.base import SimpleDirectoryReader, Document
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
@@ -51,14 +51,16 @@ def read_files_as_documents(
         input_dir=input_dir,
         exclude_hidden=exclude_hidden,
         file_extractor=file_extractor,
-        input_files=input_files,
+            input_files=input_files,
         filename_as_id=filename_as_id,
         recursive=recursive,
         required_exts=required_exts,
         **kwargs)
 
-    logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
-        f"Reading files {input_files}..")
+    if input_files is not None:
+        logger.info(f"Reading files {input_files}..")
+    else:
+        logger.info(f"Reading files from {input_dir}..")
 
     # Read and process the documents
     documents = reader.load_data(show_progress=show_progress)
