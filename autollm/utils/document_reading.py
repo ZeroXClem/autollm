@@ -17,7 +17,7 @@ from autollm.utils.website_reader import WebSiteReader
 
 def read_files_as_documents(
         input_dir: Optional[str] = None,
-        input_files: Optional[List] = None,
+        input_files: Optional[List] = None, logger: Optional[Callable] = None,
         exclude_hidden: bool = True,
         filename_as_id: bool = True,
         recursive: bool = True,
@@ -38,8 +38,21 @@ def read_files_as_documents(
     Returns:
         documents (Sequence[Document]): A sequence of Document objects.
     """
-    file_extractor = {".md": MarkdownReader(read_as_single_doc=True),".pdf": LangchainPDFReader(extract_images=False)
-}
+    file_extractor = {
+        ".md": MarkdownReader(read_as_single_doc=True),
+        ".pdf": LangchainPDFReader(extract_images=False)
+    }
+
+    # Initialize SimpleDirectoryReader
+    reader = SimpleDirectoryReader(
+        input_dir=input_dir,
+        exclude_hidden=exclude_hidden,
+        file_extractor=file_extractor,
+        input_files=input_files,
+        filename_as_id=filename_as_id,
+        recursive=recursive,
+        required_exts=required_exts,
+        **kwargs, logger=logger)
     file_extractor = {
         ".md": MarkdownReader(read_as_single_doc=True),
         ".pdf": LangchainPDFReader(extract_images=False)
