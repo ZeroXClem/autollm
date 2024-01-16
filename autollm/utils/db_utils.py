@@ -17,7 +17,11 @@ def initialize_pinecone_index(
     environment = read_env_variable('PINECONE_ENVIRONMENT')
 
     # Initialize Pinecone
-    pinecone.init(api_key=api_key, environment=environment)
+    try:
+        pinecone.init(api_key=api_key, environment=environment)
+    except Exception as e:
+        logger.error('An error occurred during Pinecone index initialization: {}'.format(str(e)))
+        raise
     pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
 
 
@@ -66,7 +70,11 @@ def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: S
     """
     for document in documents:
         delete_documents_by_id(vector_store_index, [document.id_])
-        vector_store_index.insert(document)
+        try:
+            vector_store_index.insert(document)
+        except Exception as e:
+            logger.error('An error occurred during update of the vector store index: {}'.format(str(e)))
+            raise
 
 
 def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
@@ -84,7 +92,11 @@ def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
     storage_context = StorageContext.from_defaults(vector_store=vector_store)
 
     # Create index, which will insert documents/vectors to vector store
-    _ = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
+    try:
+        _ = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
+    except Exception as e:
+        logger.error('An error occurred during overwrite of the vector index: {}'.format(str(e)))
+        raise
 
 
 def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: Sequence[str]):
@@ -104,7 +116,11 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
 
     # Proceed with deletion.
     for document_id in document_ids:
-        vector_store_index.delete_ref_doc(document_id, delete_from_docstore=True)
+        try:
+            vector_store_index.delete_ref_doc(document_id, delete_from_docstore=True)
+        except Exception as e:
+            logger.error('An error occurred during deletion of documents by ID: {}'.format(str(e)))
+            raise
 
 
 # TODO: refactor and update.
