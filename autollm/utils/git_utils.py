@@ -3,7 +3,7 @@ from pathlib import Path
 from autollm.utils.logging import logger
 
 
-def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
+def clone_or_pull_repository_with_error_handling(git_url: str, local_path: Path) -> None:
     """
     Clone a Git repository or pull latest changes if it already exists.
 
@@ -20,7 +20,7 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
         from autollm.utils.shell_utils import run_shell_command
         
         
-        def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
+        def clone_or_pull_repository_with_error_handling(git_url: str, local_path: Path) -> None:
             """
             Clone a Git repository or pull latest changes if it already exists.
         
