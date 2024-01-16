@@ -1,0 +1,29 @@
+import yaml
+
+def install_git_module():
+    # Read the contents of the ".github/workflows/main.yml" file
+    with open(".github/workflows/main.yml", "r") as file:
+        contents = file.read()
+
+    # Parse the YAML contents
+    workflow = yaml.safe_load(contents)
+
+    # Modify the parsed YAML object
+    jobs = workflow["jobs"]
+    steps = jobs["build"]["steps"]
+
+    # Add a new step to install the git module
+    new_step = {
+        "name": "Install git module",
+        "run": "pip install git"
+    }
+    steps.insert(0, new_step)
+
+    # Convert the modified YAML object back to a string
+    modified_contents = yaml.dump(workflow)
+
+    # Write the modified YAML string back to the file
+    with open(".github/workflows/main.yml", "w") as file:
+        file.write(modified_contents)
+
+install_git_module()
