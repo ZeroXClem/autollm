@@ -104,7 +104,7 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
 
     # Proceed with deletion.
     for document_id in document_ids:
-        vector_store_index.delete_ref_doc(document_id, delete_from_docstore=True)
+        delete_documents_by_id(vector_store_index, document_ids)
 
 
 # TODO: refactor and update.
