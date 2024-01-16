@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from autollm.utils.logging import logger
+from autollm.utils.logging import logger, log_error
 
 
 def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
@@ -14,7 +14,7 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
     # Lazy import to avoid dependency on GitPython
     try:
         from git import InvalidGitRepositoryError, Repo
-    except ImportError:
+    except (ImportError, Exception):
         logger.error(
             'Error while handling InvalidGitRepositoryError: {e}')
         raise
