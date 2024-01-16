@@ -13,6 +13,7 @@ from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
+from autollm.utils.webpage_reader import WebPageReader
 from typing import Callable, List, Optional, Sequence, Tuple
 
 from llama_index.readers.file.base import SimpleDirectoryReader, Document
@@ -138,7 +139,7 @@ def read_website_as_documents(
         parent_url: Optional[str] = None,
         sitemap_url: Optional[str] = None,
         include_filter_str: Optional[str] = None,
-        exclude_filter_str: Optional[str] = None) -> List[Document]:
+        exclude_filter_str: Optional[str] = None) -> Sequence[Document]:
     """
     Read documents from a website or a sitemap.
 
@@ -172,7 +173,7 @@ def read_website_as_documents(
     return documents
 
 
-def read_webpage_as_documents(url: str) -> List[Document]:
+def read_webpage_as_documents(url: str) -> Sequence[Document]:
     """
     Read documents from a single webpage URL using the WebPageReader.
 
