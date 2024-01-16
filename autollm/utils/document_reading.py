@@ -25,7 +25,22 @@ def read_files_as_documents(
         show_progress: bool = True,
         **kwargs) -> Sequence[Document]:
     """
-    Process markdown files to extract documents using SimpleDirectoryReader.
+    Process markdown files to extract documents using SimpleDirectoryReader and provide more detailed error logs.
+
+    Parameters:
+        input_dir (str): Path to the directory containing the markdown files.
+        input_files (List): List of file paths.
+        exclude_hidden (bool): Whether to exclude hidden files.
+        filename_as_id (bool): Whether to use the filename as the document id.
+        recursive (bool): Whether to recursively search for files in the input directory.
+        required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
+        show_progress (bool): Whether to show progress while reading files.
+
+    Returns:
+        documents (Sequence[Document]): A sequence of Document objects.
+
+    Raises:
+        Exception: If an error occurs while reading and processing documents.
 
     Parameters:
         input_dir (str): Path to the directory containing the markdown files.
@@ -59,7 +74,11 @@ def read_files_as_documents(
         f"Reading files {input_files}..")
 
     # Read and process the documents
-    documents = reader.load_data(show_progress=show_progress)
+    try:
+        documents = reader.load_data(show_progress=show_progress)
+    except Exception as e:
+        documents = []
+        logger.error('An error occurred while reading and processing documents: {}'.format(str(e)))
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
     return documents
