@@ -1,10 +1,20 @@
 # db_utils.py
 from typing import Sequence
 
-from llama_index import Document, StorageContext, VectorStoreIndex
+from llama_index import Document, AutoVectorStore, AutoVectorStoreIndex, StorageContext, VectorStoreIndex
+from llama_index.vector_stores import PineconeVectorStore, QdrantVectorStore
+from autollm.utils.env_utils import read_env_variable, StorageContext, VectorStoreIndex
 from llama_index.vector_stores import PineconeVectorStore, QdrantVectorStore
 
 from autollm.utils.env_utils import read_env_variable
+from autollm.utils.env_utils import read_env_variable
+import pinecone
+import qdrant_client
+from typing import Sequence, Callable
+from llama_index import Document, StorageContext, VectorStoreIndex
+from llama_index.vector_stores import PineconeVectorStore, QdrantVectorStore
+from autollm.utils.env_utils import read_env_variable
+from autollm.utils.logging import logger
 from autollm.utils.logging import logger
 
 
@@ -20,6 +30,12 @@ def initialize_pinecone_index(
     pinecone.init(api_key=api_key, environment=environment)
     pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
 
+
+from autollm.utils.env_utils import read_env_variable
+import qdrant_client
+
+from autollm.utils.env_utils import read_env_variable
+import qdrant_client
 
 def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = 'EUCLID'):
     """Initialize Qdrant index."""
@@ -53,7 +69,7 @@ def connect_vectorstore(vector_store, **params):
     # TODO: Add more elif conditions for other vector stores as needed
 
 
-def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: Sequence[Document]):
+def update_vector_store_index(vector_store_index, documents):
     """
     Update the vector store index with new documents.
 
@@ -86,6 +102,9 @@ def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
     # Create index, which will insert documents/vectors to vector store
     _ = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
 
+
+from typing import Sequence
+from llama_index import Document, VectorStoreIndex
 
 def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: Sequence[str]):
     """
