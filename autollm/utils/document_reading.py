@@ -9,7 +9,8 @@ from llama_index.readers.file.pdf import LangchainPDFReader
 from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
 from autollm.utils.webpage_reader import WebPageReader
-from autollm.utils.website_reader import WebSiteReader
+from autollm.utils.website_reader import WebSiteReader, WebPageReader, Document
+from typing import List, Optional
 from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
@@ -21,7 +22,14 @@ from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
 
 
-def read_files_as_documents(
+def read_website_as_documents(
+        input_dir: Optional[str] = None,
+        input_files: Optional[List[str]] = None,
+        exclude_hidden: bool = True,
+        filename_as_id: bool = True,
+        recursive: bool = True,
+        required_exts: Optional[List[str]] = None,
+        show_progress: bool = True) -> List[Document]
         input_dir: Optional[str] = None,
         input_files: Optional[List[str]] = None,
         exclude_hidden: bool = True,
@@ -134,13 +142,13 @@ def read_website_as_documents(
         include_filter_str: Optional[str] = None,
         exclude_filter_str: Optional[str] = None) -> List[Document]:
     """
-    Read documents from a website or a sitemap.
+    Read and process documents from a website or a sitemap based on the provided URL(s) and filters.
 
     Parameters:
-        parent_url (str, optional): The starting URL from which to scrape documents.
-        sitemap_url (str, optional): The URL of the sitemap to process.
-        include_filter_str (str, optional): Filter string to include certain URLs.
-        exclude_filter_str (str, optional): Filter string to exclude certain URLs.
+        parent_url (str, optional): The URL of the website to fetch documents from.
+        sitemap_url (str, optional): The URL of the sitemap to fetch documents from.
+        include_filter_str (str, optional): Filter string to include specific URLs from the website or sitemap.
+        exclude_filter_str (str, optional): Filter string to exclude specific URLs from the website or sitemap.
 
     Returns:
         List[Document]: A list of Document objects containing content and metadata.
@@ -148,7 +156,8 @@ def read_website_as_documents(
     Raises:
         ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
     """
-    if (parent_url is None and sitemap_url is None) or (parent_url is not None and sitemap_url is not None):
+    if parent_url is None and sitemap_url is None:
+    raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
         raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
 
     reader = WebSiteReader()
