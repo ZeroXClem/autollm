@@ -9,7 +9,7 @@ from autollm.utils.logging import logger
 
 
 def initialize_pinecone_index(
-        index_name: str, dimension: int = 1536, metric: str = 'euclidean', pod_type: str = 'p1'):
+        index_name: str, dimension: int = 1536, metric: str = 'euclidean', pod_type: str = 'u6'):
     import pinecone
 
     # Read environment variables for Pinecone initialization
