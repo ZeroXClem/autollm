@@ -12,6 +12,8 @@ from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
+from autollm.utils.error_handling import log_error
+from autollm.utils.error_handling import log_error
 from autollm.utils.website_reader import WebSiteReader
 
 
@@ -22,6 +24,7 @@ def read_files_as_documents(
         filename_as_id: bool = True,
         recursive: bool = True,
         show_progress: bool = True,
+        from autollm.utils.error_handling import log_error
         required_exts: Optional[List[str]] = None,
         show_progress: bool = True,
         **kwargs) -> Sequence[Document]:
@@ -61,7 +64,10 @@ def read_files_as_documents(
 
     # Read and process the documents
     try:
+        try:
         documents = reader.load_data(show_progress=show_progress)
+    except Exception as e:
+        log_error(f"Error reading files: {e}")
     except Exception as e:
         logger.error(f"Error reading files: {e}")
 
@@ -107,7 +113,10 @@ def read_github_repo_as_documents(
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
+        try:
         clone_or_pull_repository(git_repo_url, temp_dir)
+    except Exception as e:
+        log_error(f"Error cloning or pulling repository: {e}")
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
