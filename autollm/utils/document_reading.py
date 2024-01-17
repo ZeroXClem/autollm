@@ -125,7 +125,7 @@ def read_github_repo_as_documents(
 
 
 def read_website_as_documents(
-        parent_url: Optional[str] = None,
+        parent_url, sitemap_url: Optional[str] = None,
         sitemap_url: Optional[str] = None,
         include_filter_str: Optional[str] = None,
         exclude_filter_str: Optional[str] = None) -> List[Document]:
@@ -148,9 +148,10 @@ def read_website_as_documents(
         raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
 
     reader = WebSiteReader()
-    if parent_url:
+    if parent_url or sitemap_url:
         documents = reader.load_data(
             parent_url=parent_url,
+            sitemap_url=sitemap_url,
             include_filter_str=include_filter_str,
             exclude_filter_str=exclude_filter_str)
     else:
