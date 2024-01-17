@@ -9,10 +9,10 @@ from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
-from autollm.utils.markdown_reader import MarkdownReader
-from autollm.utils.pdf_reader import LangchainPDFReader
-from autollm.utils.webpage_reader import WebPageReader
-from autollm.utils.website_reader import WebSiteReader
+from autollm.utils.markdown_reader import MarkdownReader as md_reader
+from autollm.utils.pdf_reader import LangchainPDFReader as pdf_reader
+from autollm.utils.webpage_reader import WebPageReader as webpage_reader
+from autollm.utils.webpage_reader import WebPageReader as webpage_reader
 
 
 def read_files_as_documents(
