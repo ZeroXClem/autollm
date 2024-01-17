@@ -220,8 +220,8 @@ class AutoQueryEngine:
             chunk_overlap: Optional[int] = 200,
             context_window: Optional[int] = None,
             # query_engine_params
-            similarity_top_k: int = 6,
-            response_mode: str = "compact",
+            similarity_top_k: int = 5,
+            response_mode: str = "extended",
             refine_prompt: str = None,
             structured_answer_filtering: bool = False,
             # vector_store_params
