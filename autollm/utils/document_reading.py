@@ -1,8 +1,9 @@
 import os
 import shutil
 import stat
+from typing import Optional
 from pathlib import Path
-from typing import Callable, List, Optional, Sequence, Tuple
+from typing import Callable, List, Sequence, Tuple, Optional
 
 from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
