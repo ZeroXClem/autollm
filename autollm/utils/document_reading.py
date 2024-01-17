@@ -7,7 +7,7 @@ from typing import Callable, List, Optional, Sequence, Tuple
 from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
-from autollm.utils.git_utils import clone_or_pull_repository
+from autollm.utils.git_utils import clone_or_pull_repository as clone_or_pull_repository
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
@@ -41,7 +41,10 @@ def read_files_as_documents(
     # Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
         ".md": MarkdownReader(read_as_single_doc=True),
-        ".pdf": LangchainPDFReader(extract_images=False)
+        ".pdf": LangchainPDFReader(extract_images=False),
+    ".html": WebPageReader(),
+    ".htm": WebPageReader(),
+    ".txt": MarkdownReader(read_as_single_doc=True)
     }
 
     # Initialize SimpleDirectoryReader
@@ -49,7 +52,7 @@ def read_files_as_documents(
         input_dir=input_dir,
         exclude_hidden=exclude_hidden,
         file_extractor=file_extractor,
-        input_files=input_files,
+        input_files=input_files,file_extractor=file_extractor,required_exts=[".md", ".pdf", ".html", ".htm", ".txt"],
         filename_as_id=filename_as_id,
         recursive=recursive,
         required_exts=required_exts,
@@ -103,12 +106,14 @@ def read_github_repo_as_documents(
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
-        clone_or_pull_repository(git_repo_url, temp_dir)
+        # Specify the path to the documents using the "relative_folder_path" parameter.
 
         # Specify the path to the documents
-        docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
+        documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+        # Logging (assuming logger is configured)
+        logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
 
-        # Read and process the documents
+        # Call the "read_files_as_documents" function with the appropriate parameters.
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
         # Logging (assuming logger is configured)
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
@@ -120,7 +125,7 @@ def read_github_repo_as_documents(
 
 
 def read_website_as_documents(
-        parent_url: Optional[str] = None,
+        parent_url, sitemap_url: Optional[str] = None,
         sitemap_url: Optional[str] = None,
         include_filter_str: Optional[str] = None,
         exclude_filter_str: Optional[str] = None) -> List[Document]:
@@ -143,9 +148,10 @@ def read_website_as_documents(
         raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
 
     reader = WebSiteReader()
-    if parent_url:
+    if parent_url or sitemap_url:
         documents = reader.load_data(
             parent_url=parent_url,
+            sitemap_url=sitemap_url,
             include_filter_str=include_filter_str,
             exclude_filter_str=exclude_filter_str)
     else:
@@ -168,5 +174,5 @@ def read_webpage_as_documents(url: str) -> List[Document]:
         List[Document]: A list of Document objects containing content and metadata from the web page.
     """
     reader = WebPageReader()
-    documents = reader.load_data(url)
+documents = reader.load_data(url)
     return documents

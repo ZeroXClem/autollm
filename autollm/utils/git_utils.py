@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import logging
+from git import InvalidGitRepositoryError, Repo
 
 
 def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
