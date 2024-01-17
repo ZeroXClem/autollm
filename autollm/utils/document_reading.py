@@ -9,6 +9,7 @@ from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
+from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
@@ -96,7 +97,9 @@ def read_github_repo_as_documents(
         relative_folder_path: Optional[str] = None,
         required_exts: Optional[List[str]] = None) -> Sequence[Document]:
     """
-    A document provider that fetches documents from a specific folder within a GitHub repository.
+    A document provider that fetches documents from a specific folder within a GitHub repository that handles exceptions during the process.
+
+    Adds detailed error logging and handles exceptions occurring during the cloning or pulling of the GitHub repository.
 
     Parameters:
         git_repo_url (str): The URL of the GitHub repository.

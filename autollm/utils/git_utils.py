@@ -3,7 +3,23 @@ from pathlib import Path
 from autollm.utils.logging import logger
 
 
+from pathlib import Path
+from git import InvalidGitRepositoryError, Repo
+
+from autollm.utils.logging import logger
+
 def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
+    """
+    Clone a Git repository or pull latest changes if it already exists.
+
+    Parameters:
+        git_url (str): The URL of the Git repository.
+        local_path (Path): The local path where the repository will be cloned or updated.
+
+    Raises:
+        InvalidGitRepositoryError: If the existing directory is not a valid Git repository and cannot be cloned.
+    """
+    logger.info('Cloning or pulling the Git repository...')
     """
     Clone a Git repository or pull latest changes if it already exists.
 
