@@ -179,6 +179,6 @@ def read_webpage_as_documents(url: str) -> List[Document]:
     Returns:
         List[Document]: A list of Document objects containing content and metadata from the web page.
     """
-    reader = WebPageReader()
+    reader = WebPageReader(show_progress=False)
     documents = reader.load_data(url)
     return documents
