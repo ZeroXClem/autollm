@@ -14,7 +14,7 @@ class CostCalculatingEvent:
     prompt_token_cost: int
     completion: str
     completion_token_cost: int
-    total_token_cost: int = 0
+    total_token_cost: float = 0.0
     event_id: str = ""
 
     def __post_init__(self) -> None:
@@ -26,7 +26,7 @@ def get_llm_token_counts(
     from llama_index.llms import ChatMessage
 
     if EventPayload.PROMPT in payload:
-        prompt = str(payload.get(EventPayload.PROMPT))
+        prompt = str(payload.get(EventPayload.PROMPT, ''))
         completion = str(payload.get(EventPayload.COMPLETION))
 
         return TokenCountingEvent(
@@ -116,7 +116,7 @@ class CostCalculatingHandler(TokenCountingHandler):
         **kwargs: Any,
     ) -> None:
         """Count the LLM or Embedding tokens as needed."""
-        if (event_type == CBEventType.LLM and event_type not in self.event_ends_to_ignore and
+        if (event_type == CBEventType.LLM and event_type not in self.event_ends_to_ignore and payload is not None and event_type not in self.event_ends_to_ignore and
                 payload is not None):
             # token counts
             self.llm_token_counts.append(

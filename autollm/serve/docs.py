@@ -6,7 +6,7 @@ This is a FastAPI service for AutoLLM's natural language query engine.
 It's designed to query multiple and big documents and get the most relevant results.
 """
 version = "0.0.1"
-openapi_url = "/api/v1/openapi.json"
+openapi_url = "/api/v1/openapi.yaml"
 terms_of_service = "Local Deployment, All Rights Reserved."
 tags_metadata = [
     {

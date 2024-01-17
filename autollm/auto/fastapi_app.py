@@ -92,7 +92,7 @@ class AutoFastAPI:
             task_name_to_query_engine = load_config_and_initialize_engines(
                 config_file_path, env_file_path, documents)
 
-        @app.post("/query")
+        @app.post("/query/")
         async def query(payload: FromConfigQueryPayload):
             task = payload.task
             user_query = payload.user_query
@@ -163,7 +163,7 @@ class AutoFastAPI:
             openapi_tags=tags_metadata,
         )
 
-        @app.post("/query")
+        @app.post("/query/")
         async def query(payload: FromEngineQueryPayload):
             user_query = payload.user_query
 

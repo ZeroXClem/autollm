@@ -26,7 +26,7 @@ class AutoVectorStoreIndex:
     def from_defaults(
             vector_store_type: str = "LanceDBVectorStore",
             lancedb_uri: str = "./.lancedb",
-            lancedb_table_name: str = "vectors",
+            lancedb_table_name: str = "vector_table",
             documents: Optional[Sequence[Document]] = None,
             nodes: Optional[Sequence[BaseNode]] = None,
             service_context: Optional[ServiceContext] = None,
@@ -54,7 +54,7 @@ class AutoVectorStoreIndex:
         VectorStoreClass = import_vector_store_class(vector_store_type)
 
         # If LanceDBVectorStore, use lancedb_uri and lancedb_table_name
-        if vector_store_type == "LanceDBVectorStore":
+        if vector_store_type == "LanceDBVectorStore" and lancedb_table_name != "vectors":
             vector_store = VectorStoreClass(uri=lancedb_uri, table_name=lancedb_table_name, **kwargs)
         else:
             vector_store = VectorStoreClass(**kwargs)

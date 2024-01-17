@@ -17,7 +17,7 @@ def get_md5(file_path: Path) -> str:
     Returns:
         str: The MD5 hash of the file.
     """
-    hasher = hashlib.md5()
+    hasher = hashlib.sha256()
     with open(file_path, 'rb') as f:
         for chunk in iter(lambda: f.read(4096), b''):
             hasher.update(chunk)
