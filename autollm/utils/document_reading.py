@@ -1,7 +1,16 @@
 import os
 import shutil
 import stat
+import os
+import shutil
+import stat
 from pathlib import Path
+from git import InvalidGitRepositoryError, Repo, GitCommandError
+from autollm.utils.logging import logger
+from autollm.utils.markdown_reader import MarkdownReader
+from autollm.utils.pdf_reader import LangchainPDFReader
+from autollm.utils.webpage_reader import WebPageReader
+from autollm.utils.website_reader import WebSiteReader
 from typing import Callable, List, Optional, Sequence, Tuple
 
 from llama_index.readers.file.base import SimpleDirectoryReader
@@ -102,6 +111,13 @@ def read_github_repo_as_documents(
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
 
     try:
+        # Specify the path to the documents
+        docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
+
+        # Read and process the documents
+        documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+        # Logging (assuming logger is configured)
+        logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
         # Clone or pull the GitHub repository to get the latest documents
         clone_or_pull_repository(git_repo_url, temp_dir)
 
@@ -112,7 +128,10 @@ def read_github_repo_as_documents(
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
         # Logging (assuming logger is configured)
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
-    finally:
+    except (InvalidGitRepositoryError, GitCommandError) as e:
+        # Add error handling to catch and log exceptions
+        logger.error(f"An error occurred during cloning or pulling: {e}")
+        raise
         # Delete the temporary directory
         shutil.rmtree(temp_dir, onerror=on_rm_error)
 
