@@ -29,3 +29,84 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
             Repo.clone_from(git_url, str(local_path))
     else:
         Repo.clone_from(git_url, str(local_path))
+        try:
+            repo = Repo(str(local_path))
+            repo.remotes.origin.pull()
+        except (InvalidGitRepositoryError, GitCommandError) as e:
+            # The existing directory is not a valid git repo or there was an error pulling, clone anew
+            logger.error(f"Error occurred during cloning or pulling the repository: {e}")
+            Repo.clone_from(git_url, str(local_path))
+    else:
+        Repo.clone_from(git_url, str(local_path))
+        try:
+            repo = Repo(str(local_path))
+            repo.remotes.origin.pull()
+        except (InvalidGitRepositoryError, GitCommandError) as e:
+            # The existing directory is not a valid git repo or there was an error pulling, clone anew
+            logger.error(f"Error occurred during cloning or pulling the repository: {e}")
+            Repo.clone_from(git_url, str(local_path))
+    else:
+        Repo.clone_from(git_url, str(local_path))
+        try:
+            repo = Repo(str(local_path))
+            repo.remotes.origin.pull()
+        except (InvalidGitRepositoryError, GitCommandError) as e:
+            # The existing directory is not a valid git repo or there was an error pulling, clone anew
+            logger.error(f"Error occurred during cloning or pulling the repository: {e}")
+            Repo.clone_from(git_url, str(local_path))
+    else:
+        Repo.clone_from(git_url, str(local_path))
+        try:
+            repo = Repo(str(local_path))
+            repo.remotes.origin.pull()
+        except (InvalidGitRepositoryError, GitCommandError) as e:
+            # The existing directory is not a valid git repo or there was an error pulling, clone anew
+            logger.error(f"Error occurred during cloning or pulling the repository: {e}")
+            Repo.clone_from(git_url, str(local_path))
+    else:
+        Repo.clone_from(git_url, str(local_path))
+        try:
+            repo = Repo(str(local_path))
+            repo.remotes.origin.pull()
+        except (InvalidGitRepositoryError, GitCommandError) as e:
+            # The existing directory is not a valid git repo or there was an error pulling, clone anew
+            logger.error(f"Error occurred during cloning or pulling the repository: {e}")
+            Repo.clone_from(git_url, str(local_path))
+    else:
+        Repo.clone_from(git_url, str(local_path))
+        try:
+            repo = Repo(str(local_path))
+            repo.remotes.origin.pull()
+        except (InvalidGitRepositoryError, GitCommandError) as e:
+            # The existing directory is not a valid git repo or there was an error pulling, clone anew
+            logger.error(f"Error occurred during cloning or pulling the repository: {e}")
+            Repo.clone_from(git_url, str(local_path))
+    else:
+        Repo.clone_from(git_url, str(local_path))
+        try:
+            repo = Repo(str(local_path))
+            repo.remotes.origin.pull()
+        except (InvalidGitRepositoryError, GitCommandError) as e:
+            # The existing directory is not a valid git repo or there was an error pulling, clone anew
+            logger.error(f"Error occurred during cloning or pulling the repository: {e}")
+            Repo.clone_from(git_url, str(local_path))
+    else:
+        Repo.clone_from(git_url, str(local_path))
+        try:
+            repo = Repo(str(local_path))
+            repo.remotes.origin.pull()
+        except (InvalidGitRepositoryError, GitCommandError) as e:
+            # The existing directory is not a valid git repo or there was an error pulling, clone anew
+            logger.error(f"Error occurred during cloning or pulling the repository: {e}")
+            Repo.clone_from(git_url, str(local_path))
+    else:
+        Repo.clone_from(git_url, str(local_path))
+        try:
+            repo = Repo(str(local_path))
+            repo.remotes.origin.pull()
+        except (InvalidGitRepositoryError, GitCommandError) as e:
+            # The existing directory is not a valid git repo or there was an error pulling, clone anew
+            logger.error(f"Error occurred during cloning or pulling the repository: {e}")
+            Repo.clone_from(git_url, str(local_path))
+    else:
+        Repo.clone_from(git_url, str(local_path))
