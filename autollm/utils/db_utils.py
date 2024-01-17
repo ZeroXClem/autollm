@@ -28,6 +28,15 @@ def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = '
     # Initialize client
     url = read_env_variable('QDRANT_URL')
     api_key = read_env_variable('QDRANT_API_KEY')
+    
+    client = QdrantClient(url=url, api_key=api_key)
+    
+    # Convert string distance measure to Distance Enum equals to Distance.EUCLID
+    distance = Distance[distance]
+    
+    # Create index
+    client.recreate_collection(
+        collection_name=index_name, vectors_config=VectorParams(size=size, distance=distance))
 
     client = QdrantClient(url=url, api_key=api_key)
 
@@ -59,7 +68,6 @@ def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: S
     Parameters:
         vector_store_index: An instance of AutoVectorStoreIndex or any compatible vector store.
         documents (Sequence[Document]): List of documents to update.
-
     Returns:
         None
     """
