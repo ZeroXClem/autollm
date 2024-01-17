@@ -13,8 +13,8 @@ def initialize_pinecone_index(
     import pinecone
 
     # Read environment variables for Pinecone initialization
-    api_key = read_env_variable('PINECONE_API_KEY')
-    environment = read_env_variable('PINECONE_ENVIRONMENT')
+    api_key = read_env_variable('PINECONE_API_KEY', logger=logger)
+    environment = read_env_variable('PINECONE_ENVIRONMENT', logger=logger)
 
     # Initialize Pinecone
     pinecone.init(api_key=api_key, environment=environment)
@@ -27,8 +27,8 @@ def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = '
     from qdrant_client.models import Distance, VectorParams
 
     # Initialize client
-    url = read_env_variable('QDRANT_URL')
-    api_key = read_env_variable('QDRANT_API_KEY')
+    url = read_env_variable('QDRANT_URL', logger=logger)
+    api_key = read_env_variable('QDRANT_API_KEY', logger=logger)
 
     client = QdrantClient(url=url, api_key=api_key)
 
@@ -145,7 +145,7 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
 #         None
 
 #     Note:
-#         Ensure that the 'documents' list includes all documents that should remain in the database, as any missing items will be deleted.
+#         Ensure that the 'documents' list includes all documents that should remain in the vector store, as any missing items will be deleted.
 #     """
 #     logger.info('Updating vector store')
 
