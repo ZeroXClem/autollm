@@ -385,7 +385,7 @@ ______________________________________________________________________
 
 ## 🏆 contributing
 
-**love autollm? star the repo or contribute and help us make it even better!** see our [contributing guidelines](CONTRIBUTING.md) for more information.
+**love autollm? star the repo or contribute and help us make it even better! See our [contributing guidelines](CONTRIBUTING.md) for more information.
 
 <p align="center">
     <a href="https://github.com/safevideo/autollm/graphs/contributors">
