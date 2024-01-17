@@ -107,6 +107,7 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
         None
     """
     # Check if there are any document IDs to delete.
+        # Check if there are any document IDs to delete.
     if not document_ids:
         return
 
