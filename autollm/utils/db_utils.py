@@ -52,7 +52,8 @@ def connect_vectorstore(vector_store, **params):
     if isinstance(vector_store, PineconeVectorStore):
         vector_store.pinecone_index = pinecone.Index(params['index_name'])
     elif isinstance(vector_store, QdrantVectorStore):
-        vector_store.client = QdrantClient(url=params['url'], api_key=params['api_key'])
+        client = QdrantClient(url=params['url'], api_key=params['api_key'])
+        vector_store.client = client
     # TODO: Add more elif conditions for other vector stores as needed
 
 
