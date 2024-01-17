@@ -88,6 +88,10 @@ def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
     storage_context = StorageContext.from_defaults(vector_store=vector_store)
 
     # Create index, which will insert documents/vectors to vector store
+    # Create storage context
+    storage_context = StorageContext.from_defaults(vector_store=vector_store)
+
+    # Create index, which will insert documents/vectors to vector store
     _ = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
 
 
