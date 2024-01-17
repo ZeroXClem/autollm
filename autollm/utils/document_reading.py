@@ -52,7 +52,7 @@ def read_files_as_documents(
         input_dir=input_dir,
         exclude_hidden=exclude_hidden,
         file_extractor=file_extractor,
-        input_files=input_files,
+        input_files=input_files,file_extractor=file_extractor,required_exts=[".md", ".pdf", ".html", ".htm", ".txt"],
         filename_as_id=filename_as_id,
         recursive=recursive,
         required_exts=required_exts,
