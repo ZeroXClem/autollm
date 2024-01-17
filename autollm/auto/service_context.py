@@ -39,7 +39,7 @@ class AutoServiceContext:
             enable_qa_extractor: bool = False,
             enable_keyword_extractor: bool = False,
             enable_entity_extractor: bool = False,
-            **kwargs) -> ServiceContext:
+            **kwargs, callback_manager: CallbackManager = None) -> ServiceContext:
         """
         Create a ServiceContext with default parameters with extended enable_token_counting functionality. If
         enable_token_counting is True, tracks the number of tokens used by the LLM for each query.
@@ -62,7 +62,7 @@ class AutoServiceContext:
 
         Returns:
             ServiceContext: The initialized ServiceContext from default parameters with extra token counting functionality.
-        """
+  """
         if not system_prompt and not query_wrapper_prompt:
             system_prompt, query_wrapper_prompt = set_default_prompt_template()
         # Convert system_prompt to ChatPromptTemplate if it is a string
