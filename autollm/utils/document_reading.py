@@ -24,7 +24,7 @@ def read_files_as_documents(
         required_exts: Optional[List[str]] = None,
         show_progress: bool = True,
         raise_error_on_failure: bool = False,
-        **kwargs) -> Sequence[Document]:
+        **kwargs) -> Optional[Sequence[Document]]:
     """
     Process markdown files to extract documents using SimpleDirectoryReader.
 
@@ -36,11 +36,16 @@ def read_files_as_documents(
         recursive (bool): Whether to recursively search for files in the input directory.
         required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
 
-    Returns:
+    Yields:
         documents (Sequence[Document]): A sequence of Document objects.
     """
-    # Configure file_extractor to use MarkdownReader for md files
+    from llama_index.errors import DocumentExtractionError
+
+# Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
+    ".md": MarkdownReader(read_as_single_doc=True),
+    ".pdf": LangchainPDFReader(extract_images=False),
+    ".docx": LangchainDOCXReader(),
         ".md": MarkdownReader(read_as_single_doc=True),
         ".pdf": LangchainPDFReader(extract_images=False)
     }
@@ -60,7 +65,11 @@ def read_files_as_documents(
         f"Reading files {input_files}..")
 
     # Read and process the documents
-    documents = reader.load_data(show_progress=show_progress)
+    try:
+        documents = reader.load_data(show_progress=show_progress)
+    except Exception as e:
+        logger.error(f'Error loading documents: {str(e)}')
+        return None
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
     return documents
@@ -90,7 +99,9 @@ def read_github_repo_as_documents(
     Parameters:
         git_repo_url (str): The URL of the GitHub repository.
         relative_folder_path (str, optional): The relative path from the repo root to the folder containing documents.
-        required_exts (Optional[List[str]]): List of required extensions.
+        raise DocumentExtractionError(f'Error extracting documents from {git_repo_url}') from e
+        else:
+            logger.info('Document extraction complete.')
 
     Returns:
         Sequence[Document]: A sequence of Document objects.
@@ -110,12 +121,15 @@ def read_github_repo_as_documents(
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
 
         # Read and process the documents
-        documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+        try:
+            documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+        except Exception as e:
+            raise DocumentExtractionError(f'Error reading documents from {docs_path}') from e
         # Logging (assuming logger is configured)
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     finally:
         # Delete the temporary directory
-        shutil.rmtree(temp_dir, onerror=on_rm_error)
+        shutil.rmtree(temp_dir)
 
     return documents
 
