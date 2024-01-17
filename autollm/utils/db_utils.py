@@ -49,7 +49,12 @@ def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = '
 
 
 def connect_vectorstore(vector_store, **params):
-    """Connect to an existing vector store."""
+    """Connect to an existing vector store.
+
+    if isinstance(vector_store, PineconeVectorStore):
+        vector_store.pinecone_index = pinecone.Index(params['index_name'])
+    elif isinstance(vector_store, QdrantVectorStore):
+        vector_store.client = QdrantClient(url=params['url'], api_key=params['api_key'])"""
     import pinecone
     from qdrant_client import QdrantClient
 
