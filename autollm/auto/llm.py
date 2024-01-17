@@ -10,7 +10,7 @@ class AutoLiteLLM:
     """
 
     @staticmethod
-    def from_defaults(
+    def from_defaults_api_api(
             model: str = "gpt-3.5-turbo",
             max_tokens: Optional[int] = 256,
             temperature: float = 0.1,
