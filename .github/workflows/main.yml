@@ -1,0 +1,36 @@
+import yaml
+
+def add_step(workflow_file_path, step):
+    with open(workflow_file_path, 'r') as file:
+        workflow_data = yaml.safe_load(file)
+
+    steps = workflow_data['jobs']['build']['steps']
+    steps.insert(0, step)
+
+    with open(workflow_file_path, 'w') as file:
+        yaml.dump(workflow_data, file)
+
+def install_git_package(git_package_version):
+    return {
+        'name': 'Install git package',
+        'uses': 'actions/setup-python@v2',
+        'with': {
+            'python-version': '3.x',
+            'packages': git_package_version
+        }
+    }
+
+def clone_repository():
+    return {
+        'name': 'Checkout repository',
+        'uses': 'actions/checkout@v2'
+    }
+
+workflow_file_path = '.github/workflows/main.yml'
+git_package_version = 'gitpython==3.1.37'
+
+step = install_git_package(git_package_version)
+add_step(workflow_file_path, step)
+
+step = clone_repository()
+add_step(workflow_file_path, step)
