@@ -73,7 +73,7 @@ def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: S
         vector_store_index.insert(document)
 
 
-def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
+def overwrite_vectorindex(vector_store, documents: Sequence[Document], storage_context: StorageContext):
     """
     Overwrite the vector store index with new documents.
 
