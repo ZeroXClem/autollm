@@ -1,17 +1,20 @@
 import os
 import shutil
 import stat
+import shutil
+import stat
 from pathlib import Path
 from typing import Callable, List, Optional, Sequence, Tuple
 
 from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
-from autollm.utils.git_utils import clone_or_pull_repository
+from autollm.utils.git_utils import clone_or_pull_repository, on_rm_error
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
+from autollm.utils.document_reading import read_files_as_documents
 from autollm.utils.website_reader import WebSiteReader
 
 
@@ -103,13 +106,16 @@ def read_github_repo_as_documents(
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
-        clone_or_pull_repository(git_repo_url, temp_dir)
+        clone_result = clone_or_pull_repository(git_repo_url, temp_dir)
+        if clone_result is not None:
+            logger.info('Cloning or pulling successful.')
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
 
         # Read and process the documents
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+        if documents:
         # Logging (assuming logger is configured)
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     finally:
