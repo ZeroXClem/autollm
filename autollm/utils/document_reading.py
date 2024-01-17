@@ -41,7 +41,10 @@ def read_files_as_documents(
     # Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
         ".md": MarkdownReader(read_as_single_doc=True),
-        ".pdf": LangchainPDFReader(extract_images=False)
+        ".pdf": LangchainPDFReader(extract_images=False),
+    ".html": WebPageReader(),
+    ".htm": WebPageReader(),
+    ".txt": MarkdownReader(read_as_single_doc=True)
     }
 
     # Initialize SimpleDirectoryReader
