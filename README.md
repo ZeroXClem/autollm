@@ -72,6 +72,15 @@ ______________________________________________________________________
 
   - quickstart: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/safevideo/autollm/blob/main/examples/quickstart.ipynb)
 
+## 📦 Installation
+
+You can easily install the required dependencies using the following command:
+
+```bash
+pip install -r requirements.txt
+```
+
+
 ### create a query engine in seconds
 
 ```python
@@ -353,6 +362,14 @@ which allows for commercial use under certain conditions. [Contact](#contact) us
 
 ______________________________________________________________________
 
+## 📦 Installation
+
+To get started, you need to install the required dependencies by running the following command:
+
+```bash
+pip install -r requirements.txt
+```
+
 ## roadmap
 
 our roadmap outlines upcoming features and integrations to make autollm the most extensible and powerful base package for large language model applications.
@@ -396,7 +413,15 @@ ______________________________________________________________________
 ______________________________________________________________________
 
 <div align="center">
-  <b>follow us for more!</b>
+  <b>follow us for more!
+
+## 📦 Installation
+
+To install the required dependencies, refer to the `requirements.txt` file included in the repository. Use the following command to install the dependencies:
+
+```bash
+pip install -r requirements.txt
+```</b>
   <br>
   <a href="https://www.linkedin.com/company/safevideo/">
       <img
