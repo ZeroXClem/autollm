@@ -1,6 +1,9 @@
 # db_utils.py
 from typing import Sequence
 
+import pinecone
+from autollm.utils.env_utils import read_env_variable
+
 from llama_index import Document, StorageContext, VectorStoreIndex
 from llama_index.vector_stores import PineconeVectorStore, QdrantVectorStore
 
@@ -8,7 +11,7 @@ from autollm.utils.env_utils import read_env_variable
 from autollm.utils.logging import logger
 
 
-def initialize_pinecone_index(
+def initialize_pinecone_index(pinecone_api_key, pinecone_environment,
         index_name: str, dimension: int = 1536, metric: str = 'euclidean', pod_type: str = 'p1'):
     import pinecone
 
