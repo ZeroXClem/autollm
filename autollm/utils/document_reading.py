@@ -170,3 +170,16 @@ def read_webpage_as_documents(url: str) -> List[Document]:
     reader = WebPageReader()
     documents = reader.load_data(url)
     return documents
+def read_webpage_as_documents(url: str) -> List[Document]:
+    """
+    Read documents from a single webpage URL using the WebPageReader.
+
+    Parameters:
+        url (str): The URL of the web page to read.
+
+    Returns:
+        List[Document]: A list of Document objects containing content and metadata from the web page.
+    """
+    reader = WebPageReader()
+    documents = reader.load_data(url)
+    return documents
