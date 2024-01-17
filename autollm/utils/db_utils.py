@@ -70,7 +70,7 @@ def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: S
     """
     for document in documents:
         delete_documents_by_id(vector_store_index, [document.id_])
-        vector_store_index.insert(document)
+    vector_store_index.insert(document)
 
 
 def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
