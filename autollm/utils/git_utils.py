@@ -4,6 +4,20 @@ from autollm.utils.logging import logger
 
 
 def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
+    try:
+        from git import InvalidGitRepositoryError, Repo
+        if local_path.exists():
+            try:
+                repo = Repo(str(local_path))
+                repo.remotes.origin.pull()
+            except InvalidGitRepositoryError as e:
+                logger.error(f'Invalid Git repository: {e}')
+                raise
+        else:
+            Repo.clone_from(git_url, str(local_path))
+    except ImportError as e:
+        logger.error(f'Failed to import GitPython: {e}')
+        raise
     """
     Clone a Git repository or pull latest changes if it already exists.
 
