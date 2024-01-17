@@ -40,8 +40,12 @@ def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = '
     distance = Distance[distance]
 
     # Create index
-    client.recreate_collection(
+    try:
+        client.recreate_collection(
         collection_name=index_name, vectors_config=VectorParams(size=size, distance=distance))
+    except Exception as e:
+        logger.error(f'Failed to initialize Qdrant index: {str(e)}')
+        raise ValueError('Failed to initialize Qdrant index')
 
 
 def connect_vectorstore(vector_store, **params):
