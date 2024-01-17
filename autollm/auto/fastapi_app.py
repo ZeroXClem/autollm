@@ -39,7 +39,7 @@ class AutoFastAPI:
         /query that takes a QueryPayload and returns a QueryResponse.
 
         ```python
-        from autollm.auto.fastapi_app import QueryPayload, AutoFastAPI
+        from autollm.auto.fastapi_app import QueryPayload, AutoFastAPIConfig
         import uvicorn
         import requests
 
@@ -73,7 +73,7 @@ class AutoFastAPI:
         if task_name_to_query_engine is None and config_file_path is None:
             raise ValueError("Either config_file_path or task_name_to_query_engine must be provided")
 
-        if task_name_to_query_engine is not None and config_file_path is not None:
+        if task_name_to_query_engine or config_file_path is not None:
             raise ValueError("Only one of config_file_path or task_name_to_query_engine must be provided")
 
         if task_name_to_query_engine is not None and not isinstance(task_name_to_query_engine, dict):
@@ -106,7 +106,7 @@ class AutoFastAPI:
 
             # Check if the response should be streamed
             if payload.streaming:
-                return StreamingResponse(stream_text_data(response.response))
+                return StreamingResponse(content=stream_text_data(response.response), media_type='text/plain')
 
             return response.response
 

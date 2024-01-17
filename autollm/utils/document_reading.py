@@ -18,8 +18,8 @@ from autollm.utils.website_reader import WebSiteReader
 def read_files_as_documents(
         input_dir: Optional[str] = None,
         input_files: Optional[List] = None,
-        exclude_hidden: bool = True,
-        filename_as_id: bool = True,
+        exclude_hidden: bool = False,
+        filename_as_id: bool = False,
         recursive: bool = True,
         required_exts: Optional[List[str]] = None,
         show_progress: bool = True,

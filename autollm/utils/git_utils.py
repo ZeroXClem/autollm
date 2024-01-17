@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from autollm.utils.logging import logger
+import logging
 
 
 def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
@@ -15,7 +15,7 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
     try:
         from git import InvalidGitRepositoryError, Repo
     except ImportError:
-        logger.error(
+        logging.getLogger('autollm').error(
             'GitPython is not installed. Please "pip install gitpython==3.1.37" to use this feature.')
         raise
 
