@@ -18,6 +18,7 @@ from autollm.utils.website_reader import WebSiteReader
 def read_files_as_documents(
         input_dir: Optional[str] = None,
         input_files: Optional[List] = None,
+        show_progress: bool = True,
         exclude_hidden: bool = True,
         filename_as_id: bool = True,
         recursive: bool = True,
@@ -76,7 +77,10 @@ def on_rm_error(func: Callable, path: str, exc_info: Tuple):
         exc_info (Tuple): Exception information returned by sys.exc_info().
     """
     os.chmod(path, stat.S_IWRITE)
-    os.unlink(path)
+    try:
+        os.unlink(path)
+    except Exception as e:
+        logger.error(f"Error occurred while removing {path}: {e}")
 
 
 def read_github_repo_as_documents(
