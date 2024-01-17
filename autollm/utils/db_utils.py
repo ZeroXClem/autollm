@@ -12,7 +12,6 @@ def initialize_pinecone_index(
         index_name: str, dimension: int = 1536, metric: str = 'euclidean', pod_type: str = 'p1'):
     import pinecone
 
-    # Read environment variables for Pinecone initialization
     api_key = read_env_variable('PINECONE_API_KEY')
     environment = read_env_variable('PINECONE_ENVIRONMENT')
 
@@ -29,6 +28,15 @@ def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = '
     # Initialize client
     url = read_env_variable('QDRANT_URL')
     api_key = read_env_variable('QDRANT_API_KEY')
+    
+    client = QdrantClient(url=url, api_key=api_key)
+    
+    # Convert string distance measure to Distance Enum equals to Distance.EUCLID
+    distance = Distance[distance]
+    
+    # Create index
+    client.recreate_collection(
+        collection_name=index_name, vectors_config=VectorParams(size=size, distance=distance))
 
     client = QdrantClient(url=url, api_key=api_key)
 
@@ -41,7 +49,12 @@ def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = '
 
 
 def connect_vectorstore(vector_store, **params):
-    """Connect to an existing vector store."""
+    """Connect to an existing vector store.
+
+    if isinstance(vector_store, PineconeVectorStore):
+        vector_store.pinecone_index = pinecone.Index(params['index_name'])
+    elif isinstance(vector_store, QdrantVectorStore):
+        vector_store.client = QdrantClient(url=params['url'], api_key=params['api_key'])"""
     import pinecone
     from qdrant_client import QdrantClient
 
@@ -60,7 +73,6 @@ def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: S
     Parameters:
         vector_store_index: An instance of AutoVectorStoreIndex or any compatible vector store.
         documents (Sequence[Document]): List of documents to update.
-
     Returns:
         None
     """
