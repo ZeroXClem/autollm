@@ -1,11 +1,14 @@
 from pathlib import Path
+import os
+import stat
+import shutil
 
 from autollm.utils.logging import logger
 
 
 def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
     """
-    Clone a Git repository or pull latest changes if it already exists.
+    Clone a Git repository or pull latest changes if it already exists. Also handles errors and logs error messages appropriately.
 
     Parameters:
         git_url (str): The URL of the Git repository.
