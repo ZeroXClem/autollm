@@ -128,7 +128,7 @@ def read_github_repo_as_documents(
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
         # Logging (assuming logger is configured)
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
-    except (InvalidGitRepositoryError, GitCommandError) as e:
+    except (InvalidGitRepositoryError, GitCommandError, Exception) as e:
         # Add error handling to catch and log exceptions
         logger.error(f"An error occurred during cloning or pulling: {e}")
         raise
