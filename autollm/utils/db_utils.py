@@ -16,6 +16,10 @@ def initialize_pinecone_index(
     api_key = read_env_variable('PINECONE_API_KEY')
     environment = read_env_variable('PINECONE_ENVIRONMENT')
 
+    # Read environment variables for Pinecone initialization
+    api_key = read_env_variable('PINECONE_API_KEY')
+    environment = read_env_variable('PINECONE_ENVIRONMENT')
+
     # Initialize Pinecone
     pinecone.init(api_key=api_key, environment=environment)
     pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
@@ -36,8 +40,7 @@ def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = '
     distance = Distance[distance]
 
     # Create index
-    client.recreate_collection(
-        collection_name=index_name, vectors_config=VectorParams(size=size, distance=distance))
+    client.create_collection(collection_name=index_name, vectors_config=VectorParams(size=size, distance=distance))
 
 
 def connect_vectorstore(vector_store, **params):
@@ -49,7 +52,8 @@ def connect_vectorstore(vector_store, **params):
     if isinstance(vector_store, PineconeVectorStore):
         vector_store.pinecone_index = pinecone.Index(params['index_name'])
     elif isinstance(vector_store, QdrantVectorStore):
-        vector_store.client = QdrantClient(url=params['url'], api_key=params['api_key'])
+        client = QdrantClient(url=params['url'], api_key=params['api_key'])
+        vector_store.client = client
     # TODO: Add more elif conditions for other vector stores as needed
 
 
@@ -66,7 +70,7 @@ def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: S
     """
     for document in documents:
         delete_documents_by_id(vector_store_index, [document.id_])
-        vector_store_index.insert(document)
+    vector_store_index.insert(document)
 
 
 def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
@@ -80,6 +84,10 @@ def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
     Returns:
         None
     """
+    # Create storage context
+    storage_context = StorageContext.from_defaults(vector_store=vector_store)
+
+    # Create index, which will insert documents/vectors to vector store
     # Create storage context
     storage_context = StorageContext.from_defaults(vector_store=vector_store)
 
@@ -99,6 +107,7 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
         None
     """
     # Check if there are any document IDs to delete.
+        # Check if there are any document IDs to delete.
     if not document_ids:
         return
 

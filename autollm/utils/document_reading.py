@@ -111,10 +111,10 @@ def read_github_repo_as_documents(
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
 
     try:
-        # Specify the path to the documents
-        docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
+        # Clone or pull the GitHub repository to get the latest documents
+        clone_or_pull_repository(git_repo_url, temp_dir)
 
-        # Read and process the documents
+        # Delete the temporary directory
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
         # Logging (assuming logger is configured)
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
@@ -128,7 +128,7 @@ def read_github_repo_as_documents(
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
         # Logging (assuming logger is configured)
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
-    except (InvalidGitRepositoryError, GitCommandError) as e:
+    except (InvalidGitRepositoryError, GitCommandError, Exception) as e:
         # Add error handling to catch and log exceptions
         logger.error(f"An error occurred during cloning or pulling: {e}")
         raise
@@ -158,7 +158,7 @@ def read_website_as_documents(
     Raises:
         ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
     """
-    if (parent_url is None and sitemap_url is None) or (parent_url is not None and sitemap_url is not None):
+    if parent_url is None or sitemap_url is None:
         raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
 
     reader = WebSiteReader()
