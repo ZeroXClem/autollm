@@ -24,6 +24,10 @@ def read_files_as_documents(
         required_exts: Optional[List[str]] = None,
         show_progress: bool = True,
         **kwargs) -> Sequence[Document]:
+        try:
+    
+        except Exception as e:
+            logger.error(f"An error occurred while processing documents: {str(e)}")
     """
     Process markdown files to extract documents using SimpleDirectoryReader.
 
