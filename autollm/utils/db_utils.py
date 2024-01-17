@@ -12,7 +12,6 @@ def initialize_pinecone_index(
         index_name: str, dimension: int = 1536, metric: str = 'euclidean', pod_type: str = 'p1'):
     import pinecone
 
-    # Read environment variables for Pinecone initialization
     api_key = read_env_variable('PINECONE_API_KEY')
     environment = read_env_variable('PINECONE_ENVIRONMENT')
 
