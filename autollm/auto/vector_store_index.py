@@ -12,8 +12,16 @@ def import_vector_store_class(vector_store_class_name: str):
     Returns:
         The imported VectorStore class.
     """
-    module = __import__("llama_index.vector_stores", fromlist=[vector_store_class_name])
-    class_ = getattr(module, vector_store_class_name)
+    try:
+        module = __import__("llama_index.vector_stores", fromlist=[vector_store_class_name])
+    except ImportError as e:
+        print(f'Error occurred during vector store class import: {str(e)}')
+        raise
+    try:
+        class_ = getattr(module, vector_store_class_name)
+    except AttributeError as e:
+        print(f'Error occurred during getting vector store class: {str(e)}')
+        raise
     return class_
 
 
