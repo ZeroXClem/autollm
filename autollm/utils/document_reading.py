@@ -1,3 +1,4 @@
+"""Additions for error handling."""
 import os
 import shutil
 import stat
@@ -13,6 +14,7 @@ from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
+from git import InvalidGitRepositoryError, Repo, GitCommandError
 
 
 def read_files_as_documents(
@@ -89,6 +91,8 @@ def read_github_repo_as_documents(
     Parameters:
         git_repo_url (str): The URL of the GitHub repository.
         relative_folder_path (str, optional): The relative path from the repo root to the folder containing documents.
+:param required_exts (Optional[List[str]]): List of required extensions.
+:return: A sequence of Document objects, representing the documents cloned from the GitHub repository
         required_exts (Optional[List[str]]): List of required extensions.
 
     Returns:
@@ -99,7 +103,7 @@ def read_github_repo_as_documents(
     temp_dir = Path("autollm/temp/")
     temp_dir.mkdir(parents=True, exist_ok=True)
 
-    logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
+    logger.info(f"Cloning GitHub repository {git_repo_url} into temporary directory {temp_dir}..")
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
@@ -108,10 +112,15 @@ def read_github_repo_as_documents(
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
 
-        # Read and process the documents
-        documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+        # Read and process the documents from the cloned repository
+        try:
+            documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+            logger.info(f"Reading and processing documents from {git_repo_url}..")
+        except Exception as e:
+            logger.error(f"Error reading and processing documents from {git_repo_url}: {e}")
         # Logging (assuming logger is configured)
-        logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
+        logger.info(f"Process complete, deleting temporary directory {temp_dir}..")
+    # Logging the status of the clonning and reading processes
     finally:
         # Delete the temporary directory
         shutil.rmtree(temp_dir, onerror=on_rm_error)

@@ -12,6 +12,9 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
         local_path (Path): The local path where the repository will be cloned or updated.
     """
     # Lazy import to avoid dependency on GitPython
+    from git import GitCommandError, InvalidGitRepositoryError, Repo
+
+# Lazy import to avoid dependency on GitPython
     try:
         from git import InvalidGitRepositoryError, Repo
     except ImportError:
