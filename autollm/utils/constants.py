@@ -1,4 +1,5 @@
 DEFAULT_VECTORE_STORE_TYPE = 'pinecone'
+ACCOUNT_ID = 'your_account_id'
 DEFAULT_INDEX_NAME = 'quickstart'
 DEFAULT_LLM_CLASS_NAME = 'OpenAI'
 
