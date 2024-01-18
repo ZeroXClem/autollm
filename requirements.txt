@@ -5,3 +5,9 @@ fastapi
 python-dotenv
 httpx
 lancedb==0.3.3
+
+# New Dependencies
+
+# GitPython
+
+gitpython==3.1.37
