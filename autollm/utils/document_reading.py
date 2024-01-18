@@ -2,12 +2,12 @@ import os
 import shutil
 import stat
 from pathlib import Path
-from typing import Callable, List, Optional, Sequence, Tuple
+<relevant_file file_path="tests/test_document_reading.py">from typing import Callable, List, Optional, Sequence, Tuple
 
 from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
-from autollm.utils.git_utils import clone_or_pull_repository
+from autollm.utils.git_utils import <relevant_file file_path="tests/test_document_reading.py"><relevant_file file_path="tests/test_document_reading.py">fetch_github_repository
 import logging
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
