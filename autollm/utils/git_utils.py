@@ -13,6 +13,9 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
     """
     # Lazy import to avoid dependency on GitPython
     try:
+        import git
+        import shutil
+        import stat
         from git import InvalidGitRepositoryError, Repo
     except ImportError:
         logger.error(
@@ -26,5 +29,10 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
         except InvalidGitRepositoryError:
             # The existing directory is not a valid git repo, clone anew
             Repo.clone_from(git_url, str(local_path))
+        except Exception as e:
+            logger.error(f"An error occurred during cloning or pulling the repository: {e}")
     else:
-        Repo.clone_from(git_url, str(local_path))
+        try:
+            Repo.clone_from(git_url, str(local_path))
+        except Exception as e:
+            logger.error(f"An error occurred during cloning the repository: {e}")
