@@ -1,5 +1,7 @@
 import os
+import git
 import shutil
+import stat
 import stat
 from pathlib import Path
 from typing import Callable, List, Optional, Sequence, Tuple
@@ -8,10 +10,12 @@ from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
+from autollm.utils.logging import logger
 import git
 import shutil
 import stat
 from autollm.utils.logging import logger
+from llama_index.readers.file.markdown import MarkdownReader
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
@@ -87,7 +91,7 @@ def read_github_repo_as_documents(
         relative_folder_path: Optional[str] = None,
         required_exts: Optional[List[str]] = None) -> Sequence[Document]:
     """
-    A document provider that fetches documents from a specific folder within a GitHub repository.
+    A document provider that fetches documents from a specific folder within a GitHub repository and returns a sequence of Document objects or None if an error occurs.
 
     Parameters:
         git_repo_url (str): The URL of the GitHub repository.
@@ -102,7 +106,12 @@ def read_github_repo_as_documents(
     temp_dir = Path("autollm/temp/")
     temp_dir.mkdir(parents=True, exist_ok=True)
 
-    logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
+    try:
+        # Clone or pull the GitHub repository to get the latest documents
+        clone_or_pull_repository(git_repo_url, temp_dir)
+
+        # Specify the path to the documents
+        docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
