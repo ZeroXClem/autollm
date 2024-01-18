@@ -1,7 +1,7 @@
 from autollm.utils.templates import QUERY_PROMPT_TEMPLATE, SYSTEM_PROMPT
 
 
-def set_default_prompt_template():
+def query_wrapper_prompt(fix_failing_actions=False):
     """
     Sets the default prompt templates for the query engine.
 
