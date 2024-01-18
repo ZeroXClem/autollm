@@ -101,7 +101,13 @@ def read_github_repo_as_documents(
     temp_dir.mkdir(parents=True, exist_ok=True)
 
         logger = logging.getLogger(__name__)
-    logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
+    try:
+        return [] 
+    finally:
+        # Add finally block to handle cleanup
+        logger.info(f'Deleting temporary directory {temp_dir}..')
+        shutil.rmtree(temp_dir, onerror=on_rm_error)
+    return documents
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
@@ -113,7 +119,9 @@ def read_github_repo_as_documents(
         # Read and process the documents
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
         # Logging (assuming logger is configured)
-        logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
+    except Exception as e:
+        logger.error(f'Error in cloning or pulling the GitHub repository: {e}')
+        return []
     finally:
         # Delete the temporary directory
         shutil.rmtree(temp_dir, onerror=on_rm_error)
@@ -170,5 +178,9 @@ def read_webpage_as_documents(url: str) -> List[Document]:
         List[Document]: A list of Document objects containing content and metadata from the web page.
     """
     reader = WebPageReader()
-    documents = reader.load_data(url)
-    return documents
+    try:
+        documents = reader.load_data(url)
+        return documents
+    except Exception as e:
+        logger.error(f'Error in reading the web page: {e}')
+        return []
