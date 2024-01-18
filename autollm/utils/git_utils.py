@@ -13,6 +13,7 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
     """
     # Lazy import to avoid dependency on GitPython
     try:
+        import logging
         from git import InvalidGitRepositoryError, Repo
     except ImportError:
         logger.error(
@@ -28,3 +29,10 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
             Repo.clone_from(git_url, str(local_path))
     else:
         Repo.clone_from(git_url, str(local_path))
+    logger.info(f"Pulling latest changes from {git_url} into {local_path}..")
+    repo.remotes.origin.pull()
+    logger.info("Pull successful.")
+except InvalidGitRepositoryError:
+    logger.info(f"Cloning {git_url} into {local_path}..")
+    Repo.clone_from(git_url, str(local_path))
+    logger.info("Clone successful.")
