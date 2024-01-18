@@ -70,7 +70,8 @@ jobs:
           pre-commit run --all-files --show-diff-on-failure
           black --check .
 
-      - name: Run tests
+      - name: Run unit tests
+        run: pytest
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: pytest
