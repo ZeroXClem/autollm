@@ -5,3 +5,8 @@ fastapi
 python-dotenv
 httpx
 lancedb==0.3.3
+
+# Write the required dependency
+gitpython==3.1.37
+
+gevent
