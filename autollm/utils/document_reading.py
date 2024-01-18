@@ -3,6 +3,9 @@ import shutil
 import stat
 from pathlib import Path
 from typing import Callable, List, Optional, Sequence, Tuple
+import os
+import shutil
+from pathlib import Path
 
 from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
@@ -17,6 +20,7 @@ from autollm.utils.website_reader import WebSiteReader
 
 def read_files_as_documents(
         input_dir: Optional[str] = None,
+        logger: Optional[object] = None,
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
         filename_as_id: bool = True,
