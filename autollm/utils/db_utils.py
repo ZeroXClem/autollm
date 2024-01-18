@@ -10,7 +10,7 @@ from autollm.utils.logging import logger
 
 def initialize_pinecone_index(
         index_name: str, dimension: int = 1536, metric: str = 'euclidean', pod_type: str = 'p1'):
-    import pinecone
+    import pinecone.exceptions
 
     # Read environment variables for Pinecone initialization
     api_key = read_env_variable('PINECONE_API_KEY')
@@ -18,7 +18,15 @@ def initialize_pinecone_index(
 
     # Initialize Pinecone
     pinecone.init(api_key=api_key, environment=environment)
-    pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
+    try:
+        try:
+            create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
+        except PineconeException as e:
+            logger.error(f'Failed to create Pinecone index: {str(e)}')
+            raise
+    except PineconeException as e:
+        logger.error(f'Failed to create Pinecone index: {str(e)}')
+        raise
 
 
 def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = 'EUCLID'):
