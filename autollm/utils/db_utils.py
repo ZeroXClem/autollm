@@ -106,11 +106,8 @@ def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
     Returns:
         None
     """
-    # Create storage context
-    storage_context = StorageContext.from_defaults(vector_store=vector_store)
-
-    # Create index, which will insert documents/vectors to vector store
-    _ = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
+def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
+    try:
 
 
 def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: Sequence[str]):
