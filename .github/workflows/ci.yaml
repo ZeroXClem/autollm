@@ -61,10 +61,11 @@ jobs:
         run: >
           pip install -e .[dev,readers]
 
-      - name: Check styling with pre-commit
+      - name: Check formatting
         run: |
           pre-commit install
           pre-commit run --all-files --show-diff-on-failure
+          black --check .
 
       - name: Run tests
         env:
