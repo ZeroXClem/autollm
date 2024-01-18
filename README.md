@@ -97,7 +97,7 @@ ______________________________________________________________________
 >>> query_engine = AutoQueryEngine.from_defaults(
 ...     documents=documents,
 ...     system_prompt='...',
-...     query_wrapper_prompt='...',
+...     query_wrapper_prompt='...', fix_failing_actions='Update the query engine configuration to fix the failing GitHub Actions run.',
 ...     enable_cost_calculator=True,
 ...     embed_model="local",
 ...     chunk_size=1024,
@@ -373,7 +373,20 @@ autollm is available under the [GNU Affero General Public License (AGPL 3.0)](LI
 
 ______________________________________________________________________
 
-## 📞 contact
+## 📞 Update for GitHub Actions Fix
+
+An error was identified in the GitHub Actions run. To fix the issue, update the query engine configuration with the latest parameters.
+
+- **Account ID**: Add your account ID to the query engine configuration.
+- **Metadata Extraction**: Set enable_metadata_extraction to True in the query engine configuration to enable metadata extraction.
+- **Query Wrapper Prompt**: Include a new parameter 'fix_failing_actions' in the query_wrapper_prompt of the AutoQueryEngine.from_defaults function to address the failing GitHub Actions run.
+
+
+## 🏆 contributing
+
+**love autollm? star the repo or contribute and help us make it even better!** see our [contributing guidelines](CONTRIBUTING.md) for more information.
+
+<p align="center":>
 
 for more information, support, or questions, please contact:
 

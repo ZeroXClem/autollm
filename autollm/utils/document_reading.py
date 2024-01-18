@@ -2,6 +2,14 @@ import os
 import shutil
 import stat
 from pathlib import Path
+from typing import Optional, Sequence, List
+from llama_index.schema import Document
+from autollm.utils.logging import logger
+from autollm.utils.git_utils import clone_or_pull_repository
+from autollm.utils.markdown_reader import MarkdownReader
+from autollm.utils.pdf_reader import LangchainPDFReader
+from autollm.utils.webpage_reader import WebPageReader
+from autollm.utils.website_reader import WebSiteReader
 from typing import Callable, List, Optional, Sequence, Tuple
 
 from llama_index.readers.file.base import SimpleDirectoryReader
@@ -23,7 +31,7 @@ def read_files_as_documents(
         recursive: bool = True,
         required_exts: Optional[List[str]] = None,
         show_progress: bool = True,
-        **kwargs) -> Sequence[Document]:
+        **kwargs) -> Optional[Sequence[Document]]:
     """
     Process markdown files to extract documents using SimpleDirectoryReader.
 
