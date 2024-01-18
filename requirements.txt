@@ -5,3 +5,18 @@ fastapi
 python-dotenv
 httpx
 lancedb==0.3.3
+
+# New dependencies
+
+# Requested change: Add GitPython
+
+# End of new dependencies
+# This file contains the required dependencies for the project.
+
+# New dependencies
+
+# Requested change: Create requirements.txt and add dependencies
+
+# End of new dependencies   
+gitpython==3.1.37
+   
