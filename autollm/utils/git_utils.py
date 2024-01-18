@@ -4,6 +4,11 @@ from autollm.utils.logging import logger
 
 
 def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
+    try:
+        from git import InvalidGitRepositoryError, Repo
+    except ImportError as e:
+        logger.error('Error occurred during cloning or pulling process: %s' % str(e))
+        raise
     """
     Clone a Git repository or pull latest changes if it already exists.
 
