@@ -115,7 +115,7 @@ def read_github_repo_as_documents(
         # Read and process the documents
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
         # Logging (assuming logger is configured)
-        logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
+        logger.info(f"Deleting temporary directory {temp_dir}..")
     except Exception as e:
         logger.error(f"An error occurred during cloning or reading documents: {e}")
 
