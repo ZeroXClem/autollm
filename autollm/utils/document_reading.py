@@ -15,7 +15,8 @@ from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
 
 
-def read_files_as_documents(
+def read_files_as_documents(exception_handler=
+        logger.error,
         input_dir: Optional[str] = None,
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
@@ -36,7 +37,15 @@ def read_files_as_documents(
         required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
 
     Returns:
-        documents (Sequence[Document]): A sequence of Document objects.
+        Try:
+        documents = reader.load_data(show_progress=show_progress)
+        logger.info(f"Found {len(documents)} 'document(s)'.")
+        return documents
+    except Exception as e:
+        exception_handler('An exception occurred while reading files:', exc_info=e)
+        return []
+
+documents (Sequence[Document]): A sequence of Document objects.
     """
     # Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
