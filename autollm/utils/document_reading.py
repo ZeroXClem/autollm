@@ -10,6 +10,15 @@ from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
+from typing import Callable, List, Optional, Sequence, Tuple
+from llama_index.schema import Document
+from autollm.utils.logging import logger
+import os
+import stat
+from pathlib import Path
+from autollm.utils.markdown_reader import MarkdownReader
+from autollm.utils.pdf_reader import LangchainPDFReader
+from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.logging import logger
 import git
 import shutil
@@ -24,7 +33,7 @@ from autollm.utils.website_reader import WebSiteReader
 
 def read_files_as_documents(
         input_dir: Optional[str] = None,
-        input_files: Optional[List] = None,
+        input_files: Optional[List[str]] = None,
         exclude_hidden: bool = True,
         filename_as_id: bool = True,
         recursive: bool = True,
@@ -38,6 +47,7 @@ def read_files_as_documents(
         input_dir (str): Path to the directory containing the markdown files.
         input_files (List): List of file paths.
         exclude_hidden (bool): Whether to exclude hidden files.
+    logger: Optional[Logger]: Logger instance for logging.
         filename_as_id (bool): Whether to use the filename as the document id.
         recursive (bool): Whether to recursively search for files in the input directory.
         required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
