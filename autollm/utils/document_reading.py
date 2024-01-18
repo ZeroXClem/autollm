@@ -108,6 +108,15 @@ def read_github_repo_as_documents(
     temp_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
+    try:
+        # Clone or pull the GitHub repository to get the latest documents
+        clone_or_pull_repository(git_repo_url, temp_dir)
+
+        # Specify the path to the documents
+        docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
+
+        # Read and process the documents
+        raise RuntimeError('GitHub Actions run failed. Please check the GitHub Actions logs for more details.')
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
