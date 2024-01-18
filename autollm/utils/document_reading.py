@@ -71,7 +71,7 @@ def read_files_as_documents(
 # From http://stackoverflow.com/a/4829285/548792
 def on_rm_error(func: Callable, path: str, exc_info: Tuple):
     """
-    Error handler for `shutil.rmtree` to handle permission errors.
+    Error handler for `shutil.rmtree` to handle permission errors and handle any exceptions during the removal process.
 
     Parameters:
         func (Callable): The function that raised the error.
@@ -87,7 +87,7 @@ def read_github_repo_as_documents(
         relative_folder_path: Optional[str] = None,
         required_exts: Optional[List[str]] = None) -> Sequence[Document]:
     """
-    A document provider that fetches documents from a specific folder within a GitHub repository.
+    A document provider that fetches documents from a specific folder within a GitHub repository with error handling for cloning and reading documents and error logging for any exceptions.
 
     Parameters:
         git_repo_url (str): The URL of the GitHub repository.
