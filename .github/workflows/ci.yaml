@@ -70,6 +70,10 @@ jobs:
           pre-commit run --all-files --show-diff-on-failure
           black --check .
 
+            - name: Check coverage
+        run: |
+          coverage run -m pytest
+          coverage report
       - name: Run unit tests
         run: pytest
         env:
