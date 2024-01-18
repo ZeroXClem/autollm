@@ -2,7 +2,7 @@
 # Metadata
 title = "AutoLLM Query Engine"
 description = """
-This is a FastAPI service for AutoLLM's natural language query engine.
+This is a FastAPI service for AutoLLM's query engine, which uses natural language processing to search through multiple documents and retrieve the most relevant results. It's designed to provide fast and accurate search functionality for all types of documents, including large repositories of text-based data.
 It's designed to query multiple and big documents and get the most relevant results.
 """
 version = "0.0.1"
