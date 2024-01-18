@@ -17,7 +17,11 @@ def initialize_pinecone_index(
     environment = read_env_variable('PINECONE_ENVIRONMENT')
 
     # Initialize Pinecone
-    pinecone.init(api_key=api_key, environment=environment)
+    try:
+        pinecone.init(api_key=api_key, environment=environment)
+    except Exception as e:
+        logger.error(f'Error occurred during Pinecone initialization: {str(e)}')
+        raise
     pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
 
 
@@ -50,17 +54,39 @@ def connect_vectorstore(vector_store, **params):
         vector_store.pinecone_index = pinecone.Index(params['index_name'])
     elif isinstance(vector_store, QdrantVectorStore):
         vector_store.client = QdrantClient(url=params['url'], api_key=params['api_key'])
-    # TODO: Add more elif conditions for other vector stores as needed
+    # Error handling and logging
 
 
 def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: Sequence[Document]):
+    """
+    Update the vector store index with new documents.
+    """
+    try:
     """
     Update the vector store index with new documents.
 
     Parameters:
         vector_store_index: An instance of AutoVectorStoreIndex or any compatible vector store.
         documents (Sequence[Document]): List of documents to update.
+def connect_vectorstore(vector_store, **params):
+    """Connect to an existing vector store."""
+    import pinecone
+    from qdrant_client import QdrantClient
 
+    # Logic to connect to vector store based on the specific type of vector store
+    if isinstance(vector_store, PineconeVectorStore):
+        vector_store.pinecone_index = pinecone.Index(params['index_name'])
+    elif isinstance(vector_store, QdrantVectorStore):
+        vector_store.client = QdrantClient(url=params['url'], api_key=params['api_key'])
+    # Error handling and logging
+
+    # Error handling and logging
+    try:
+        # Connect to vector store
+        # ...
+    except Exception as e:
+        logger.error(f'Error occurred during vector store connection: {str(e)}')
+        raise
     Returns:
         None
     """
@@ -80,11 +106,8 @@ def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
     Returns:
         None
     """
-    # Create storage context
-    storage_context = StorageContext.from_defaults(vector_store=vector_store)
-
-    # Create index, which will insert documents/vectors to vector store
-    _ = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
+def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
+    try:
 
 
 def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: Sequence[str]):
@@ -104,7 +127,11 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
 
     # Proceed with deletion.
     for document_id in document_ids:
+        try:
         vector_store_index.delete_ref_doc(document_id, delete_from_docstore=True)
+    except Exception as e:
+        logger.error(f'Error occurred during document deletion: {str(e)}')
+        raise
 
 
 # TODO: refactor and update.
