@@ -73,7 +73,7 @@ def read_files_as_documents(
 
 
 # From http://stackoverflow.com/a/4829285/548792
-def on_rm_error(func: Callable, path: str, exc_info: Tuple):
+def on_rm_error(func: Callable, path: str, exc_info: Tuple, logger: Optional[Logger] = None):
     """
     Error handler for `shutil.rmtree` to handle permission errors.
 
@@ -82,6 +82,8 @@ def on_rm_error(func: Callable, path: str, exc_info: Tuple):
         path (str): The path to the file or directory which couldn't be removed.
         exc_info (Tuple): Exception information returned by sys.exc_info().
     """
+    if isinstance(exc_info[1], PermissionError):
+        logger.warning(f'Permission error when removing {path}: {exc_info[1]}')
     os.chmod(path, stat.S_IWRITE)
     os.unlink(path)
 
