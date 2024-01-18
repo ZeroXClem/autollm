@@ -27,4 +27,4 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
             # The existing directory is not a valid git repo, clone anew
             Repo.clone_from(git_url, str(local_path))
     else:
-        Repo.clone_from(git_url, str(local_path))
+        Repo.clone_from(git_url, str(local_path))  # Modified to handle InvalidGitRepositoryError
