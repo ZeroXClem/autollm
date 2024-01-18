@@ -28,3 +28,11 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
             Repo.clone_from(git_url, str(local_path))
     else:
         Repo.clone_from(git_url, str(local_path))
+    except (NoSuchPathError, GitCommandError) as e:
+        # The existing directory is not a valid git repo, clone anew
+        logger.error(f"Failed to clone git repo {git_url}: {e}")
+        raise e
+    except (NoSuchPathError, GitCommandError) as e:
+        # The existing directory is not a valid git repo, clone anew
+        logger.error(f"Failed to clone git repo {git_url}: {e}")
+        raise e
