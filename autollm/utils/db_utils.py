@@ -60,6 +60,10 @@ def connect_vectorstore(vector_store, **params):
 def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: Sequence[Document]):
     """
     Update the vector store index with new documents.
+    """
+    try:
+    """
+    Update the vector store index with new documents.
 
     Parameters:
         vector_store_index: An instance of AutoVectorStoreIndex or any compatible vector store.
