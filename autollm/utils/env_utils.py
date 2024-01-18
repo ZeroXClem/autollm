@@ -13,7 +13,10 @@ def find_dotenv_file(start_path: Path) -> Path:
         if dotenv_path.exists():
             return dotenv_path
         current_path = current_path.parent
-    raise OSError('Could not find a .env file.')
+    try:
+        raise FileNotFoundError('.env file not found in the path: %s' % current_path)
+    except FileNotFoundError as e:
+        print(f'Error occurred during .env file search: {str(e)}')
 
 
 # Find and load .env file
