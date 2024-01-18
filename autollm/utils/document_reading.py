@@ -102,6 +102,8 @@ def read_github_repo_as_documents(
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
 
     try:
+    except Exception as e:
+        logger.error(f'An error occurred during Github repository cloning or pulling: {e}')
         # Clone or pull the GitHub repository to get the latest documents
         clone_or_pull_repository(git_repo_url, temp_dir)
 
