@@ -64,7 +64,25 @@ def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: S
     Parameters:
         vector_store_index: An instance of AutoVectorStoreIndex or any compatible vector store.
         documents (Sequence[Document]): List of documents to update.
+def connect_vectorstore(vector_store, **params):
+    """Connect to an existing vector store."""
+    import pinecone
+    from qdrant_client import QdrantClient
 
+    # Logic to connect to vector store based on the specific type of vector store
+    if isinstance(vector_store, PineconeVectorStore):
+        vector_store.pinecone_index = pinecone.Index(params['index_name'])
+    elif isinstance(vector_store, QdrantVectorStore):
+        vector_store.client = QdrantClient(url=params['url'], api_key=params['api_key'])
+    # TODO: Add more elif conditions for other vector stores as needed
+
+    # Error handling and logging
+    try:
+        # Connect to vector store
+        # ...
+    except Exception as e:
+        logger.error(f'Error occurred during vector store connection: {str(e)}')
+        raise
     Returns:
         None
     """
