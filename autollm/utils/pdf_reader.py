@@ -1,6 +1,6 @@
 from typing import List
 
-from llama_index.readers.base import BaseReader
+from autollm.readers.base import BaseReader
 from llama_index.schema import Document
 
 from autollm.utils.logging import logger

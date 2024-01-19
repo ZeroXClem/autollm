@@ -5,6 +5,20 @@ import logging
 # Configure the logger
 logger = logging.getLogger('autollm')
 logger.setLevel(logging.INFO)
+ch = logging.StreamHandler()
+ch.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+logger.addHandler(ch)
+logger.addHandler(ch)
+
+import logging
+import autollm.utils.logging
+
+# Configure the logger
+logger = logging.getLogger('autollm')
+logger.setLevel(logging.INFO)
 
 # Create a console handler with a specific format
 ch = logging.StreamHandler()
