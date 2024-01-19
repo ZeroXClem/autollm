@@ -1,3 +1,5 @@
+# autollm/utils/constants.py
+
 DEFAULT_VECTORE_STORE_TYPE = 'pinecone'
 DEFAULT_INDEX_NAME = 'quickstart'
 DEFAULT_LLM_CLASS_NAME = 'OpenAI'
