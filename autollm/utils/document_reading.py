@@ -65,6 +65,56 @@ def read_files_as_documents(
     return documents
 
 
+def read_files_as_documents(
+        input_dir: Optional[str] = None,
+        input_files: Optional[List] = None,
+        exclude_hidden: bool = True,
+        filename_as_id: bool = True,
+        recursive: bool = True,
+        required_exts: Optional[List[str]] = None,
+        show_progress: bool = True,
+        **kwargs) -> Sequence[Document]:
+    """
+    Process markdown files to extract documents using SimpleDirectoryReader.
+
+    Parameters:
+        input_dir (str): Path to the directory containing the markdown files.
+        input_files (List): List of file paths.
+        exclude_hidden (bool): Whether to exclude hidden files.
+        filename_as_id (bool): Whether to use the filename as the document id.
+        recursive (bool): Whether to recursively search for files in the input directory.
+        required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
+
+    Returns:
+        documents (Sequence[Document]): A sequence of Document objects.
+    """
+    # Configure file_extractor to use MarkdownReader for md files
+    file_extractor = {
+        ".md": MarkdownReader(read_as_single_doc=True),
+        ".pdf": LangchainPDFReader(extract_images=False)
+    }
+
+    # Initialize SimpleDirectoryReader
+    reader = SimpleDirectoryReader(
+        input_dir=input_dir,
+        exclude_hidden=exclude_hidden,
+        file_extractor=file_extractor,
+        input_files=input_files,
+        filename_as_id=filename_as_id,
+        recursive=recursive,
+        required_exts=required_exts,
+        **kwargs)
+
+    logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
+        f"Reading files {input_files}..")
+
+    # Read and process the documents
+    documents = reader.load_data(show_progress=show_progress)
+
+    logger.info(f"Found {len(documents)} 'document(s)'.")
+    return documents
+
+
 # From http://stackoverflow.com/a/4829285/548792
 def on_rm_error(func: Callable, path: str, exc_info: Tuple):
     """
