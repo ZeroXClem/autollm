@@ -15,7 +15,7 @@ from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
 
 
-def read_files_as_documents(
+def read_files_as_documents(**kwargs)
         input_dir: Optional[str] = None,
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
@@ -66,7 +66,7 @@ def read_files_as_documents(
 
 
 # From http://stackoverflow.com/a/4829285/548792
-def on_rm_error(func: Callable, path: str, exc_info: Tuple):
+def on_rm_error(func: Callable, path: str, exc_info: Tuple) -> None:
     """
     Error handler for `shutil.rmtree` to handle permission errors.
 
