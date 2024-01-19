@@ -21,7 +21,7 @@ def initialize_pinecone_index(
     pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
 
 
-def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = 'EUCLID'):
+def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = 'euclidean'):
     """Initialize Qdrant index."""
     from qdrant_client import QdrantClient
     from qdrant_client.models import Distance, VectorParams
@@ -84,7 +84,7 @@ def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
     storage_context = StorageContext.from_defaults(vector_store=vector_store)
 
     # Create index, which will insert documents/vectors to vector store
-    _ = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
+    _ = VectorStoreIndex.from_documents(documents, storage_context=storage_context.vector_store)
 
 
 def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: Sequence[str]):
