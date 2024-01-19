@@ -127,7 +127,7 @@ ______________________________________________________________________
 
 >>> from autollm import AutoFastAPI
 
->>> app = AutoFastAPI.from_query_engine(query_engine)
+>>> app = AutoFastAPI.from_config('./path_to_config_file', './path_to_env_file)
 
 >>> uvicorn.run(app, host="0.0.0.0", port=8000)
 INFO:    Started server process [12345]
@@ -302,7 +302,7 @@ LLM Total Token Cost: $0.002317
 ```python
 >>> from autollm import AutoFastAPI
 
->>> app = AutoFastAPI.from_config(config_path, env_path)
+>>> app = AutoFastAPI.from_config('./actual_config_file_path', './actual_env_file_path')
 ```
 
 Here, `config` and `env` should be replaced by your configuration and environment file paths.
