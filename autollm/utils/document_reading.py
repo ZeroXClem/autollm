@@ -98,6 +98,8 @@ def read_github_repo_as_documents(
     # Ensure the temp_dir directory exists
     temp_dir = Path("autollm/temp/")
     temp_dir.mkdir(parents=True, exist_ok=True)
+    except Exception as e:
+        logger.error(f'Error creating temporary directory: {e}', exc_info=True)
 
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
 
