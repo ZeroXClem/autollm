@@ -14,9 +14,23 @@ def initialize_pinecone_index(
 
     # Read environment variables for Pinecone initialization
     api_key = read_env_variable('PINECONE_API_KEY')
+    if api_key is None:
+        logger.error('PINECONE_API_KEY environment variable is not set')
+        return
     environment = read_env_variable('PINECONE_ENVIRONMENT')
+    if environment is None:
+        logger.error('PINECONE_ENVIRONMENT environment variable is not set')
+        return
 
     # Initialize Pinecone
+    api_key = read_env_variable('PINECONE_API_KEY')
+    if api_key is None:
+        logger.error('PINECONE_API_KEY environment variable is not set')
+        return
+    environment = read_env_variable('PINECONE_ENVIRONMENT')
+    if environment is None:
+        logger.error('PINECONE_ENVIRONMENT environment variable is not set')
+        return
     pinecone.init(api_key=api_key, environment=environment)
     pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
 
@@ -28,8 +42,21 @@ def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = '
 
     # Initialize client
     url = read_env_variable('QDRANT_URL')
+    if url is None:
+        logger.error('QDRANT_URL environment variable is not set')
+        return
+    api_key = read_env_variable('QDRANT_API_KEY')
+    if api_key is None:
+        logger.error('QDRANT_API_KEY environment variable is not set')
+        return
     api_key = read_env_variable('QDRANT_API_KEY')
 
+    if url is None:
+        logger.error('QDRANT_URL environment variable is not set')
+        return
+    if api_key is None:
+        logger.error('QDRANT_API_KEY environment variable is not set')
+        return
     client = QdrantClient(url=url, api_key=api_key)
 
     # Convert string distance measure to Distance Enum equals to Distance.EUCLID
