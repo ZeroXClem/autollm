@@ -99,7 +99,10 @@ def read_github_repo_as_documents(
     temp_dir = Path("autollm/temp/")
     temp_dir.mkdir(parents=True, exist_ok=True)
 
-    logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
+    try:
+        logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
+    except Exception as e:
+        logger.error(f"Failed to clone github repo: {e}")
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
