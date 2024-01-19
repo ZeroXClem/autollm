@@ -1,25 +1,4 @@
-"""
-Markdown Reader.
-
-A parser for md files.
-"""
-import re
-import uuid
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, cast
-
-from llama_index.readers.base import BaseReader
-from llama_index.schema import Document
-
-
 class MarkdownReader(BaseReader):
-    """
-    Markdown parser.
-
-    Extract text from markdown files. Returns dictionary with keys as headers and values as the text between
-    headers.
-    """
-
     def __init__(
         self,
         *args: Any,
@@ -28,18 +7,12 @@ class MarkdownReader(BaseReader):
         read_as_single_doc: bool = False,
         **kwargs: Any,
     ) -> None:
-        """Init params."""
         super().__init__(*args, **kwargs)
         self._remove_hyperlinks = remove_hyperlinks
         self._remove_images = remove_images
         self._read_as_single_doc = read_as_single_doc
 
     def markdown_to_tups(self, markdown_text: str) -> List[Tuple[Optional[str], str]]:
-        """
-        Convert a markdown file to a dictionary.
-
-        The keys are the headers and the values are the text under each header.
-        """
         markdown_tups: List[Tuple[Optional[str], str]] = []
         lines = markdown_text.split('\n')
 
