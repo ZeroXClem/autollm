@@ -60,7 +60,100 @@ def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: S
     Parameters:
         vector_store_index: An instance of AutoVectorStoreIndex or any compatible vector store.
         documents (Sequence[Document]): List of documents to update.
+def connect_vectorstore(vector_store, **params):
+    """Connect to an existing vector store."""
+    import pinecone
+    from qdrant_client import QdrantClient
 
+    # Logic to connect to vector store based on the specific type of vector store
+    if isinstance(vector_store, PineconeVectorStore):
+        vector_store.pinecone_index = pinecone.Index(params['index_name'])
+    elif isinstance(vector_store, QdrantVectorStore):
+        vector_store.client = QdrantClient(url=params['url'], api_key=params['api_key'])
+    # TODO: Add more elif conditions for other vector stores as needed
+
+
+def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: Sequence[Document]):
+    """
+    Update the vector store index with new documents.
+
+    Parameters:
+        vector_store_index: An instance of AutoVectorStoreIndex or any compatible vector store.
+        documents (Sequence[Document]): List of documents to update.
+
+    Returns:
+        None
+    """
+    for document in documents:
+        delete_documents_by_id(vector_store_index, [document.id_])
+        vector_store_index.insert(document)
+
+
+def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: Sequence[str]):
+    """
+    Delete documents from vector store by their ids.
+
+    Parameters:
+        vector_store_index: An instance of AutoVectorStoreIndex or any compatible vector store.
+        document_ids (Sequence[str]): List of document ids to delete.
+
+    Returns:
+        None
+    """
+    # Check if there are any document IDs to delete.
+    if not document_ids:
+        return
+
+    # Proceed with deletion.
+    for document_id in document_ids:
+        vector_store_index.delete_ref_doc(document_id, delete_from_docstore=True)
+def connect_vectorstore(vector_store, **params):
+    """Connect to an existing vector store."""
+    import pinecone
+    from qdrant_client import QdrantClient
+
+    # Logic to connect to vector store based on the specific type of vector store
+    if isinstance(vector_store, PineconeVectorStore):
+        vector_store.pinecone_index = pinecone.Index(params['index_name'])
+    elif isinstance(vector_store, QdrantVectorStore):
+        vector_store.client = QdrantClient(url=params['url'], api_key=params['api_key'])
+    # TODO: Add more elif conditions for other vector stores as needed
+
+
+def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: Sequence[Document]):
+    """
+    Update the vector store index with new documents.
+
+    Parameters:
+        vector_store_index: An instance of AutoVectorStoreIndex or any compatible vector store.
+        documents (Sequence[Document]): List of documents to update.
+
+    Returns:
+        None
+    """
+    for document in documents:
+        delete_documents_by_id(vector_store_index, [document.id_])
+        vector_store_index.insert(document)
+
+
+def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: Sequence[str]):
+    """
+    Delete documents from vector store by their ids.
+
+    Parameters:
+        vector_store_index: An instance of AutoVectorStoreIndex or any compatible vector store.
+        document_ids (Sequence[str]): List of document ids to delete.
+
+    Returns:
+        None
+    """
+    # Check if there are any document IDs to delete.
+    if not document_ids:
+        return
+
+    # Proceed with deletion.
+    for document_id in document_ids:
+        vector_store_index.delete_ref_doc(document_id, delete_from_docstore=True)
     Returns:
         None
     """
