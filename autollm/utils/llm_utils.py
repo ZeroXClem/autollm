@@ -1,4 +1,5 @@
 from autollm.utils.templates import QUERY_PROMPT_TEMPLATE, SYSTEM_PROMPT
+from autollm.utils.llm_utils import *
 
 
 def set_default_prompt_template():
