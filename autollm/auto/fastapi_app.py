@@ -130,7 +130,6 @@ class AutoFastAPI:
         # Start the server using from_query_engine class method
         app = AutoFastAPI.from_query_engine(query_engine)
         uvicorn.run(app, host="0.0.0.0", port=8000)
-
         # Post request to the server
         data = {
            "user_query": "why so serious?"
