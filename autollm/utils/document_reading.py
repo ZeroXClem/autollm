@@ -2,6 +2,7 @@ import os
 import shutil
 import stat
 from pathlib import Path
+from git import InvalidGitRepositoryError, Repo
 from typing import Callable, List, Optional, Sequence, Tuple
 
 from llama_index.readers.file.base import SimpleDirectoryReader
