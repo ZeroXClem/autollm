@@ -104,7 +104,16 @@ def read_github_repo_as_documents(
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
-        clone_or_pull_repository(git_repo_url, temp_dir)
+            try:
+        repo = Repo(str(local_path))
+        repo.remotes.origin.pull()
+    except InvalidGitRepositoryError:
+        # The existing directory is not a valid git repo, clone anew
+        Repo.clone_from(git_url, str(local_path))
+    except Exception as e:
+        logger.error(f"An error occurred while cloning or pulling the repository: {e}")
+        raise
+  
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
