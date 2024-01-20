@@ -1,7 +1,7 @@
-import os
-import shutil
-import stat
+from git import InvalidGitRepositoryError, Repo
+from os import stat, chmod
 from pathlib import Path
+from shutil import rmtree
 from typing import Callable, List, Optional, Sequence, Tuple
 
 from llama_index.readers.file.base import SimpleDirectoryReader
@@ -99,7 +99,7 @@ def read_github_repo_as_documents(
     temp_dir = Path("autollm/temp/")
     temp_dir.mkdir(parents=True, exist_ok=True)
 
-    logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
+        logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
