@@ -1,3 +1,4 @@
 
+from autollm.utils.document_reading import SimpleDirectoryReader
 from markdown_reader import MarkdownReader
 from pdf_reader import LangchainPDFReader
