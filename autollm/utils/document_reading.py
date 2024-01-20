@@ -108,9 +108,13 @@ def read_github_repo_as_documents(
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
 
-        # Read and process the documents
+        # Read and process the documents and handle potential errors
+    try: and handle potential errors and handle potential errors
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
-        # Logging (assuming logger is configured)
+    except Exception as e:
+        logger.error(f'An error occurred: {e}. Deleting temporary directory {temp_dir}..')
+        raise
+    finally:
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     finally:
         # Delete the temporary directory
