@@ -1,4 +1,5 @@
-from os import os, stat
+from os import stat
+from pathlib import Path
 from typing import Tuple
 from typing import Optional
 
@@ -92,7 +93,7 @@ def read_github_repo_as_documents(
     """
 
     # Ensure the temp_dir directory exists
-    temp_dir = Path("autollm/temp/")
+    temp_dir = Path("autollm/temp/").resolve()
     temp_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
