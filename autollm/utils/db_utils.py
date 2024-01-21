@@ -10,7 +10,7 @@ from autollm.utils.logging import logger
 
 def initialize_pinecone_index(
         index_name: str, dimension: int = 1536, metric: str = 'euclidean', pod_type: str = 'p1'):
-    import pinecone
+    from pinecone import pinecone
 
     # Read environment variables for Pinecone initialization
     api_key = read_env_variable('PINECONE_API_KEY')
@@ -23,7 +23,7 @@ def initialize_pinecone_index(
 
 def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = 'EUCLID'):
     """Initialize Qdrant index."""
-    from qdrant_client import QdrantClient
+    from qdrant_client import QdrantClient, VectorParams
     from qdrant_client.models import Distance, VectorParams
 
     # Initialize client
