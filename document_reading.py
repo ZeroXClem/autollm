@@ -55,10 +55,57 @@ def read_files_as_documents(
     logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
         f"Reading files {input_files}..")
 
-    # Read and process the documents
-    documents = reader.load_data(show_progress=show_progress)
+    from autollm.utils.website_reader import WebSiteReader
+from autollm.utils.webpage_reader import WebPageReader
 
-    logger.info(f"Found {len(documents)} 'document(s)'.")
+def read_website_as_documents(
+        parent_url: Optional[str] = None,
+        sitemap_url: Optional[str] = None,
+        include_filter_str: Optional[str] = None,
+        exclude_filter_str: Optional[str] = None) -> List[Document]:
+    """
+    Read documents from a website or a sitemap.
+
+    Parameters:
+        parent_url (str, optional): The starting URL from which to scrape documents.
+        sitemap_url (str, optional): The URL of the sitemap to process.
+        include_filter_str (str, optional): Filter string to include certain URLs.
+        exclude_filter_str (str, optional): Filter string to exclude certain URLs.
+
+    Returns:
+        List[Document]: A list of Document objects containing content and metadata.
+
+    Raises:
+        ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
+    """
+    reader = WebSiteReader()
+    if parent_url:
+        documents = reader.load_data(
+            parent_url=parent_url,
+            include_filter_str=include_filter_str,
+            exclude_filter_str=exclude_filter_str)
+    else:
+        documents = reader.load_data(
+            sitemap_url=sitemap_url,
+            include_filter_str=include_filter_str,
+            exclude_filter_str=exclude_filter_str)
+
+    return documents
+
+
+def read_webpage_as_documents(url: str) -> List[Document]:
+    """
+    Read documents from a single webpage URL using the WebPageReader.
+
+    Parameters:
+        url (str): The URL of the web page to read.
+
+    Returns:
+        List[Document]: A list of Document objects containing content and metadata from the web page.
+    """
+    reader = WebPageReader()
+    documents = reader.load_data(url)
+
     return documents
 
 
