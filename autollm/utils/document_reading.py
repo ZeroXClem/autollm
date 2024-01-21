@@ -24,6 +24,18 @@ def read_files_as_documents(
         required_exts: Optional[List[str]] = None,
         show_progress: bool = True,
         **kwargs) -> Sequence[Document]:
+    try:
+        # Read and process the documents
+        documents = reader.load_data(show_progress=show_progress)
+        logger.info(f"Found {len(documents)} 'document(s)'.")
+    except Exception as e:
+        # Error handling and logging
+        logger.error(f"An error occurred while reading documents: {e}")
+        raise
+    except Exception as e:
+        # Error handling and logging
+        logger.error(f"An error occurred while reading documents: {e}")
+        raise
     """
     Process markdown files to extract documents using SimpleDirectoryReader.
 
@@ -36,7 +48,7 @@ def read_files_as_documents(
         required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
 
     Returns:
-        documents (Sequence[Document]): A sequence of Document objects.
+        documents (Sequence[Document]|None): A sequence of Document objects.
     """
     # Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
@@ -114,7 +126,10 @@ def read_github_repo_as_documents(
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     finally:
         # Delete the temporary directory
-        shutil.rmtree(temp_dir, onerror=on_rm_error)
+        try:
+            shutil.rmtree(temp_dir, onerror=on_rm_error)
+        except Exception as e:
+            logger.error(f"An error occurred while deleting the temporary directory {temp_dir}: {e}")
 
     return documents
 
