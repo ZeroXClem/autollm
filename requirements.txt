@@ -5,3 +5,20 @@ fastapi
 python-dotenv
 httpx
 lancedb==0.3.3
+# Required dependencies for GitHub Actions workflow
+pytest
+```
+
+=======
+<snippet index="0" reason="Create requirements.txt file">
+llama-index==0.9.10
+litellm==1.1.1
+uvicorn
+fastapi
+python-dotenv
+httpx
+lancedb==0.3.3
+pytest
+</snippet>
+# Required dependencies for GitHub Actions workflow
+pytest
