@@ -1,3 +1,4 @@
+from autollm import read_files_as_documents
 import os
 import shutil
 import stat
@@ -15,7 +16,7 @@ from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
 
 
-def read_files_as_documents(
+def read_files_as_documents_with_error_handling(
         input_dir: Optional[str] = None,
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
@@ -25,7 +26,7 @@ def read_files_as_documents(
         show_progress: bool = True,
         **kwargs) -> Sequence[Document]:
     """
-    Process markdown files to extract documents using SimpleDirectoryReader.
+    Reads and processes the provided files with error handling to extract and handle documents using the SimpleDirectoryReader.
 
     Parameters:
         input_dir (str): Path to the directory containing the markdown files.
@@ -80,7 +81,7 @@ def on_rm_error(func: Callable, path: str, exc_info: Tuple):
 
 
 def read_github_repo_as_documents(
-        git_repo_url: str,
+        input_dir: Optional[str] = None,
         relative_folder_path: Optional[str] = None,
         required_exts: Optional[List[str]] = None) -> Sequence[Document]:
     """
