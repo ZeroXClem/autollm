@@ -48,7 +48,7 @@ def read_files_as_documents(
         required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
 
     Returns:
-        documents (Sequence[Document]): A sequence of Document objects.
+        documents (Sequence[Document]|None): A sequence of Document objects.
     """
     # Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
