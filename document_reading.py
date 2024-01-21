@@ -69,8 +69,8 @@ def on_rm_error(func: Callable, path: str, exc_info: Tuple):
         path (str): The path to the file or directory which couldn't be removed.
         exc_info (Tuple): Exception information returned by sys.exc_info().
     """
-    os.chmod(path, stat.S_IWRITE)
-    os.unlink(path)
+    logger.error(f"Error while deleting temporary directory: {path}")
+        raise
 
 
 def read_github_repo_as_documents(
