@@ -9,6 +9,7 @@ from autollm.utils.website_reader import WebSiteReader
 
 
 def read_files_as_documents(
+        InvalidGitRepositoryError,
         input_dir: Optional[str] = None,
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
