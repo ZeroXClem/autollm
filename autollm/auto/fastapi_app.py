@@ -2,6 +2,7 @@ from typing import Optional, Sequence
 
 from fastapi import FastAPI, HTTPException
 from autollm.utils.document_reading import StreamingResponse, Document, BaseQueryEngine, FromEngineQueryPayload
+from autollm.utils.db_utils import stream_text_data
 from autollm.utils.document_reading import load_config_and_initialize_engines, FromConfigQueryPayload
 from autollm.utils.db_utils import Document
 from autollm.utils.document_reading import BaseQueryEngine
