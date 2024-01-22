@@ -16,6 +16,7 @@ from autollm.utils.website_reader import WebSiteReader
 
 
 @handle_error
+@handle_error
 def read_files_as_documents(
         input_dir: Optional[str] = None,
         input_files: Optional[List] = None,
