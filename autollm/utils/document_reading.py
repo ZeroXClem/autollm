@@ -34,6 +34,7 @@ def read_files_as_documents(
         filename_as_id (bool): Whether to use the filename as the document id.
         recursive (bool): Whether to recursively search for files in the input directory.
         required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
+        handle_errors (bool): Whether to handle errors when reading files.
 
     Returns:
         documents (Sequence[Document]): A sequence of Document objects.
@@ -53,13 +54,16 @@ def read_files_as_documents(
         filename_as_id=filename_as_id,
         recursive=recursive,
         required_exts=required_exts,
+        handle_errors: bool = True,
         **kwargs)
 
     logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
         f"Reading files {input_files}..")
 
-    # Read and process the documents
-    documents = reader.load_data(show_progress=show_progress)
+    try:
+        documents = reader.load_data(show_progress=show_progress)
+    except Exception as e:
+        logger.error(f"An error occurred while reading files: {e}")
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
     return documents
