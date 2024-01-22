@@ -3,7 +3,7 @@ from typing import Optional, Sequence
 from fastapi import FastAPI, HTTPException
 from autollm.utils.document_reading import StreamingResponse, Document, BaseQueryEngine, FromEngineQueryPayload
 from autollm.utils.document_reading import load_config_and_initialize_engines, FromConfigQueryPayload
-from llama_index import Document
+from autollm.utils.db_utils import Document
 from autollm.utils.document_reading import BaseQueryEngine
 from llama_index.indices.query.base import BaseQueryEngine
 from pydantic import BaseModel, Field
