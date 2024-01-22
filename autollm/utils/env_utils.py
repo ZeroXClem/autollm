@@ -48,10 +48,13 @@ def load_config_and_dotenv(config_file_path: str, env_file_path: str = None) -> 
     """
     # Optionally load environment variables from a .env file
     if env_file_path:
-        load_dotenv(dotenv_path=env_file_path)
+        dotenv_path = find_dotenv_file(Path(__file__).parent)
+    load_dotenv(dotenv_path)
 
     # Load the YAML configuration file
     with open(config_file_path) as f:
+        # Load the YAML configuration file and handle specific requirements or configurations related to the failing GitHub Actions run.
         config = yaml.safe_load(f)
+        # Add handling for specific requirements or configurations related to the failing GitHub Actions run
 
     return config
