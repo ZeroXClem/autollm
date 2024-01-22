@@ -15,6 +15,7 @@ from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
 
 
+@handle_error
 def read_files_as_documents(
         input_dir: Optional[str] = None,
         input_files: Optional[List] = None,
@@ -79,6 +80,7 @@ def on_rm_error(func: Callable, path: str, exc_info: Tuple):
     os.unlink(path)
 
 
+@handle_error
 def read_github_repo_as_documents(
         git_repo_url: str,
         relative_folder_path: Optional[str] = None,
@@ -119,6 +121,7 @@ def read_github_repo_as_documents(
     return documents
 
 
+@handle_error
 def read_website_as_documents(
         parent_url: Optional[str] = None,
         sitemap_url: Optional[str] = None,
@@ -157,6 +160,7 @@ def read_website_as_documents(
     return documents
 
 
+@handle_error
 def read_webpage_as_documents(url: str) -> List[Document]:
     """
     Read documents from a single webpage URL using the WebPageReader.
