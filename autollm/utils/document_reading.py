@@ -40,7 +40,13 @@ def read_files_as_documents(
         documents (Sequence[Document]): A sequence of Document objects.
     """
     # Configure file_extractor to use MarkdownReader for md files
-    file_extractor = {
+    file_extractor = {}
+    try:
+        file_extractor['.md'] = MarkdownReader(read_as_single_doc=True)
+        file_extractor['.pdf'] = LangchainPDFReader(extract_images=False)
+    except Exception as e:
+        logging.error(f"An error occurred while configuring the file_extractor: {str(e)}")
+        raise
         ".md": MarkdownReader(read_as_single_doc=True),
         ".pdf": LangchainPDFReader(extract_images=False)
     }
@@ -60,7 +66,11 @@ def read_files_as_documents(
         f"Reading files {input_files}..")
 
     # Read and process the documents
-    documents = reader.load_data(show_progress=show_progress)
+    try:
+        documents = reader.load_data(show_progress=show_progress)
+    except Exception as e:
+        logging.error(f"An error occurred while reading and processing the documents: {str(e)}")
+        raise
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
     return documents
