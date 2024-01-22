@@ -2,6 +2,7 @@ from typing import Optional, Sequence
 
 from fastapi import FastAPI, HTTPException
 from autollm.utils.document_reading import StreamingResponse, Document, BaseQueryEngine
+from autollm.utils.document_reading import FromConfigQueryPayload
 from llama_index import Document
 from autollm.utils.document_reading import BaseQueryEngine
 from llama_index.indices.query.base import BaseQueryEngine
