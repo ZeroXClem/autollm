@@ -103,7 +103,15 @@ def read_github_repo_as_documents(
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
+        try:
+        try:
         clone_or_pull_repository(git_repo_url, temp_dir)
+    except Exception as e:
+        logger.error(f'Error occurred during cloning or pulling: {e}')
+        raise
+    except Exception as e:
+        logger.error(f'Error occurred during cloning or pulling: {e}')
+        raise
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
