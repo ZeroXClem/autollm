@@ -8,7 +8,7 @@ from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
-from autollm.utils.logging import logger
+import autollm.utils.error_handling as logging
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
@@ -148,6 +148,7 @@ def read_github_repo_as_documents(
     return documents
 
 
+@handle_error
 @handle_error
 def read_website_as_documents(
         parent_url: Optional[str] = None,
