@@ -8,13 +8,15 @@ from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
-from autollm.utils.logging import logger
+import autollm.utils.error_handling as logging
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
 
 
+@handle_error
+@handle_error
 def read_files_as_documents(
         input_dir: Optional[str] = None,
         input_files: Optional[List] = None,
@@ -39,7 +41,13 @@ def read_files_as_documents(
         documents (Sequence[Document]): A sequence of Document objects.
     """
     # Configure file_extractor to use MarkdownReader for md files
-    file_extractor = {
+    file_extractor = {}
+    try:
+        file_extractor['.md'] = MarkdownReader(read_as_single_doc=True)
+        file_extractor['.pdf'] = LangchainPDFReader(extract_images=False)
+    except Exception as e:
+        logging.error(f"An error occurred while configuring the file_extractor: {str(e)}")
+        raise
         ".md": MarkdownReader(read_as_single_doc=True),
         ".pdf": LangchainPDFReader(extract_images=False)
     }
@@ -59,7 +67,11 @@ def read_files_as_documents(
         f"Reading files {input_files}..")
 
     # Read and process the documents
-    documents = reader.load_data(show_progress=show_progress)
+    try:
+        documents = reader.load_data(show_progress=show_progress)
+    except Exception as e:
+        logging.error(f"An error occurred while reading and processing the documents: {str(e)}")
+        raise
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
     return documents
@@ -79,6 +91,7 @@ def on_rm_error(func: Callable, path: str, exc_info: Tuple):
     os.unlink(path)
 
 
+@handle_error
 def read_github_repo_as_documents(
         git_repo_url: str,
         relative_folder_path: Optional[str] = None,
@@ -97,7 +110,11 @@ def read_github_repo_as_documents(
 
     # Ensure the temp_dir directory exists
     temp_dir = Path("autollm/temp/")
-    temp_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        temp_dir.mkdir(parents=True, exist_ok=True)
+    except Exception as e:
+        logging.error(f"An error occurred while creating temporary directory: {str(e)}")
+        raise
 
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
 
@@ -106,19 +123,33 @@ def read_github_repo_as_documents(
         clone_or_pull_repository(git_repo_url, temp_dir)
 
         # Specify the path to the documents
+        try:
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
+    except Exception as e:
+        logging.error(f"An error occurred while specifying the path to the documents: {str(e)}")
+        raise
 
         # Read and process the documents
+        try:
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+    except Exception as e:
+        logging.error(f"An error occurred while reading and processing the documents: {str(e)}")
+        raise
         # Logging (assuming logger is configured)
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     finally:
         # Delete the temporary directory
+        try:
         shutil.rmtree(temp_dir, onerror=on_rm_error)
+    except Exception as e:
+        logging.error(f"An error occurred while deleting the temporary directory: {str(e)}")
+        raise
 
     return documents
 
 
+@handle_error
+@handle_error
 def read_website_as_documents(
         parent_url: Optional[str] = None,
         sitemap_url: Optional[str] = None,
@@ -157,6 +188,8 @@ def read_website_as_documents(
     return documents
 
 
+@handle_error
+@handle_error
 def read_webpage_as_documents(url: str) -> List[Document]:
     """
     Read documents from a single webpage URL using the WebPageReader.
@@ -167,6 +200,10 @@ def read_webpage_as_documents(url: str) -> List[Document]:
     Returns:
         List[Document]: A list of Document objects containing content and metadata from the web page.
     """
-    reader = WebPageReader()
-    documents = reader.load_data(url)
+    try:
+        reader = WebPageReader()
+        documents = reader.load_data(url)
+    except Exception as e:
+        logging.error(f"An error occurred while reading documents from {url}: {str(e)}")
+        raise
     return documents
