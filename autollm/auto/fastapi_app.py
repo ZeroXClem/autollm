@@ -1,7 +1,7 @@
 from typing import Optional, Sequence
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import StreamingResponse
+from autollm.utils.document_reading import StreamingResponse, Document
 from llama_index import Document
 from llama_index.indices.query.base import BaseQueryEngine
 from pydantic import BaseModel, Field
