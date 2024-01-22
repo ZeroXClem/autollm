@@ -17,7 +17,7 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
     except ImportError:
         logger.error(
             'GitPython is not installed. Please "pip install gitpython==3.1.37" to use this feature.')
-        raise
+        raise ImportError
 
     if local_path.exists():
         try:
@@ -28,3 +28,4 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
             Repo.clone_from(git_url, str(local_path))
     else:
         Repo.clone_from(git_url, str(local_path))
+raise
