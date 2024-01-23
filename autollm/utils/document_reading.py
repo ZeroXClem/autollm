@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Callable, List, Optional, Sequence, Tuple, Union
 from autollm.utils.file_extractor import FileExtractor
 from autollm.utils.document import Document
-from autollm.utils.error_handler import ErrorHandler
+from autollm.utils.error_handler import ErrorHandler, Error
 
 from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
@@ -152,21 +152,23 @@ def read_github_repo_as_documents(
 
 
 def read_website_as_documents(
-        parent_url: Optional[str] = None,
-        sitemap_url: Optional[str] = None,
-        include_filter_str: Optional[str] = None,
-        exclude_filter_str: Optional[str] = None) -> List[Document]:
+        parent_url: Union[str, None] = None,
+        sitemap_url: Union[str, None] = None,
+        include_filter_str: Union[str, None] = None,
+        exclude_filter_str: Union[str, None] = None) -> List[Document]:
     """
     Read documents from a website or a sitemap.
 
+    This function reads documents from a website or a sitemap, based on the provided parameters.
+
     Parameters:
-        parent_url (str, optional): The starting URL from which to scrape documents.
-        sitemap_url (str, optional): The URL of the sitemap to process.
-        include_filter_str (str, optional): Filter string to include certain URLs.
-        exclude_filter_str (str, optional): Filter string to exclude certain URLs.
+        parent_url (Union[str, None], optional): The starting URL from which to scrape documents.
+        sitemap_url (Union[str, None], optional): The URL of the sitemap to process.
+        include_filter_str (Union[str, None], optional): Filter string to include certain URLs.
+        exclude_filter_str (Union[str, None], optional): Filter string to exclude certain URLs.
 
     Returns:
-        List[Document]: A list of Document objects containing content and metadata.
+        List[Document]: A list of Document objects containing content and metadata. If no documents are found, an empty list is returned.
 
     Raises:
         ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
