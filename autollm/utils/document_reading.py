@@ -16,6 +16,7 @@ from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
+from autollm.utils.website_reader import WebSiteReader
 
 
 def read_files_as_documents(
@@ -102,6 +103,17 @@ def read_github_repo_as_documents(
         git_repo_url: str,
         relative_folder_path: Optional[str] = None,
         required_exts: Optional[List[str]] = None) -> Sequence[Document]:
+    '''
+    A document provider that fetches documents from a specific folder within a GitHub repository.
+
+    Parameters:
+        git_repo_url (str): The URL of the GitHub repository.
+        relative_folder_path (str, optional): The relative path from the repo root to the folder containing documents.
+        required_exts (Optional[List[str]]): List of required extensions.
+
+    Returns:
+        Sequence[Document]: A sequence of Document objects.
+    '''
     """
     A document provider that fetches documents from a specific folder within a GitHub repository.
 
@@ -130,6 +142,7 @@ def read_github_repo_as_documents(
         # Read and process the documents
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
         # Logging (assuming logger is configured)
+    logger.info(f"Processed {len(documents)} 'document(s)' from {temp_dir / Path(relative_folder_path)}")
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     finally:
         # Delete the temporary directory
