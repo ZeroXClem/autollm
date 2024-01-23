@@ -17,7 +17,7 @@ from autollm.utils.website_reader import WebSiteReader
 
 def read_files_as_documents(
         input_dir: Optional[str] = None,
-        input_files: Optional[List] = None,
+        input_files: Optional[List[Path]] = None,
         exclude_hidden: bool = True,
         filename_as_id: bool = True,
         recursive: bool = True,
@@ -102,6 +102,7 @@ def read_github_repo_as_documents(
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
 
     try:
+    logger.info('Reading and processing the documents from ' + str(docs_path))
         # Clone or pull the GitHub repository to get the latest documents
         clone_or_pull_repository(git_repo_url, temp_dir)
 
