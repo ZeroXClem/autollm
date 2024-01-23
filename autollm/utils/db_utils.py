@@ -13,8 +13,8 @@ def initialize_pinecone_index(
     import pinecone
 
     # Read environment variables for Pinecone initialization
-    api_key = read_env_variable('PINECONE_API_KEY')
-    environment = read_env_variable('PINECONE_ENVIRONMENT')
+    api_key = read_env_variable('PINECONE_API_KEY', required=True)
+    environment = read_env_variable('PINECONE_ENVIRONMENT', required=True)
 
     # Initialize Pinecone
     pinecone.init(api_key=api_key, environment=environment)
@@ -27,8 +27,8 @@ def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = '
     from qdrant_client.models import Distance, VectorParams
 
     # Initialize client
-    url = read_env_variable('QDRANT_URL')
-    api_key = read_env_variable('QDRANT_API_KEY')
+    url = read_env_variable('QDRANT_URL', required=True)
+    api_key = read_env_variable('QDRANT_API_KEY', required=True)
 
     client = QdrantClient(url=url, api_key=api_key)
 
