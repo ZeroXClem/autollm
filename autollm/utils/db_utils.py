@@ -18,7 +18,11 @@ def initialize_pinecone_index(
 
     # Initialize Pinecone
     pinecone.init(api_key=api_key, environment=environment)
-    pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
+    try:
+        pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
+    except Exception as e:
+        logger.error('Failed to initialize Pinecone index:', exc_info=True)
+        raise e
 
 
 def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = 'EUCLID'):
@@ -36,8 +40,12 @@ def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = '
     distance = Distance[distance]
 
     # Create index
-    client.recreate_collection(
-        collection_name=index_name, vectors_config=VectorParams(size=size, distance=distance))
+    try:
+        client.recreate_collection(
+            collection_name=index_name, vectors_config=VectorParams(size=size, distance=distance))
+    except Exception as e:
+        logger.error('Failed to initialize Qdrant index:', exc_info=True)
+        raise e
 
 
 def connect_vectorstore(vector_store, **params):
@@ -84,7 +92,11 @@ def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
     storage_context = StorageContext.from_defaults(vector_store=vector_store)
 
     # Create index, which will insert documents/vectors to vector store
-    _ = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
+    try:
+        _ = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
+    except Exception as e:
+        logger.error('Failed to create vector store index:', exc_info=True)
+        raise e
 
 
 def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: Sequence[str]):

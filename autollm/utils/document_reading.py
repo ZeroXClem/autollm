@@ -24,6 +24,9 @@ def read_files_as_documents(
         required_exts: Optional[List[str]] = None,
         show_progress: bool = True,
         **kwargs) -> Sequence[Document]:
+    try:
+        from llama_index.exceptions import DocumentReadError, DocumentReadWarning
+        from llama_index.schema import DocumentReadErrorMessage
     """
     Process markdown files to extract documents using SimpleDirectoryReader.
 
@@ -45,6 +48,7 @@ def read_files_as_documents(
     }
 
     # Initialize SimpleDirectoryReader
+    try:
     reader = SimpleDirectoryReader(
         input_dir=input_dir,
         exclude_hidden=exclude_hidden,
