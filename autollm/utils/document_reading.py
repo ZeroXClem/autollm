@@ -15,6 +15,7 @@ from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
+from autollm.utils.error_handler import ErrorHandler, Error
 from autollm.utils.website_reader import WebSiteReader
 from autollm.utils.website_reader import WebSiteReader
 
@@ -192,6 +193,17 @@ def read_website_as_documents(
 
 
 def read_webpage_as_documents(url: str) -> List[Document]:
+    '''
+    Read documents from a single webpage URL using the WebPageReader.
+
+    This function reads documents from a single webpage URL using the WebPageReader. It handles potential errors during webpage reading, provides more informative logging, and ensures that the function returns an empty list if no documents are found.
+
+    Parameters:
+        url (str): The URL of the web page to read.
+
+    Returns:
+        List[Document]: A list of Document objects containing content and metadata from the web page. If no documents are found, an empty list is returned.
+    '''
     """
     Read documents from a single webpage URL using the WebPageReader.
 
