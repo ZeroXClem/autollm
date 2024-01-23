@@ -1,6 +1,8 @@
 import os
 import shutil
 import stat
+import shutil
+import stat
 from pathlib import Path
 from typing import Callable, List, Optional, Sequence, Tuple
 
@@ -59,7 +61,17 @@ def read_files_as_documents(
     logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
         f"Reading files {input_files}..")
 
-    # Read and process the documents
+def on_rm_error(func: Callable, path: str, exc_info: Tuple):
+    """
+    Error handler for `shutil.rmtree` to handle permission errors.
+
+    Parameters:
+        func (Callable): The function that raised the error.
+        path (str): The path to the file or directory which couldn't be removed.
+        exc_info (Tuple): Exception information returned by sys.exc_info().
+    """
+    os.chmod(path, stat.S_IWRITE)
+    os.unlink(path)    # Read and process the documents
     documents = reader.load_data(show_progress=show_progress)
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
