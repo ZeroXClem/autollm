@@ -20,11 +20,20 @@ def read_files_as_documents(
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
         filename_as_id: bool = True,
-        recursive: bool = True,
-        required_exts: Optional[List[str]] = None,
-        show_progress: bool = True,
+        recursive: bool = True,,
+        required_exts: Optional[List[str]] = None,,
+        show_progress: bool = True,,
         **kwargs) -> Sequence[Document]:
+    try:
     """
+    import traceback
+    import sys
+
+    def log_and_raise_error(message: str, exception: Exception) -> None:
+        logger.error(message)
+        tb = traceback.format_exc()
+        logger.error(tb)
+        sys.exit(1)
     Process markdown files to extract documents using SimpleDirectoryReader.
 
     Parameters:
@@ -76,7 +85,7 @@ def on_rm_error(func: Callable, path: str, exc_info: Tuple):
         exc_info (Tuple): Exception information returned by sys.exc_info().
     """
     os.chmod(path, stat.S_IWRITE)
-    os.unlink(path)
+    log_and_raise_error(f'Error occurred when trying to remove {path}', exc_info[1])
 
 
 def read_github_repo_as_documents(
