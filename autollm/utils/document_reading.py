@@ -2,7 +2,10 @@ import os
 import shutil
 import stat
 from pathlib import Path
-from typing import Callable, List, Optional, Sequence, Tuple
+from typing import Callable, List, Optional, Sequence, Tuple, Union
+from autollm.utils.file_extractor import FileExtractor
+from autollm.utils.document import Document
+from autollm.utils.error_handler import ErrorHandler, Error
 
 from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
@@ -12,6 +15,8 @@ from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
+from autollm.utils.error_handler import ErrorHandler, Error
+from autollm.utils.website_reader import WebSiteReader
 from autollm.utils.website_reader import WebSiteReader
 
 
@@ -24,16 +29,28 @@ def read_files_as_documents(
         required_exts: Optional[List[str]] = None,
         show_progress: bool = True,
         **kwargs) -> Sequence[Document]:
+        input_dir: Optional[str] = None,
+        input_files: Optional[List] = None,
+        exclude_hidden: bool = True,
+        filename_as_id: bool = True,
+        recursive: bool = True,
+        required_exts: Optional[List[str]] = None,
+        show_progress: bool = True,
+        **kwargs) -> Sequence[Document]:
     """
-    Process markdown files to extract documents using SimpleDirectoryReader.
+    Process files to extract documents using SimpleDirectoryReader.
+
+    This function reads files from the specified input directory or input_files, processes them to extract documents and returns a sequence of Document objects.
 
     Parameters:
-        input_dir (str): Path to the directory containing the markdown files.
-        input_files (List): List of file paths.
+        input_dir (Optional[str]): Path to the directory containing the files.
+        input_files (Optional[List]): List of file paths.
         exclude_hidden (bool): Whether to exclude hidden files.
         filename_as_id (bool): Whether to use the filename as the document id.
         recursive (bool): Whether to recursively search for files in the input directory.
         required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
+        show_progress (bool): Whether to display progress during file processing.
+        **kwargs: Additional keyword arguments.
 
     Returns:
         documents (Sequence[Document]): A sequence of Document objects.
@@ -58,11 +75,15 @@ def read_files_as_documents(
     logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
         f"Reading files {input_files}..")
 
-    # Read and process the documents
-    documents = reader.load_data(show_progress=show_progress)
-
-    logger.info(f"Found {len(documents)} 'document(s)'.")
-    return documents
+    try:
+        # Read and process the documents
+        documents = reader.load_data(show_progress=show_progress)
+        logger.info(f"Found {len(documents)} 'document(s)'.")
+        return documents
+    except Exception as e:
+        error_message = f"An error occurred during document extraction: {str(e)}"
+        logger.error(error_message)
+        return []
 
 
 # From http://stackoverflow.com/a/4829285/548792
@@ -83,6 +104,17 @@ def read_github_repo_as_documents(
         git_repo_url: str,
         relative_folder_path: Optional[str] = None,
         required_exts: Optional[List[str]] = None) -> Sequence[Document]:
+    '''
+    A document provider that fetches documents from a specific folder within a GitHub repository.
+
+    Parameters:
+        git_repo_url (str): The URL of the GitHub repository.
+        relative_folder_path (str, optional): The relative path from the repo root to the folder containing documents.
+        required_exts (Optional[List[str]]): List of required extensions.
+
+    Returns:
+        Sequence[Document]: A sequence of Document objects.
+    '''
     """
     A document provider that fetches documents from a specific folder within a GitHub repository.
 
@@ -111,6 +143,7 @@ def read_github_repo_as_documents(
         # Read and process the documents
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
         # Logging (assuming logger is configured)
+    logger.info(f"Processed {len(documents)} 'document(s)' from {temp_dir / Path(relative_folder_path)}")
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     finally:
         # Delete the temporary directory
@@ -120,21 +153,23 @@ def read_github_repo_as_documents(
 
 
 def read_website_as_documents(
-        parent_url: Optional[str] = None,
-        sitemap_url: Optional[str] = None,
-        include_filter_str: Optional[str] = None,
-        exclude_filter_str: Optional[str] = None) -> List[Document]:
+        parent_url: Union[str, None] = None,
+        sitemap_url: Union[str, None] = None,
+        include_filter_str: Union[str, None] = None,
+        exclude_filter_str: Union[str, None] = None) -> List[Document]:
     """
     Read documents from a website or a sitemap.
 
+    This function reads documents from a website or a sitemap, based on the provided parameters.
+
     Parameters:
-        parent_url (str, optional): The starting URL from which to scrape documents.
-        sitemap_url (str, optional): The URL of the sitemap to process.
-        include_filter_str (str, optional): Filter string to include certain URLs.
-        exclude_filter_str (str, optional): Filter string to exclude certain URLs.
+        parent_url (Union[str, None], optional): The starting URL from which to scrape documents.
+        sitemap_url (Union[str, None], optional): The URL of the sitemap to process.
+        include_filter_str (Union[str, None], optional): Filter string to include certain URLs.
+        exclude_filter_str (Union[str, None], optional): Filter string to exclude certain URLs.
 
     Returns:
-        List[Document]: A list of Document objects containing content and metadata.
+        List[Document]: A list of Document objects containing content and metadata. If no documents are found, an empty list is returned.
 
     Raises:
         ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
@@ -158,6 +193,17 @@ def read_website_as_documents(
 
 
 def read_webpage_as_documents(url: str) -> List[Document]:
+    '''
+    Read documents from a single webpage URL using the WebPageReader.
+
+    This function reads documents from a single webpage URL using the WebPageReader. It handles potential errors during webpage reading, provides more informative logging, and ensures that the function returns an empty list if no documents are found.
+
+    Parameters:
+        url (str): The URL of the web page to read.
+
+    Returns:
+        List[Document]: A list of Document objects containing content and metadata from the web page. If no documents are found, an empty list is returned.
+    '''
     """
     Read documents from a single webpage URL using the WebPageReader.
 
