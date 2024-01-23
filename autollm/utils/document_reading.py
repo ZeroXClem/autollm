@@ -2,7 +2,10 @@ import os
 import shutil
 import stat
 from pathlib import Path
-from typing import Callable, List, Optional, Sequence, Tuple
+from typing import Callable, List, Optional, Sequence, Tuple, Union
+from autollm.utils.file_extractor import FileExtractor
+from autollm.utils.document import Document
+from autollm.utils.error_handler import ErrorHandler
 
 from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
@@ -24,16 +27,28 @@ def read_files_as_documents(
         required_exts: Optional[List[str]] = None,
         show_progress: bool = True,
         **kwargs) -> Sequence[Document]:
+        input_dir: Optional[str] = None,
+        input_files: Optional[List] = None,
+        exclude_hidden: bool = True,
+        filename_as_id: bool = True,
+        recursive: bool = True,
+        required_exts: Optional[List[str]] = None,
+        show_progress: bool = True,
+        **kwargs) -> Sequence[Document]:
     """
-    Process markdown files to extract documents using SimpleDirectoryReader.
+    Process files to extract documents using SimpleDirectoryReader.
+
+    This function reads files from the specified input directory or input_files, processes them to extract documents and returns a sequence of Document objects.
 
     Parameters:
-        input_dir (str): Path to the directory containing the markdown files.
-        input_files (List): List of file paths.
+        input_dir (Optional[str]): Path to the directory containing the files.
+        input_files (Optional[List]): List of file paths.
         exclude_hidden (bool): Whether to exclude hidden files.
         filename_as_id (bool): Whether to use the filename as the document id.
         recursive (bool): Whether to recursively search for files in the input directory.
         required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
+        show_progress (bool): Whether to display progress during file processing.
+        **kwargs: Additional keyword arguments.
 
     Returns:
         documents (Sequence[Document]): A sequence of Document objects.
@@ -58,11 +73,15 @@ def read_files_as_documents(
     logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
         f"Reading files {input_files}..")
 
-    # Read and process the documents
-    documents = reader.load_data(show_progress=show_progress)
-
-    logger.info(f"Found {len(documents)} 'document(s)'.")
-    return documents
+    try:
+        # Read and process the documents
+        documents = reader.load_data(show_progress=show_progress)
+        logger.info(f"Found {len(documents)} 'document(s)'.")
+        return documents
+    except Exception as e:
+        error_message = f"An error occurred during document extraction: {str(e)}"
+        logger.error(error_message)
+        return []
 
 
 # From http://stackoverflow.com/a/4829285/548792
