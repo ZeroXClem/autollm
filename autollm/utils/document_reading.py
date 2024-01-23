@@ -7,7 +7,7 @@ from typing import Callable, List, Optional, Sequence, Tuple
 from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
-from autollm.utils.git_utils import clone_or_pull_repository
+from autollm.utils.git_utils import clone_or_pull_repository, Repo
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
@@ -65,8 +65,8 @@ def read_files_as_documents(
     return documents
 
 
-# From http://stackoverflow.com/a/4829285/548792
-def on_rm_error(func: Callable, path: str, exc_info: Tuple):
+
+
     """
     Error handler for `shutil.rmtree` to handle permission errors.
 
@@ -75,8 +75,8 @@ def on_rm_error(func: Callable, path: str, exc_info: Tuple):
         path (str): The path to the file or directory which couldn't be removed.
         exc_info (Tuple): Exception information returned by sys.exc_info().
     """
-    os.chmod(path, stat.S_IWRITE)
-    os.unlink(path)
+
+
 
 
 def read_github_repo_as_documents(
@@ -103,7 +103,7 @@ def read_github_repo_as_documents(
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
-        clone_or_pull_repository(git_repo_url, temp_dir)
+        clone_or_pull_repository(git_url, local_path)
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
