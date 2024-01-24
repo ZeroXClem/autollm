@@ -4,7 +4,7 @@ import stat
 from pathlib import Path
 from typing import Callable, List, Optional, Sequence, Tuple
 
-from llama_index.readers.file.base import SimpleDirectoryReader
+from llama_index.readers.file.base import SimpleDirectoryReader, FileExtractor
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
@@ -13,6 +13,9 @@ from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
+from autollm.utils.text_reader import TextReader
+from autollm.utils.docx_reader import DocxReader
+from autollm.utils.html_reader import HTMLReader
 
 
 def read_files_as_documents(
@@ -40,6 +43,9 @@ def read_files_as_documents(
     """
     # Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
+        ".txt": TextReader(),
+        ".docx": DocxReader(),
+        ".html": HTMLReader(),
         ".md": MarkdownReader(read_as_single_doc=True),
         ".pdf": LangchainPDFReader(extract_images=False)
     }
@@ -59,7 +65,11 @@ def read_files_as_documents(
         f"Reading files {input_files}..")
 
     # Read and process the documents
+    try:
     documents = reader.load_data(show_progress=show_progress)
+except Exception as e:
+    logger.error(f"Error occurred while reading files: {str(e)}")
+    raise
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
     return documents
