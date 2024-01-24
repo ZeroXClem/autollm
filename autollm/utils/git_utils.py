@@ -9,7 +9,7 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
 
     Parameters:
         git_url (str): The URL of the Git repository.
-        local_path (Path): The local path where the repository will be cloned or updated.
+        local_path (Union[str, Path): The local path where the repository will be cloned or updated.
     """
     # Lazy import to avoid dependency on GitPython
     try:
