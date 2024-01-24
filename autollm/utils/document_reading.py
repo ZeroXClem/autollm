@@ -137,6 +137,8 @@ def read_website_as_documents(
         List[Document]: A list of Document objects containing content and metadata.
 
     Raises:
+from git import InvalidGitRepositoryError, Repo
+from git import InvalidGitRepositoryError, Repo
         ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
     """
     if (parent_url is None and sitemap_url is None) or (parent_url is not None and sitemap_url is not None):
