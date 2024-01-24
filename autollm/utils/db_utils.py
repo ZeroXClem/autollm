@@ -83,7 +83,7 @@ def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: O
         vector_store_index.insert(document)
 
 
-def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
+def overwrite_vectorindex(vector_store, documents: Optional[Sequence[Document]] = None): import autollm.utils.schema as schema
     """
     Overwrite the vector store index with new documents.
 
