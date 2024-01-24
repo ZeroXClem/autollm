@@ -6,7 +6,8 @@ from llama_index.vector_stores import PineconeVectorStore, QdrantVectorStore
 
 from autollm.utils.env_utils import read_env_variable
 import pinecone
-from autollm.utils.logging import logger
+import logging
+logger = logging.getLogger(__name__)
 
 
 def initialize_pinecone_index(
@@ -66,6 +67,12 @@ def connect_vectorstore(vector_store, **params):
 
 
 def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: Sequence[Document]):
+    try:
+        for document in documents:
+            delete_documents_by_id(vector_store_index, [document.id_])
+            vector_store_index.insert(document)
+    except Exception as e:
+        logger.error(f'An error occurred while updating the vector store index: {e}')
     """
     Update the vector store index with new documents.
 
