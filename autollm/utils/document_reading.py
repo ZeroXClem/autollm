@@ -13,6 +13,9 @@ from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
+from autollm.utils.text_reader import TextReader
+from autollm.utils.docx_reader import DocxReader
+from autollm.utils.html_reader import HTMLReader
 
 
 def read_files_as_documents(
@@ -40,6 +43,9 @@ def read_files_as_documents(
     """
     # Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
+        ".txt": TextReader(),
+        ".docx": DocxReader(),
+        ".html": HTMLReader(),
         ".md": MarkdownReader(read_as_single_doc=True),
         ".pdf": LangchainPDFReader(extract_images=False)
     }
