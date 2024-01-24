@@ -5,7 +5,9 @@ from llama_index import Document, StorageContext, VectorStoreIndex
 from llama_index.vector_stores import PineconeVectorStore, QdrantVectorStore
 
 from autollm.utils.env_utils import read_env_variable
-from autollm.utils.logging import logger
+import pinecone
+import logging
+logger = logging.getLogger(__name__)
 
 
 def initialize_pinecone_index(
@@ -17,7 +19,12 @@ def initialize_pinecone_index(
     environment = read_env_variable('PINECONE_ENVIRONMENT')
 
     # Initialize Pinecone
-    pinecone.init(api_key=api_key, environment=environment)
+    logger.info('Initializing Pinecone index')
+    try:
+        pinecone.init(api_key=api_key, environment=environment)
+        logger.info('Pinecone index initialized successfully')
+    except Exception as e:
+        logger.error(f'An error occurred while initializing Pinecone index: {e}')
     pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
 
 
@@ -42,10 +49,16 @@ def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = '
 
 def connect_vectorstore(vector_store, **params):
     """Connect to an existing vector store."""
-    import pinecone
     from qdrant_client import QdrantClient
 
-    # Logic to connect to vector store based on the specific type of vector store
+    try:
+        if isinstance(vector_store, PineconeVectorStore):
+            vector_store.pinecone_index = pinecone.Index(params['index_name'])
+        elif isinstance(vector_store, QdrantVectorStore):
+            vector_store.client = QdrantClient(url=params['url'], api_key=params['api_key'])
+        # TODO: Add more elif conditions for other vector stores as needed
+    except Exception as e:
+        logger.error(f'An error occurred while connecting to the vector store: {e}')
     if isinstance(vector_store, PineconeVectorStore):
         vector_store.pinecone_index = pinecone.Index(params['index_name'])
     elif isinstance(vector_store, QdrantVectorStore):
@@ -54,6 +67,12 @@ def connect_vectorstore(vector_store, **params):
 
 
 def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: Sequence[Document]):
+    try:
+        for document in documents:
+            delete_documents_by_id(vector_store_index, [document.id_])
+            vector_store_index.insert(document)
+    except Exception as e:
+        logger.error(f'An error occurred while updating the vector store index: {e}')
     """
     Update the vector store index with new documents.
 
