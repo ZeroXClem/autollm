@@ -5,9 +5,9 @@ from pathlib import Path
 from typing import Callable, List, Optional, Sequence, Tuple
 
 from autollm.utils.file.base import SimpleDirectoryReader
-from autollm.schema import Document
+from autollm.utils.schema import Document
 
-from autollm.utils.git_utils import clone_or_pull_repository
+from autollm.utils.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
