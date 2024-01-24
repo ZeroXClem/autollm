@@ -123,7 +123,7 @@ class AutoFastAPI:
         Create an FastAPI instance from a llama-index query engine.
 
         ```python
-        from autollm.auto.fastapi_app import QueryPayload, AutoFastAPI
+        from autollm.auto.models import QueryPayload, AutoFastAPI
         import uvicorn
         import requests
 
