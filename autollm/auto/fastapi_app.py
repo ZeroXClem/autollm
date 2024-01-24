@@ -39,7 +39,7 @@ class AutoFastAPI:
         /query that takes a QueryPayload and returns a QueryResponse.
 
         ```python
-        from autollm.auto.fastapi_app import QueryPayload, AutoFastAPI
+        from autollm.auto.models import QueryPayload, AutoFastAPI
         import uvicorn
         import requests
 
