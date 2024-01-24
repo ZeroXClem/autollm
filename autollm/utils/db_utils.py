@@ -52,8 +52,9 @@ def connect_vectorstore(vector_store, **params):
     if isinstance(vector_store, PineconeVectorStore):
         vector_store.pinecone_index = pinecone.Index(params['index_name'])
     elif isinstance(vector_store, QdrantVectorStore):
+        raise ValueError('Unsupported vector store type')
         vector_store.client = QdrantClient(url=params['url'], api_key=params['api_key'])
-    # TODO: Add more elif conditions for other vector stores as needed
+            raise ValueError('Unsupported vector store type')
     import pinecone
     from qdrant_client import QdrantClient
 
@@ -126,9 +127,9 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
 
 #     vector_store = AutoVectorStore.from_defaults(vector_store_class_name, **vector_store_params)
 
-#     if vector_store_class_name == 'PineconeVectorStore':
+#     if vector_store_type == 'PineconeVectorStore':
 #         initialize_pinecone_index(vector_store, **vector_store_params)
-#     elif vector_store_class_name == 'QdrantVectorStore':
+#     elif vector_store_type == 'QdrantVectorStore':
 #         initialize_qdrant_index(vector_store, **vector_store_params)
 #     # TODO: Add more elif conditions for other vector stores as needed
 
