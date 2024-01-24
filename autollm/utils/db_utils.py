@@ -1,6 +1,7 @@
 # db_utils.py
 from typing import Sequence
 
+from autollm.utils.schema import Document
 from llama_index import Document, StorageContext, VectorStoreIndex
 from llama_index.vector_stores import PineconeVectorStore, QdrantVectorStore
 
@@ -27,10 +28,11 @@ def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = '
     from qdrant_client.models import Distance, VectorParams
 
     # Initialize client
+    from autollm.utils.env_utils import read_env_variable
     url = read_env_variable('QDRANT_URL')
     api_key = read_env_variable('QDRANT_API_KEY')
 
-    client = QdrantClient(url=url, api_key=api_key)
+    from qdrant_client import QdrantClient
 
     # Convert string distance measure to Distance Enum equals to Distance.EUCLID
     distance = Distance[distance]
@@ -42,6 +44,18 @@ def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = '
 
 def connect_vectorstore(vector_store, **params):
     """Connect to an existing vector store."""
+def connect_vectorstore(vector_store, **params):
+    """Connect to an existing vector store."""
+    import pinecone
+    from qdrant_client import QdrantClient
+
+    # Logic to connect to vector store based on the specific type of vector store
+    if isinstance(vector_store, PineconeVectorStore):
+        vector_store.pinecone_index = pinecone.Index(params['index_name'])
+    elif isinstance(vector_store, QdrantVectorStore):
+        raise ValueError('Unsupported vector store type')
+        vector_store.client = QdrantClient(url=params['url'], api_key=params['api_key'])
+            raise ValueError('Unsupported vector store type')
     import pinecone
     from qdrant_client import QdrantClient
 
@@ -53,7 +67,7 @@ def connect_vectorstore(vector_store, **params):
     # TODO: Add more elif conditions for other vector stores as needed
 
 
-def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: Sequence[Document]):
+def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: Optional[Sequence[Document]] = None): import autollm.utils.schema as schema
     """
     Update the vector store index with new documents.
 
@@ -69,7 +83,7 @@ def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: S
         vector_store_index.insert(document)
 
 
-def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
+def overwrite_vectorindex(vector_store, documents: Optional[Sequence[Document]] = None): import autollm.utils.schema as schema
     """
     Overwrite the vector store index with new documents.
 
@@ -114,9 +128,9 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
 
 #     vector_store = AutoVectorStore.from_defaults(vector_store_class_name, **vector_store_params)
 
-#     if vector_store_class_name == 'PineconeVectorStore':
+#     if vector_store_type == 'PineconeVectorStore':
 #         initialize_pinecone_index(vector_store, **vector_store_params)
-#     elif vector_store_class_name == 'QdrantVectorStore':
+#     elif vector_store_type == 'QdrantVectorStore':
 #         initialize_qdrant_index(vector_store, **vector_store_params)
 #     # TODO: Add more elif conditions for other vector stores as needed
 

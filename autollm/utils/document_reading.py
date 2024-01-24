@@ -2,12 +2,13 @@ import os
 import shutil
 import stat
 from pathlib import Path
-from typing import Callable, List, Optional, Sequence, Tuple
+from typing import Callable, List, Sequence, Tuple
+from typing import Optional
 
-from llama_index.readers.file.base import SimpleDirectoryReader
-from llama_index.schema import Document
+from autollm.utils.file.base import SimpleDirectoryReader
+from autollm.utils.schema import Document
 
-from autollm.utils.git_utils import clone_or_pull_repository
+from autollm.utils.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
@@ -16,7 +17,7 @@ from autollm.utils.website_reader import WebSiteReader
 
 
 def read_files_as_documents(
-        input_dir: Optional[str] = None,
+        input_dir: str = '',
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
         filename_as_id: bool = True,
@@ -139,7 +140,8 @@ def read_website_as_documents(
     Raises:
         ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
     """
-    if (parent_url is None and sitemap_url is None) or (parent_url is not None and sitemap_url is not None):
+    if parent_url is None and sitemap_url is None:
+        raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
         raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
 
     reader = WebSiteReader()
@@ -168,5 +170,6 @@ def read_webpage_as_documents(url: str) -> List[Document]:
         List[Document]: A list of Document objects containing content and metadata from the web page.
     """
     reader = WebPageReader()
+    from autollm.utils.schema import Document
     documents = reader.load_data(url)
     return documents
