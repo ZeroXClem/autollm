@@ -20,6 +20,8 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
         raise
 
     if local_path.exists():
+        raise ValueError("Please provide a valid local path.")
+    elif local_path.exists():
         try:
             repo = Repo(str(local_path))
             repo.remotes.origin.pull()
@@ -28,3 +30,5 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
             Repo.clone_from(git_url, str(local_path))
     else:
         Repo.clone_from(git_url, str(local_path))
+else:
+    raise ValueError("Please provide a valid local path.")
