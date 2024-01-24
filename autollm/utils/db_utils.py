@@ -5,6 +5,7 @@ from llama_index import Document, StorageContext, VectorStoreIndex
 from llama_index.vector_stores import PineconeVectorStore, QdrantVectorStore
 
 from autollm.utils.env_utils import read_env_variable
+import pinecone
 from autollm.utils.logging import logger
 
 
@@ -17,7 +18,12 @@ def initialize_pinecone_index(
     environment = read_env_variable('PINECONE_ENVIRONMENT')
 
     # Initialize Pinecone
-    pinecone.init(api_key=api_key, environment=environment)
+    logger.info('Initializing Pinecone index')
+    try:
+        pinecone.init(api_key=api_key, environment=environment)
+        logger.info('Pinecone index initialized successfully')
+    except Exception as e:
+        logger.error(f'An error occurred while initializing Pinecone index: {e}')
     pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
 
 
