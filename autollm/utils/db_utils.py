@@ -1,6 +1,7 @@
 # db_utils.py
 from typing import Sequence
 
+from autollm.utils.schema import Document
 from llama_index import Document, StorageContext, VectorStoreIndex
 from llama_index.vector_stores import PineconeVectorStore, QdrantVectorStore
 
@@ -66,7 +67,7 @@ def connect_vectorstore(vector_store, **params):
     # TODO: Add more elif conditions for other vector stores as needed
 
 
-def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: Sequence[Document]):
+def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: Optional[Sequence[Document]] = None): import autollm.utils.schema as schema
     """
     Update the vector store index with new documents.
 
