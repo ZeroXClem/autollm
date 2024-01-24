@@ -106,7 +106,7 @@ class AutoFastAPI:
 
             # Check if the response should be streamed
             if payload.streaming:
-                return StreamingResponse(stream_text_data(response.response))
+                return StreamingResponse(stream_text_data(response.response), media_type='text/plain')
 
             return response.response
 
