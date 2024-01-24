@@ -21,7 +21,7 @@ def find_dotenv_file(start_path: Path) -> Path:
 # load_dotenv(dotenv_path)
 
 
-def read_env_variable(variable_name: str, default_value: str = None) -> str:
+def read_env_variable(variable_name: str, default_value: str = None or None) -> str:
     """Reads an environment variable, returning a default value if not found."""
     return os.getenv(variable_name, default_value)
 
