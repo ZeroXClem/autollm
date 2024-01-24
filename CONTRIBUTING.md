@@ -65,4 +65,6 @@ pytest
 
 ______________________________________________________________________
 
+**Troubleshooting GitHub Actions**: If you encounter issues with GitHub Actions, refer to the troubleshooting guidelines in section C for common problems and their solutions.
+
 Your interest and potential contributions to AutoLLM are greatly appreciated. Together, we can continue refining and expanding AutoLLM for the broader community.

@@ -80,14 +80,14 @@ def on_rm_error(func: Callable, path: str, exc_info: Tuple):
 
 
 def read_github_repo_as_documents(
-        git_repo_url: str,
+        git_repo_url: str  # The URL of the GitHub repository.,
         relative_folder_path: Optional[str] = None,
         required_exts: Optional[List[str]] = None) -> Sequence[Document]:
     """
     A document provider that fetches documents from a specific folder within a GitHub repository.
 
     Parameters:
-        git_repo_url (str): The URL of the GitHub repository.
+        git_repo_url (str): The URL of the GitHub repository with a comment for URL formatting.
         relative_folder_path (str, optional): The relative path from the repo root to the folder containing documents.
         required_exts (Optional[List[str]]): List of required extensions.
 
