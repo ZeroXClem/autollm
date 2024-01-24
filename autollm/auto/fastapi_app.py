@@ -1,7 +1,7 @@
 from typing import Optional, Sequence
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, Response
 from llama_index import Document
 from llama_index.indices.query.base import BaseQueryEngine
 from pydantic import BaseModel, Field
@@ -39,7 +39,7 @@ class AutoFastAPI:
         /query that takes a QueryPayload and returns a QueryResponse.
 
         ```python
-        from autollm.auto.fastapi_app import QueryPayload, AutoFastAPI
+        from autollm.auto.models import QueryPayload, AutoFastAPI
         import uvicorn
         import requests
 
@@ -106,7 +106,7 @@ class AutoFastAPI:
 
             # Check if the response should be streamed
             if payload.streaming:
-                return StreamingResponse(stream_text_data(response.response))
+                return StreamingResponse(stream_text_data(response.response), media_type='text/plain')
 
             return response.response
 
@@ -123,14 +123,15 @@ class AutoFastAPI:
         Create an FastAPI instance from a llama-index query engine.
 
         ```python
-        from autollm.auto.fastapi_app import QueryPayload, AutoFastAPI
+        from autollm.auto.models import QueryPayload, AutoFastAPI
         import uvicorn
         import requests
 
         # Start the server using from_query_engine class method
         app = AutoFastAPI.from_query_engine(query_engine)
         uvicorn.run(app, host="0.0.0.0", port=8000)
-
+    response = query_engine.query(user_query)
+    response.headers["X-Custom-Header"] = "Custom Value"
         # Post request to the server
         data = {
            "user_query": "why so serious?"
