@@ -2,13 +2,13 @@
 
 Thank you for considering a contribution to AutoLLM. Your input is invaluable to our project's continued growth and improvement.
 
-## PR Guidelines 📝
+## PR Guidelines 📝: Update the PR Guidelines section in the CONTRIBUTING.md file to include instructions for creating a pull request related to fixing failing GitHub Actions. Provide guidelines for creating a new branch, keeping PRs small, and providing detailed information about the changes made.
 
 To streamline the integration of your contributions:
 
 - **Start by Forking 🍴**: This allows you to work on your own copy of the project. See [these steps](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork) to open a PR from your fork.
 
-- **New Branch 🌱**: Always create a new branch for your PR. It keeps things neat and makes the review process smoother.
+- **New Branch 🌱**: Always create a new branch for your PR related to fixing failing GitHub Actions. It keeps things neat and makes the review process smoother. Ensure your PR provides detailed information about the changes made and aligns with the existing test suite.
 
 - **Size Matters 📏**: Aim for smaller PRs. If you have a big feature in mind, consider breaking it up. It helps us understand your contribution better and gets you feedback quicker!
 
