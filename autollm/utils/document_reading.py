@@ -2,7 +2,8 @@ import os
 import shutil
 import stat
 from pathlib import Path
-from typing import Callable, List, Optional, Sequence, Tuple
+from typing import Callable, List, Sequence, Tuple
+from typing import Optional
 
 from autollm.utils.file.base import SimpleDirectoryReader
 from autollm.utils.schema import Document
@@ -169,5 +170,6 @@ def read_webpage_as_documents(url: str) -> List[Document]:
         List[Document]: A list of Document objects containing content and metadata from the web page.
     """
     reader = WebPageReader()
+    from autollm.utils.schema import Document
     documents = reader.load_data(url)
     return documents
