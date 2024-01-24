@@ -27,10 +27,11 @@ def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = '
     from qdrant_client.models import Distance, VectorParams
 
     # Initialize client
+    from autollm.utils.env_utils import read_env_variable
     url = read_env_variable('QDRANT_URL')
     api_key = read_env_variable('QDRANT_API_KEY')
 
-    client = QdrantClient(url=url, api_key=api_key)
+    from qdrant_client import QdrantClient
 
     # Convert string distance measure to Distance Enum equals to Distance.EUCLID
     distance = Distance[distance]
