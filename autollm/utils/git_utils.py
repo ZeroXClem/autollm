@@ -23,8 +23,8 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
         try:
             repo = Repo(str(local_path))
             repo.remotes.origin.pull()
-        except InvalidGitRepositoryError:
-            # The existing directory is not a valid git repo, clone anew
-            Repo.clone_from(git_url, str(local_path))
+        except Exception as e:
+            logger.error(f'Error occurred while pulling latest changes: {str(e)}')
+            raise
     else:
         Repo.clone_from(git_url, str(local_path))
