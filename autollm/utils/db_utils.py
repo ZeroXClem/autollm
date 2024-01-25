@@ -1,15 +1,27 @@
-# db_utils.py
-from typing import Sequence
+def initialize_qdrant_index(index_name: str, size: int = 1536, distance: str = 'EUCLID'):
+    """Initialize Qdrant index."""
+    from qdrant_client import QdrantClient
+    from qdrant_client.models import Distance, VectorParams
 
-from llama_index import Document, StorageContext, VectorStoreIndex
-from llama_index.vector_stores import PineconeVectorStore, QdrantVectorStore
+    # Initialize client
+    try:
+        url = read_env_variable('QDRANT_URL')
+        api_key = read_env_variable('QDRANT_API_KEY')
+    except Exception as e:
+        logger.error(f'Error occurred while reading environment variables: {str(e)}')
+        raise
 
-from autollm.utils.env_utils import read_env_variable
-from autollm.utils.logging import logger
+    client = QdrantClient(url=url, api_key=api_key)
+
+    # Convert string distance measure to Distance Enum equals to Distance.EUCLID
+    distance = Distance[distance]
+
+    # Create index
+    client.recreate_collection(
+        collection_name=index_name, vectors_config=VectorParams(size=size, distance=distance))
 
 
-def initialize_pinecone_index(
-        index_name: str, dimension: int = 1536, metric: str = 'euclidean', pod_type: str = 'p1'):
+def connect_vectorstore(vector_store, **params):
     import pinecone
 
     # Read environment variables for Pinecone initialization
@@ -54,15 +66,16 @@ def connect_vectorstore(vector_store, **params):
 
 
 def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: Sequence[Document]):
-    """
-    Update the vector store index with new documents.
+    for document in documents:
+        try:
+            delete_documents_by_id(vector_store_index, [document.id_])
+            vector_store_index.insert(document)
+        except Exception as e:
+            logger.error(f'Error occurred while updating vector store index: {str(e)}')
+            raise
 
-    Parameters:
-        vector_store_index: An instance of AutoVectorStoreIndex or any compatible vector store.
-        documents (Sequence[Document]): List of documents to update.
 
-    Returns:
-        None
+def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
     """
     for document in documents:
         delete_documents_by_id(vector_store_index, [document.id_])
