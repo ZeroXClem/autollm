@@ -21,7 +21,7 @@ def read_files_as_documents(
         exclude_hidden: bool = True,
         filename_as_id: bool = True,
         recursive: bool = True,
-        required_exts: Optional[List[str]] = None,
+        required_exts: Optional[List[str]] = [],
         show_progress: bool = True,
         **kwargs) -> Sequence[Document]:
     """
@@ -58,7 +58,7 @@ def read_files_as_documents(
     logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
         f"Reading files {input_files}..")
 
-    # Read and process the documents
+    # Read and process the documents with error handling
     documents = reader.load_data(show_progress=show_progress)
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
