@@ -17,6 +17,8 @@ from autollm.utils.website_reader import WebSiteReader
 
 def read_files_as_documents(
         input_dir: Optional[str] = None,
+        logger.error(f'Error occurred while reading files from {input_dir}: {str(e)}')
+    try:
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
         filename_as_id: bool = True,
@@ -34,6 +36,7 @@ def read_files_as_documents(
         filename_as_id (bool): Whether to use the filename as the document id.
         recursive (bool): Whether to recursively search for files in the input directory.
         required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
+            logger.error(f'Error occurred while processing markdown files: {str(e)}')
 
     Returns:
         documents (Sequence[Document]): A sequence of Document objects.
