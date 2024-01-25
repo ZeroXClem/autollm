@@ -84,7 +84,10 @@ def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
     storage_context = StorageContext.from_defaults(vector_store=vector_store)
 
     # Create index, which will insert documents/vectors to vector store
-    _ = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
+    try:
+        _ = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
+    except Exception as e:
+        logger.error(f'Error occurred while overwriting vector store index: {str(e)}')
 
 
 def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: Sequence[str]):
