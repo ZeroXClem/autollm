@@ -10,7 +10,21 @@ from autollm.utils.logging import logger
 
 def initialize_pinecone_index(
         index_name: str, dimension: int = 1536, metric: str = 'euclidean', pod_type: str = 'p1'):
-    import pinecone
+    import pinecone.exceptions
+    
+    try:
+        # Initialize client
+        client = QdrantClient(url=url, api_key=api_key)
+    
+        # Convert string distance measure to Distance Enum equals to Distance.EUCLID
+        distance = Distance[distance]
+    
+        # Create index
+        client.recreate_collection(
+            collection_name=index_name, vectors_config=VectorParams(size=size, distance=distance))
+    except pinecone.exceptions.PineconeException as e:
+        logger.error(f"Error initializing Qdrant index: {e}")
+        raise
 
     # Read environment variables for Pinecone initialization
     api_key = read_env_variable('PINECONE_API_KEY')
@@ -60,7 +74,18 @@ def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: S
     Parameters:
         vector_store_index: An instance of AutoVectorStoreIndex or any compatible vector store.
         documents (Sequence[Document]): List of documents to update.
-
+from autollm.utils.env_utils import read_env_variable
+from qdrant_client.exceptions import QdrantClientException
+from qdrant_client.models import Distance, VectorParams
+from autollm.utils.logging import logger
+from autollm.utils.env_utils import read_env_variable
+from qdrant_client import QdrantClient
+from qdrant_client.models import Distance, VectorParams
+from autollm.utils.logging import logger
+from autollm.utils.env_utils import read_env_variable
+from qdrant_client import QdrantClient
+from qdrant_client.models import Distance, VectorParams
+from autollm.utils.logging import logger
     Returns:
         None
     """
