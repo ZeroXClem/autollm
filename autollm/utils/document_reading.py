@@ -62,7 +62,7 @@ def read_files_as_documents(
     # Read and process the documents
     documents = reader.load_data(show_progress=show_progress)
 
-    logger.info(f"Found {len(documents)} 'document(s)'.")
+    logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     return documents
 
 
