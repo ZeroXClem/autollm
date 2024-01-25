@@ -93,10 +93,14 @@ class MarkdownReader(BaseReader):
         if content is None:
             with open(filepath, encoding='utf-8') as f:
                 content = f.read()
-        if self._remove_hyperlinks:
-            content = self.remove_hyperlinks(content)
-        if self._remove_images:
-            content = self.remove_images(content)
+        try:
+            if self._remove_hyperlinks:
+                content = self.remove_hyperlinks(content)
+            if self._remove_images:
+                content = self.remove_images(content)
+        except Exception as e:
+            logger.error(f'Error occurred while removing hyperlinks or images: {str(e)}')
+            raise
         markdown_tups = self.markdown_to_tups(content)
         return markdown_tups
 
@@ -117,7 +121,11 @@ class MarkdownReader(BaseReader):
         Returns:
             List[Document]: List of Document objects representing header-docs.
         """
-        tups = self.parse_tups(file, content=content)
+        try:
+            tups = self.parse_tups(file, content=content)
+        except Exception as e:
+            logger.error(f'Error occurred while parsing markdown file: {str(e)}')
+            raise
         results = []
 
         for header, value in tups:
