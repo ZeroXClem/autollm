@@ -78,8 +78,6 @@ def on_rm_error(func: Callable, path: str, exc_info: Tuple):
     """
     os.chmod(path, stat.S_IWRITE)
     os.unlink(path)
-
-
 def read_github_repo_as_documents(
         git_repo_url: str,
         relative_folder_path: Optional[str] = None,
