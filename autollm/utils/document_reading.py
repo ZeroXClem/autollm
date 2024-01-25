@@ -5,6 +5,8 @@ from pathlib import Path
 from typing import Callable, List, Optional, Sequence, Tuple
 
 from llama_index.readers.file.base import SimpleDirectoryReader
+from autollm.utils.git_utils import clone_or_pull_repository
+from autollm.utils.logging import logger
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
@@ -20,6 +22,8 @@ def read_files_as_documents(
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
         filename_as_id: bool = True,
+        from autollm.utils.git_utils import clone_or_pull_repository
+        from autollm.utils.logging import logger
         recursive: bool = True,
         required_exts: Optional[List[str]] = None,
         show_progress: bool = True,
