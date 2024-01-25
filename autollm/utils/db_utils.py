@@ -109,8 +109,7 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
 
 # TODO: refactor and update.
 # def initialize_database(
-from autollm.utils.logging import logger
-#     logger.info('Initializing vector store')
+logger.info('Initializing vector store')
 
 #     vector_store = AutoVectorStore.from_defaults(vector_store_class_name, **vector_store_params)
 
