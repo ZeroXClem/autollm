@@ -5,6 +5,8 @@ from pathlib import Path
 from typing import Callable, List, Optional, Sequence, Tuple
 
 from llama_index.readers.file.base import SimpleDirectoryReader
+from autollm.utils.git_utils import clone_or_pull_repository
+from autollm.utils.logging import logger
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
@@ -20,6 +22,7 @@ def read_files_as_documents(
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
         filename_as_id: bool = True,
+        from autollm.utils.git_utils import clone_or_pull_repository
         recursive: bool = True,
         required_exts: Optional[List[str]] = None,
         show_progress: bool = True,
@@ -108,7 +111,10 @@ def read_github_repo_as_documents(
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
 
-        # Read and process the documents
+        # Clone or pull the Git repository
+    clone_or_pull_repository(git_repo_url, temp_dir)
+
+    # Read and process the documents
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
         # Logging (assuming logger is configured)
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
@@ -139,6 +145,8 @@ def read_website_as_documents(
     Raises:
         ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
     """
+    # Logging (assuming logger is configured)
+    logger.info(f"Reading documents from website or sitemap..")
     if (parent_url is None and sitemap_url is None) or (parent_url is not None and sitemap_url is not None):
         raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
 
@@ -168,5 +176,7 @@ def read_webpage_as_documents(url: str) -> List[Document]:
         List[Document]: A list of Document objects containing content and metadata from the web page.
     """
     reader = WebPageReader()
+    # Logging (assuming logger is configured)
+    logger.info(f"Reading documents from webpage {url}..")
     documents = reader.load_data(url)
     return documents
