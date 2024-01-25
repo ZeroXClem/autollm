@@ -20,13 +20,20 @@ Maintaining a consistent codebase is crucial. We utilize tools such as [flake8](
 
 ### Pre-commit Hooks 🔗
 
+### Pre-commit Hooks 🔗
+
 1. **Installation**:
 
    ```bash
    pip install autollm[dev]
    ```
 
-1. **Pre-commit Setup**:
+2. **Pre-commit Setup**:
+  
+     ```bash
+     pre-commit install
+     pre-commit run --all-files
+     ```
 
    ```bash
    pre-commit install

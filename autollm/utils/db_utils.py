@@ -107,10 +107,7 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
         vector_store_index.delete_ref_doc(document_id, delete_from_docstore=True)
 
 
-# TODO: refactor and update.
-# def initialize_database(
-#         documents: Sequence[Document], vector_store_class_name: str, **vector_store_params) -> None:
-#     logger.info('Initializing vector store')
+logger.info('Updating vector store with documents')
 
 #     vector_store = AutoVectorStore.from_defaults(vector_store_class_name, **vector_store_params)
 

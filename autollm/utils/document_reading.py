@@ -8,6 +8,7 @@ from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
+import logging
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
@@ -61,7 +62,7 @@ def read_files_as_documents(
     # Read and process the documents
     documents = reader.load_data(show_progress=show_progress)
 
-    logger.info(f"Found {len(documents)} 'document(s)'.")
+    logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     return documents
 
 
@@ -77,8 +78,6 @@ def on_rm_error(func: Callable, path: str, exc_info: Tuple):
     """
     os.chmod(path, stat.S_IWRITE)
     os.unlink(path)
-
-
 def read_github_repo_as_documents(
         git_repo_url: str,
         relative_folder_path: Optional[str] = None,
