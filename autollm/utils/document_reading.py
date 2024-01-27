@@ -15,7 +15,19 @@ from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
 
 
-def read_files_as_documents(
+import os
+import shutil
+import stat
+from pathlib import Path
+from typing import Callable, List, Optional, Sequence, Tuple
+
+import os
+import shutil
+import stat
+
+from autollm.utils.logging import logger
+
+def read_files_as_documents((
         input_dir: Optional[str] = None,
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
@@ -108,6 +120,10 @@ def read_github_repo_as_documents(
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
 
+        # Add logging statements to track the progress of reading files
+    logger.info("Reading and processing the documents..")
+
+    try:
         # Read and process the documents
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
         # Logging (assuming logger is configured)
