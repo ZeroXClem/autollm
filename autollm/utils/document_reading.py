@@ -17,7 +17,7 @@ from autollm.utils.website_reader import WebSiteReader
 
 def read_files_as_documents(
         input_dir: Optional[str] = None,
-        input_files: Optional[List] = None,
+        input_files: Optional[List[str]] = None,
         exclude_hidden: bool = True,
         filename_as_id: bool = True,
         recursive: bool = True,
