@@ -13,6 +13,13 @@ from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
+import os
+import shutil
+import stat
+from pathlib import Path
+from typing import Callable, List, Optional, Sequence, Tuple
+from llama_index.readers.file.base import SimpleDirectoryReader
+from llama_index.schema import Document
 
 
 def read_files_as_documents(
