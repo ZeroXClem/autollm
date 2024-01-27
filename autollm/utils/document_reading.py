@@ -16,7 +16,7 @@ from autollm.utils.website_reader import WebSiteReader
 
 
 def read_files_as_documents(
-        input_dir: Optional[str] = None,
+        input_dir: Optional[str] = None, parent_url: Optional[str] = None, error_log: Optional[str] = None,
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
         filename_as_id: bool = True,
@@ -28,7 +28,7 @@ def read_files_as_documents(
     Process markdown files to extract documents using SimpleDirectoryReader.
 
     Parameters:
-        input_dir (str): Path to the directory containing the markdown files.
+        input_dir (str, optional): Path to the directory containing the markdown files.
         input_files (List): List of file paths.
         exclude_hidden (bool): Whether to exclude hidden files.
         filename_as_id (bool): Whether to use the filename as the document id.
@@ -109,7 +109,12 @@ def read_github_repo_as_documents(
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
 
         # Read and process the documents
+        try:
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+    except Exception as e:
+        error_log = f'Failed to read files as documents: {str(e)}'
+        logger.error(error_log)
+        raise e
         # Logging (assuming logger is configured)
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     finally:
