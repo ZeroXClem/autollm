@@ -16,6 +16,8 @@ from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.vector_store_index import VectorStoreIndex
 from autollm.utils.website_reader import WebSiteReader
 
+from autollm.utils.db_utils import delete_documents_by_id
+
 
 def read_files_as_documents(
         input_dir: Optional[str] = None,
