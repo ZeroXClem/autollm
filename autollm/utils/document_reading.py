@@ -8,6 +8,11 @@ from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
+import os
+import shutil
+from typing import Tuple, Optional
+from autollm.utils.logging import logger
+from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
@@ -111,10 +116,11 @@ def read_github_repo_as_documents(
         # Read and process the documents
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
         # Logging (assuming logger is configured)
-        logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
-    finally:
-        # Delete the temporary directory
-        shutil.rmtree(temp_dir, onerror=on_rm_error)
+        if not e:
+            logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
+        finally:
+            # Delete the temporary directory
+            shutil.rmtree(temp_dir, onerror=on_rm_error)
 
     return documents
 
