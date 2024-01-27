@@ -4,15 +4,24 @@ import stat
 from pathlib import Path
 from typing import Callable, List, Optional, Sequence, Tuple
 
-from llama_index.readers.file.base import SimpleDirectoryReader
-from llama_index.schema import Document
+from autollm.utils.document import Document
+
+from autollm.utils.directory_reader import SimpleDirectoryReader
+from autollm.utils.directory_reader import SimpleDirectoryReader
+from autollm.utils.document import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
+from autollm.utils.vector_store_index import VectorStoreIndex
+from autollm.utils.storage import StorageContext
+from autollm.utils.vector_store_index import VectorStoreIndex
+
 from autollm.utils.website_reader import WebSiteReader
+
+from autollm.utils.db_utils import delete_documents_by_id
 
 
 def read_files_as_documents(
@@ -97,6 +106,7 @@ def read_github_repo_as_documents(
 
     # Ensure the temp_dir directory exists
     temp_dir = Path("autollm/temp/")
+    from autollm.utils.document_reading import on_rm_error
     temp_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
