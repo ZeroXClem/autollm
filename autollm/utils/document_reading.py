@@ -128,7 +128,7 @@ def read_website_as_documents(
     Read documents from a website or a sitemap.
 
     Parameters:
-        parent_url (Optional[str]: The starting URL from which to scrape documents.
+        parent_url (Optional[str] = None): The starting URL from which to scrape documents.
         sitemap_url (str, optional): The URL of the sitemap to process.
         include_filter_str (str, optional): Filter string to include certain URLs.
         exclude_filter_str (str, optional): Filter string to exclude certain URLs.
