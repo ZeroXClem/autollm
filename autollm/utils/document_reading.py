@@ -119,54 +119,51 @@ def read_github_repo_as_documents(
     return documents
 
 
-def read_website_as_documents(
-        parent_url: Optional[str] = None,
-        sitemap_url: Optional[str] = None,
-        include_filter_str: Optional[str] = None,
-        exclude_filter_str: Optional[str] = None) -> List[Document]:
+def read_files_as_documents(
+        input_dir: Optional[str] = None,
+        input_files: Optional[List] = None,
+        exclude_hidden: bool = True,
+        filename_as_id: bool = True,
+        recursive: bool = True,
+        required_exts: Optional[List[str]] = None,
+        show_progress: bool = True,
+        **kwargs) -> Sequence[Document]:
     """
-    Read documents from a website or a sitemap.
+    Process markdown files to extract documents using SimpleDirectoryReader.
 
     Parameters:
-        parent_url (str, optional): The starting URL from which to scrape documents.
-        sitemap_url (str, optional): The URL of the sitemap to process.
-        include_filter_str (str, optional): Filter string to include certain URLs.
-        exclude_filter_str (str, optional): Filter string to exclude certain URLs.
+        input_dir (str): Path to the directory containing the markdown files.
+        input_files (List): List of file paths.
+        exclude_hidden (bool): Whether to exclude hidden files.
+        filename_as_id (bool): Whether to use the filename as the document id.
+        recursive (bool): Whether to recursively search for files in the input directory.
+        required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
 
     Returns:
-        List[Document]: A list of Document objects containing content and metadata.
-
-    Raises:
-        ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
+        documents (Sequence[Document]): A sequence of Document objects.
     """
-    if (parent_url is None and sitemap_url is None) or (parent_url is not None and sitemap_url is not None):
-        raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
+    # Configure file_extractor to use MarkdownReader for md files
+    file_extractor = {
+        ".md": MarkdownReader(read_as_single_doc=True),
+        ".pdf": LangchainPDFReader(extract_images=False)
+    }
 
-    reader = WebSiteReader()
-    if parent_url:
-        documents = reader.load_data(
-            parent_url=parent_url,
-            include_filter_str=include_filter_str,
-            exclude_filter_str=exclude_filter_str)
-    else:
-        documents = reader.load_data(
-            sitemap_url=sitemap_url,
-            include_filter_str=include_filter_str,
-            exclude_filter_str=exclude_filter_str)
+    # Initialize SimpleDirectoryReader
+    reader = SimpleDirectoryReader(
+        input_dir=input_dir,
+        exclude_hidden=exclude_hidden,
+        file_extractor=file_extractor,
+        input_files=input_files,
+        filename_as_id=filename_as_id,
+        recursive=recursive,
+        required_exts=required_exts,
+        **kwargs)
 
-    return documents
+    logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
+        f"Reading files {input_files}..")
 
+    # Read and process the documents
+    documents = reader.load_data(show_progress=show_progress)
 
-def read_webpage_as_documents(url: str) -> List[Document]:
-    """
-    Read documents from a single webpage URL using the WebPageReader.
-
-    Parameters:
-        url (str): The URL of the web page to read.
-
-    Returns:
-        List[Document]: A list of Document objects containing content and metadata from the web page.
-    """
-    reader = WebPageReader()
-    documents = reader.load_data(url)
+    logger.info(f"Found {len(documents)} 'document(s)'.")
     return documents
