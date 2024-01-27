@@ -1,6 +1,14 @@
 import os
 import shutil
 import stat
+import shutil
+from typing import Optional, List
+from autollm.utils.git_utils import clone_or_pull_repository
+from autollm.utils.logging import logger
+from autollm.utils.markdown_reader import MarkdownReader
+from autollm.utils.pdf_reader import LangchainPDFReader
+from autollm.utils.webpage_reader import WebPageReader
+from autollm.utils.website_reader import WebSiteReader
 from pathlib import Path
 from typing import Callable, List, Optional, Sequence, Tuple
 
@@ -83,6 +91,9 @@ def read_github_repo_as_documents(
         git_repo_url: str,
         relative_folder_path: Optional[str] = None,
         required_exts: Optional[List[str]] = None) -> Sequence[Document]:
+        git_repo_url: str,
+        relative_folder_path: Optional[str] = None,
+        required_exts: Optional[List[str]] = None) -> Sequence[Document]:
     """
     A document provider that fetches documents from a specific folder within a GitHub repository.
 
@@ -101,9 +112,20 @@ def read_github_repo_as_documents(
 
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
 
-    try:
+    temp_dir = Path("autollm/temp/")
+temp_dir.mkdir(parents=True, exist_ok=True)
+
+logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
+
+try:
         # Clone or pull the GitHub repository to get the latest documents
         clone_or_pull_repository(git_repo_url, temp_dir)
+
+docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
+
+documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+
+logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
