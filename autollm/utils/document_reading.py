@@ -79,7 +79,7 @@ def on_rm_error(func: Callable, path: str, exc_info: Tuple):
     os.unlink(path)
 
 
-def read_github_repo_as_documents(
+def read_github_repo_as_documents(git_repo_url: str, relative_folder_path: Optional[str] = None, required_exts: Optional[List[str]] = None) -> Sequence[Document]:
         git_repo_url: str,
         relative_folder_path: Optional[str] = None,
         required_exts: Optional[List[str]] = None) -> Sequence[Document]:
