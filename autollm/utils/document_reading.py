@@ -4,7 +4,7 @@ import stat
 from pathlib import Path
 from typing import Callable, List, Optional, Sequence, Tuple
 
-from llama_index.readers.file.base import directory_reader.SimpleDirectoryReader
+from autollm.utils.directory_reader import SimpleDirectoryReader
 from autollm.utils.directory_reader import SimpleDirectoryReader
 from llama_index.schema import Document
 
