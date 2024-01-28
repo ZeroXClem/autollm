@@ -16,6 +16,7 @@ from autollm.utils.website_reader import WebSiteReader
 
 
 def read_files_as_documents(
+        show_progress: bool = True,
         input_dir: Optional[str] = None,
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
@@ -24,6 +25,14 @@ def read_files_as_documents(
         required_exts: Optional[List[str]] = None,
         show_progress: bool = True,
         **kwargs) -> Sequence[Document]:
+        try:
+            # Read and process the documents
+            documents = reader.load_data(show_progress=show_progress)
+
+            logger.info(f"Found {len(documents)} 'document(s)'.")
+            return documents
+        except Exception as e:
+            logger.error(f"An error occurred while reading files: {str(e)}")
     """
     Process markdown files to extract documents using SimpleDirectoryReader.
 
