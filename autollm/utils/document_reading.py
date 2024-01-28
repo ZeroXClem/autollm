@@ -9,6 +9,8 @@ from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
+from autollm.utils.git_utils import clone_or_pull_repository
+from pathlib import Path
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
 from autollm.utils.webpage_reader import WebPageReader
@@ -103,13 +105,13 @@ def read_github_repo_as_documents(
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
-        clone_or_pull_repository(git_repo_url, temp_dir)
+        clone_or_pull_repository(git_repo_url=git_repo_url, target_dir=temp_dir)
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
 
         # Read and process the documents
-        documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+        documents = read_files_as_documents(input_dir=str(docs_path), exclude_hidden=True, filename_as_id=True, recursive=True, required_exts=required_exts)
         # Logging (assuming logger is configured)
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     finally:
