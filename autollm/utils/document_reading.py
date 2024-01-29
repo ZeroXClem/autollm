@@ -50,7 +50,7 @@ def read_files_as_documents(
     }
 
     # Initialize SimpleDirectoryReader
-    reader = SimpleDirectoryReader(
+        reader = SimpleDirectoryReader(input_dir=input_dir, exclude_hidden=exclude_hidden, file_extractor=file_extractor, input_files=input_files, filename_as_id=filename_as_id, recursive=recursive, required_exts=required_exts, **kwargs)(
         input_dir=input_dir,
         exclude_hidden=exclude_hidden,
         file_extractor=file_extractor,
