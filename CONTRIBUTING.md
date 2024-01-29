@@ -57,7 +57,7 @@ For functions or classes that warrant explanation, we use docstrings adhering to
 
 ## Testing 🔍
 
-Before finalizing your PR, ensure it aligns with our existing test suite:
+Before finalizing your PR, ensure it aligns with our existing test suite and run the tests using the `pytest` command:
 
 ```bash
 pytest
