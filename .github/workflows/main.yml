@@ -1,0 +1,26 @@
+import yaml
+from pathlib import Path
+
+def modify_workflow_file():
+    # Read the contents of the workflow file
+    workflow_file_path = Path(".github/workflows/main.yml")
+    workflow_contents = workflow_file_path.read_text()
+
+    # Parse the YAML contents
+    workflow_data = yaml.safe_load(workflow_contents)
+
+    # Add the new step under the "jobs" section
+    jobs = workflow_data["jobs"]
+    for job in jobs.values():
+        steps = job.get("steps", [])
+        steps.append({"name": "Install dependencies", "run": "pip install -r requirements.txt"})
+        job["steps"] = steps
+
+    # Convert the modified Python object back to YAML
+    modified_workflow_contents = yaml.dump(workflow_data)
+
+    # Write the modified YAML contents back to the workflow file
+    workflow_file_path.write_text(modified_workflow_contents)
+
+# Call the function to modify the workflow file
+modify_workflow_file()
