@@ -39,8 +39,7 @@ def read_files_as_documents_with_logging(
     Returns:
         documents (Sequence[Document]): A sequence of Document objects.
 
-    Raises:
-        Exception: If an error occurs during the function execution.
+    Raises an Exception if an error occurs during the function execution.
     """
     # Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
