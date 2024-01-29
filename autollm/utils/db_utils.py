@@ -9,7 +9,22 @@ from autollm.utils.logging import logger
 
 
 def initialize_pinecone_index(
-        index_name: str, dimension: int = 1536, metric: str = 'euclidean', pod_type: str = 'p1'):
+        index_name: str, dimension: int = 1536, metric: str = 'euclidean', pod_type: str = 'p1') -> None:
+    """
+    Initialize the Pinecone index with the specified parameters.
+
+    Parameters:
+        index_name (str): The name of the index.
+        dimension (int): The dimension of the vectors.
+        metric (str): The distance metric to use.
+        pod_type (str): The type of pod to use.
+
+    Returns:
+        None
+
+    Raises:
+        pinecone.exceptions.PineconeException: If there is an error initializing the Pinecone index.
+    """
     import pinecone
 
     # Read environment variables for Pinecone initialization
@@ -17,6 +32,12 @@ def initialize_pinecone_index(
     environment = read_env_variable('PINECONE_ENVIRONMENT')
 
     # Initialize Pinecone
+    try:
+        pinecone.init(api_key=api_key, environment=environment)
+        pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
+    except pinecone.exceptions.PineconeException as e:
+        logger.error(f"Error initializing Pinecone index: {e}")
+        raise
     pinecone.init(api_key=api_key, environment=environment)
     pinecone.create_index(index_name, dimension=dimension, metric=metric, pod_type=pod_type)
 
