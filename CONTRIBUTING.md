@@ -60,7 +60,7 @@ For functions or classes that warrant explanation, we use docstrings adhering to
 Before finalizing your PR, ensure it aligns with our existing test suite:
 
 ```bash
-pytest
+pytest --cov=autollm --cov=autollm
 ```
 
 ______________________________________________________________________
