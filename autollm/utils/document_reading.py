@@ -1,3 +1,4 @@
+from autollm import read_files_as_documents
 import os
 import shutil
 import stat
@@ -15,7 +16,7 @@ from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
 
 
-def read_files_as_documents(
+def read_files_as_documents_with_logging(
         input_dir: Optional[str] = None,
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
@@ -37,6 +38,8 @@ def read_files_as_documents(
 
     Returns:
         documents (Sequence[Document]): A sequence of Document objects.
+
+    Raises an Exception if an error occurs during the function execution.
     """
     # Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
@@ -116,7 +119,10 @@ def read_github_repo_as_documents(
         # Delete the temporary directory
         shutil.rmtree(temp_dir, onerror=on_rm_error)
 
-    return documents
+            return documents
+        except Exception as e:
+            logger.error(f"Error reading website: {e}")
+            return []
 
 
 def read_website_as_documents(
@@ -157,7 +163,7 @@ def read_website_as_documents(
     return documents
 
 
-def read_webpage_as_documents(url: str) -> List[Document]:
+def read_webpage_as_documents_with_logging(url: str) -> List[Document:
     """
     Read documents from a single webpage URL using the WebPageReader.
 

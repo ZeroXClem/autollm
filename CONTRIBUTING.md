@@ -61,6 +61,16 @@ Before finalizing your PR, ensure it aligns with our existing test suite:
 
 ```bash
 pytest
+
+### Troubleshooting GitHub Actions Failures
+
+If your GitHub Actions run fails, follow these steps to gather and share error logs:
+
+```bash
+   1. Access the failed GitHub Actions run on the GitHub UI.
+   2. Click on the job that failed to view the error logs.
+   3. Copy and share the error logs in your PR to help with troubleshooting.
+```
 ```
 
 ______________________________________________________________________
