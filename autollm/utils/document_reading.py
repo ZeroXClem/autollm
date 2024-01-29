@@ -163,7 +163,7 @@ def read_website_as_documents(
     return documents
 
 
-def read_webpage_as_documents(url: str) -> List[Document]:
+def read_webpage_as_documents_with_logging(url: str) -> List[Document:
     """
     Read documents from a single webpage URL using the WebPageReader.
 
