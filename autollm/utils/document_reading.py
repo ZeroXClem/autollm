@@ -11,6 +11,9 @@ from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
+from autollm.utils.file_extractors import DocxReader
+from autollm.utils.file_extractors import TxtReader
+from autollm.utils.file_extractors import TxtReader
 from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
 
@@ -40,6 +43,8 @@ def read_files_as_documents(
     """
     # Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
+        ".docx": DocxReader(),
+        ".txt": TxtReader(),
         ".md": MarkdownReader(read_as_single_doc=True),
         ".pdf": LangchainPDFReader(extract_images=False)
     }
