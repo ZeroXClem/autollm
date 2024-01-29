@@ -81,7 +81,15 @@ def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: S
     Parameters:
         vector_store_index: An instance of AutoVectorStoreIndex or any compatible vector store.
         documents (Sequence[Document]): List of documents to update.
+    Update the vector store index with new documents.
 
+    Parameters:
+        vector_store_index: An instance of AutoVectorStoreIndex or any compatible vector store.
+        documents (Sequence[Document]): List of documents to update.
+
+    Returns:
+        None
+    """
     Returns:
         None
     """
