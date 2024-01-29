@@ -119,7 +119,10 @@ def read_github_repo_as_documents(
         # Delete the temporary directory
         shutil.rmtree(temp_dir, onerror=on_rm_error)
 
-    return documents
+            return documents
+        except Exception as e:
+            logger.error(f"Error reading website: {e}")
+            return []
 
 
 def read_website_as_documents(
