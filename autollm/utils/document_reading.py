@@ -114,7 +114,10 @@ def read_github_repo_as_documents(
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     finally:
         # Delete the temporary directory
+        try:
         shutil.rmtree(temp_dir, onerror=on_rm_error)
+    except Exception as e:
+        logger.error(f'Error occurred: {e}')
 
     return documents
 
