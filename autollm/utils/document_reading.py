@@ -8,6 +8,11 @@ from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
+import os
+import shutil
+import stat
+from pathlib import Path
+from typing import Callable, List, Optional, Sequence, Tuple
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
@@ -82,7 +87,7 @@ def on_rm_error(func: Callable, path: str, exc_info: Tuple):
 def read_github_repo_as_documents(
         git_repo_url: str,
         relative_folder_path: Optional[str] = None,
-        required_exts: Optional[List[str]] = None) -> Sequence[Document]:
+        required_exts: Optional[List[str]] = None) -> List[Document]:
     """
     A document provider that fetches documents from a specific folder within a GitHub repository.
 
