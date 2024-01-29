@@ -48,6 +48,8 @@ for built-in data readers (github, pdf, docx, ipynb, epub, mbox, websites..), in
 
 ```bash
 pip install autollm[readers]
+pip install autollm[file_extractors]
+pip install GitPython[readers]
 ```
 
 ______________________________________________________________________

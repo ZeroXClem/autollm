@@ -11,6 +11,9 @@ from autollm.utils.git_utils import clone_or_pull_repository
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
+from autollm.utils.file_extractors import DocxReader
+from autollm.utils.file_extractors import TxtReader
+from autollm.utils.file_extractors import TxtReader
 from autollm.utils.webpage_reader import WebPageReader
 from autollm.utils.website_reader import WebSiteReader
 
@@ -40,12 +43,14 @@ def read_files_as_documents(
     """
     # Configure file_extractor to use MarkdownReader for md files
     file_extractor = {
+        ".docx": DocxReader(),
+        ".txt": TxtReader(),
         ".md": MarkdownReader(read_as_single_doc=True),
         ".pdf": LangchainPDFReader(extract_images=False)
     }
 
     # Initialize SimpleDirectoryReader
-    reader = SimpleDirectoryReader(
+        reader = SimpleDirectoryReader(input_dir=input_dir, exclude_hidden=exclude_hidden, file_extractor=file_extractor, input_files=input_files, filename_as_id=filename_as_id, recursive=recursive, required_exts=required_exts, **kwargs)(
         input_dir=input_dir,
         exclude_hidden=exclude_hidden,
         file_extractor=file_extractor,
@@ -96,7 +101,7 @@ def read_github_repo_as_documents(
     """
 
     # Ensure the temp_dir directory exists
-    temp_dir = Path("autollm/temp/")
+    temp_dir = Path("./autollm/temp/")
     temp_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
@@ -114,7 +119,7 @@ def read_github_repo_as_documents(
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
     finally:
         # Delete the temporary directory
-        shutil.rmtree(temp_dir, onerror=on_rm_error)
+        shutil.rmtree(temp_dir, onerror=on_rm_error) if temp_dir.is_dir() else logger.warning("Temporary directory does not exist.")
 
     return documents
 

@@ -6,14 +6,14 @@ from llama_index.schema import Document
 from autollm.utils.logging import logger
 
 
-class LangchainPDFReader(BaseReader):
-    """Custom PDF reader that uses langchain's PDFMinerLoader."""
+class PDFReader(BaseReader):
+    """Custom PDF reader that uses autollm's PDFMinerLoader."""
 
     def __init__(self, extract_images: bool = False) -> None:
         """Initialize the reader."""
         self.extract_images = extract_images
 
-    def load_data(self, file_path: str, extra_info: dict = None) -> List[Document]:
+    def read_and_process_data(self, file_path: str, extra_info: dict = None) -> List[Document]:
         """Load data from a PDF file using langchain's PDFMinerLoader."""
         from langchain.document_loaders import PDFMinerLoader
 
