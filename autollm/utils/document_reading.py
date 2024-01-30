@@ -1,4 +1,5 @@
-import os
+# Commit the modified file and push to the repository
+repo.commit_and_push(file_path='autollm/utils/document_reader.py', commit_message='fix: Update document reading functionality to handle recursive file processing and silent fails')import os
 import shutil
 import stat
 from pathlib import Path
@@ -20,8 +21,8 @@ def read_files_as_documents(
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
         filename_as_id: bool = True,
-        recursive: bool = True,
-        required_exts: Optional[List[str]] = None,
+        recursive: bool = False,
+        required_exts: Optional[List[str]] = ['md', 'pdf'],
         show_progress: bool = True,
         **kwargs) -> Sequence[Document]:
     """
@@ -98,12 +99,14 @@ def read_github_repo_as_documents(
     # Ensure the temp_dir directory exists
     temp_dir = Path("autollm/temp/")
     temp_dir.mkdir(parents=True, exist_ok=True)
+        if len(list(temp_dir.iterdir())) > 0:
+            shutil.rmtree(temp_dir)
 
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
-        clone_or_pull_repository(git_repo_url, temp_dir)
+        clone_or_pull_repository(git_repo_url, temp_dir, fail_silently=True)
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
@@ -168,5 +171,5 @@ def read_webpage_as_documents(url: str) -> List[Document]:
         List[Document]: A list of Document objects containing content and metadata from the web page.
     """
     reader = WebPageReader()
-    documents = reader.load_data(url)
+    documents = reader.load_data(url, fail_silently=True)
     return documents
