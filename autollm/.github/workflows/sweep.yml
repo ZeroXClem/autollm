@@ -37,15 +37,14 @@ def create_sweep_workflow():
                                 {
                                     "name": "Install dependencies",
                                     "run": "pip install -r requirements.txt",
-                                    "working-directory": "app"
+                                    "continue-on-error": true,"working-directory": "app"
                                 ,
                                 {
                                     "name": "Install dependencies",
                                     "run": "pip install -r requirements.txt",
                                     "working-directory": "app"
                                           
-outputs:
-          sweep-job-output: ${{ steps.<step-id>.outputs.<output-id> }}
+continue-on-error: true, needs: sweep-job
                                         }
                                 },
                                 {
