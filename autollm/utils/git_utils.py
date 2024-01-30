@@ -11,7 +11,7 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
         git_url (str): The URL of the Git repository.
         local_path (Path): The local path where the repository will be cloned or updated.
     """
-    # Lazy import to avoid dependency on GitPython
+    from git import NoSuchPathError, GitCommandError, Repo
     try:
         from git import InvalidGitRepositoryError, Repo
     except ImportError:
@@ -19,7 +19,7 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
             'GitPython is not installed. Please "pip install gitpython==3.1.37" to use this feature.')
         raise
 
-    if local_path.exists():
+    if hasattr(local_path, 'exists') and local_path.exists():
         try:
             repo = Repo(str(local_path))
             repo.remotes.origin.pull()
