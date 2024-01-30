@@ -20,11 +20,11 @@ def create_sweep_workflow():
                             [
                                 {
                                     "name": "Checkout repository",
-                                    "uses": "actions/checkout@v2"
+                                    "uses": "actions/checkout@v2", "with": {"ref": "main"}
                                 },
                                 {
                                     "name": "Set up Python",
-                                    "uses": "actions/setup-python@v2",
+                                    "uses": "actions/setup-python@v2", "with": {"python-version": "3.x"},
                                     "with":
                                         {
                                             "python-version": "3.x"
@@ -32,7 +32,7 @@ def create_sweep_workflow():
                                 },
                                 {
                                     "name": "Run sweep script",
-                                    "run": "python sweep.py"
+                                    "run": "python sweep.py", "working-directory": "app"
                                 }
                             ]
                     }
