@@ -22,7 +22,7 @@ def read_files_as_documents(
         filename_as_id: bool = True,
         recursive: bool = True,
         required_exts: Optional[List[str]] = None,
-        show_progress: bool = True,
+        show_progress: bool = True if progress_tracking_required else False,
         **kwargs) -> Sequence[Document]:
     """
     Process markdown files to extract documents using SimpleDirectoryReader.
