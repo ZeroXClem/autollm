@@ -58,7 +58,16 @@ continue-on-error: true, needs: sweep-job
                                 "sweep-results": "sweep_results"
                             }
                     }
+                                                }
                     }
+                    }
+            }
+    }
+
+  outputs:
+    sweep-results:
+      description: 'Results of the sweep job'
+      value: ${{ steps.sweep_job.outputs.sweep-results }}
             }
     }
 
