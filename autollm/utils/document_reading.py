@@ -17,13 +17,13 @@ from autollm.utils.website_reader import WebSiteReader
 
 def read_files_as_documents(
         input_dir: Optional[str] = None,
-        input_files: Optional[List] = None,
+        input_files: Optional[List] = None, show_progress: bool = True,
         exclude_hidden: bool = True,
         filename_as_id: bool = True,
         recursive: bool = True,
         required_exts: Optional[List[str]] = None,
         show_progress: bool = True,
-        **kwargs) -> Sequence[Document]:
+        **kwargs, show_progress: bool = True) -> Sequence[Document]:
     """
     Process markdown files to extract documents using SimpleDirectoryReader.
 
