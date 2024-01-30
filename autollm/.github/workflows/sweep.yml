@@ -118,6 +118,12 @@ print('Sweep job created successfully.')
         working-directory: app
 
   outputs:
+    sweep-job:
+      needs: sweep_job
+      outputs:
+        sweep-results:
+          description: 'Results of the sweep job'
+          value: ${{ steps.sweep_job.outputs.sweep-results }}
     sweep-results:
       description: 'Results of the sweep job'
       value: ${{ steps.sweep_job.outputs.sweep-results }}
