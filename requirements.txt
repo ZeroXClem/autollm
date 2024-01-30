@@ -5,3 +5,6 @@ fastapi
 python-dotenv
 httpx
 lancedb==0.3.3
+gitpython==3.1.37
+gitpython==3.1.37
+gitpython==3.1.37
