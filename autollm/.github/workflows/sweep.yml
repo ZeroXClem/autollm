@@ -1,0 +1,45 @@
+import os
+import yaml
+
+def create_sweep_workflow():
+    workflow = {
+        "name": "Sweep",
+        "on":
+            {
+                "push":
+                    {
+                        "branches": ["main"]
+                    }
+            },
+        "jobs":
+            {
+                "sweep_job":
+                    {
+                        "runs-on": "ubuntu-latest",
+                        "steps":
+                            [
+                                {
+                                    "name": "Checkout repository",
+                                    "uses": "actions/checkout@v2"
+                                },
+                                {
+                                    "name": "Set up Python",
+                                    "uses": "actions/setup-python@v2",
+                                    "with":
+                                        {
+                                            "python-version": "3.x"
+                                        }
+                                },
+                                {
+                                    "name": "Run sweep script",
+                                    "run": "python sweep.py"
+                                }
+                            ]
+                    }
+            }
+    }
+
+    with open(".github/workflows/sweep.yml", "w") as file:
+        yaml.dump(workflow, file)
+
+create_sweep_workflow()
