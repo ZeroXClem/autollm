@@ -71,6 +71,15 @@ create_sweep_workflow()
 print('Sweep job created successfully.')
                                 },
                                 {
+    "env": {
+        "SOME_ENV_VARIABLE": "some_value"
+    },
+    "outputs": {
+        "some_output": {
+            "description": "Some description",
+            "value": "${{ steps.sweep_job.outputs.some-output }}"
+        }
+    },
                                     "name": "Run sweep script",
                                     "run": "python sweep.py", "working-directory": "app"
                                 }
