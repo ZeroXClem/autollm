@@ -51,7 +51,13 @@ continue-on-error: true, needs: sweep-job
                                     "name": "Run sweep script",
                                     "run": "python sweep.py", "working-directory": "app"
                                 }
-                            ]
+                            ,
+                                }
+                            ],
+                            "outputs": {
+                                "sweep-results": "$"
+                            }
+                    }
                     }
             }
     }
@@ -60,3 +66,5 @@ continue-on-error: true, needs: sweep-job
         yaml.dump(workflow, file)
 
 create_sweep_workflow()
+
+print('Sweep job created successfully.')
