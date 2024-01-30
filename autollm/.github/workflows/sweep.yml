@@ -107,11 +107,9 @@ print('Sweep job created successfully.')
         steps:
           - name: Cleanup and post-processing
             run: echo 'Performing cleanup and post-processing'
-        runs-on: ubuntu-latest
-        needs: [sweep_job]
-        steps:
-          - name: Cleanup and post-processing
-            run: echo 'Performing cleanup and post-processing'
+      - name: Post-Processing
+        run: echo 'Performing post-processing'
+        working-directory: app
 
   outputs:
     sweep-results:
