@@ -55,7 +55,7 @@ continue-on-error: true, needs: sweep-job
                                 }
                             ],
                             "outputs": {
-                                "sweep-results": "$"
+                                "sweep-results": "sweep_results"
                             }
                     }
                     }
