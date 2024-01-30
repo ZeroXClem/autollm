@@ -76,6 +76,7 @@ print('Sweep job created successfully.')
                                 }
                             ],
                             "outputs": {
+    "sweep_job": {
                                 "sweep-results": {"description": "Results of the sweep job", "value": ${{ steps.sweep_job.outputs.sweep-results }}
                             }
                     }
