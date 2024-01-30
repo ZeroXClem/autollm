@@ -1,0 +1,185 @@
+import os
+import yaml
+
+def create_sweep_workflow():
+    workflow = {
+        "name": "Sweep",
+        "on": {
+                "push": {
+                    "branches": ["main"]
+                }
+            },
+            "pull_request": {
+            {
+                "push":
+                    {
+                        "branches": ["main"]
+                    }
+            },
+        "jobs":
+            {
+                "sweep_job":
+                    {
+                        "runs-on": "ubuntu-latest",
+        "if": "github.event_name == 'push' && github.ref == 'refs/heads/main'",
+                        "steps":
+                            [
+                                {
+                                    "name": "Checkout repository",
+                                    "uses": "actions/checkout@v2"
+                                },
+                                {
+                                    "name": "Set up Python",
+                                    "uses": "actions/setup-python@v2", "with": {"python-version": "3.x"},
+                                    "with": {
+                                    "python-version": "3.x"
+                                },
+                                {
+                                    "name": "Install dependencies",
+                                    "run": "pip install -r requirements.txt",
+                                    "continue-on-error": true,"working-directory": "app"
+                                ,
+                                {
+                                    "name": "Install dependencies",
+                                    "run": "pip install -r requirements.txt",
+                                    "working-directory": "app"
+                                          
+continue-on-error: true, needs: sweep-job
+                                                  - name: Run sweep script
+            run: python sweep.py
+            working-directory: app
+
+      runs-on: ubuntu-latest
+        needs: [sweep_job]
+        steps:
+          - name: Cleanup and post-processing
+            run: echo 'Performing cleanup and post-processing'
+          - name: Cleanup and post-processing
+            run: echo 'Performing cleanup and post-processing'
+        runs-on: ubuntu-latest
+        needs: [sweep_job]
+        steps:
+          - name: Cleanup and post-processing
+            run: echo 'Performing cleanup and post-processing'
+}
+  
+with open(".github/workflows/sweep.yml", "w") as file:
+    yaml.dump(workflow, file)
+
+create_sweep_workflow()
+
+print('Sweep job created successfully.')
+                                },
+                                {
+    "env": {
+        "SOME_ENV_VARIABLE": "some_value"
+    },
+    "outputs": {
+        "some_output": {
+            "description": "Some description",
+            "value": "${{ steps.sweep_job.outputs.some-output }}"
+        }
+    },
+                                    "name": "Run sweep script",
+                                    "run": "python sweep.py", "working-directory": "app"
+                                }
+                            ,
+                                }
+                            ],
+                            "outputs": {
+    "sweep_job": {
+                                "sweep-results": {"description": "Results of the sweep job", "value": ${{ steps.sweep_job.outputs.sweep-results }}
+                            }
+                    }
+                                                            }
+        }
+    }
+
+    jobs:
+      sweep_job:
+        runs-on: ubuntu-latest
+        needs: []
+        steps:
+          - name: Cleanup and post-processing
+            run: echo 'Performing cleanup and post-processing'
+            working-directory: app
+          - name: Post-Processing
+            run: echo 'Performing post-processing'
+            working-directory: app
+          - name: Checkout repository
+            uses: actions/checkout@v2
+          - name: Set up Python
+            uses: actions/setup-python@v2
+            with:
+              python-version: '3.x'
+          - name: Install dependencies
+            run: pip install -r requirements.txt
+            continue-on-error: true
+            working-directory: app
+                - name: Post-Processing
+            run: echo 'Performing post-processing'
+            working-directory: app
+      - name: Checkout repository
+            uses: actions/checkout@v2
+      - name: Set up Python
+            uses: actions/setup-python@v2
+            with:
+              python-version: '3.x'
+      - name: Install dependencies
+            run: pip install -r requirements.txt
+            continue-on-error: true
+            working-directory: app
+      - name: Run sweep script
+            run: python sweep.py
+            run: python sweep.py
+            working-directory: app
+
+              runs-on: ubuntu-latest
+        needs: [sweep_job]
+        steps:
+          - name: Cleanup and post-processing
+            run: echo 'Performing cleanup and post-processing'
+      - name: Post-Processing
+        run: echo 'Performing post-processing'
+        working-directory: app
+
+  outputs:
+    sweep-job:
+      needs: sweep_job
+      outputs:
+        sweep-results:
+          description: 'Results of the sweep job'
+          value: ${{ steps.sweep_job.outputs.sweep-results }}
+    sweep-results:
+      description: 'Results of the sweep job'
+      value: ${{ steps.sweep_job.outputs.sweep-results }}
+    sweep-results:
+      description: 'Results of the sweep job'
+      value: ${{ steps.sweep_job.outputs.sweep-results }}
+}
+  
+with open(".github/workflows/sweep.yml", "w") as file:
+    yaml.dump(workflow, file)
+
+create_sweep_workflow()
+
+print('Sweep job created successfully.')
+                    }
+                    }
+            }
+    }
+
+  outputs:
+    sweep-results:
+      description: 'Results of the sweep job'
+      value: ${{ steps.sweep_job.outputs.sweep-results }}
+      value: ${{ steps.sweep_job.outputs.sweep-results }}
+            }
+    }
+
+    with open(".github/workflows/sweep.yml", "w") as file:
+        yaml.dump(workflow, file)
+
+create_sweep_workflow()
+
+}
