@@ -26,14 +26,24 @@ def create_sweep_workflow():
                             [
                                 {
                                     "name": "Checkout repository",
-                                    "uses": "actions/checkout@v2", "with": {"ref": "main"}
+                                    "uses": "actions/checkout@v2"
                                 },
                                 {
                                     "name": "Set up Python",
                                     "uses": "actions/setup-python@v2", "with": {"python-version": "3.x"},
-                                    "with":
-                                        {
-                                            "python-version": "3.x"
+                                    "with": {
+                                    "python-version": "3.x"
+                                },
+                                {
+                                    "name": "Install dependencies",
+                                    "run": "pip install -r requirements.txt",
+                                    "working-directory": "app"
+                                ,
+                                {
+                                    "name": "Install dependencies",
+                                    "run": "pip install -r requirements.txt",
+                                    "working-directory": "app"
+                                }
                                         }
                                 },
                                 {
