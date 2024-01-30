@@ -4,7 +4,12 @@ import yaml
 def create_sweep_workflow():
     workflow = {
         "name": "Sweep",
-        "on":
+        "on": {
+                "push": {
+                    "branches": ["main"]
+                }
+            },
+            "pull_request": {
             {
                 "push":
                     {
@@ -16,6 +21,7 @@ def create_sweep_workflow():
                 "sweep_job":
                     {
                         "runs-on": "ubuntu-latest",
+        "if": "github.event_name == 'push' && github.ref == 'refs/heads/main'",
                         "steps":
                             [
                                 {
