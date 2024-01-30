@@ -49,7 +49,11 @@ continue-on-error: true, needs: sweep-job
             run: python sweep.py
             working-directory: app
 
-      post-steps:
+      runs-on: ubuntu-latest
+        needs: [sweep_job]
+        steps:
+          - name: Cleanup and post-processing
+            run: echo 'Performing cleanup and post-processing'
         runs-on: ubuntu-latest
         needs: [sweep_job]
         steps:
@@ -98,7 +102,11 @@ print('Sweep job created successfully.')
             run: python sweep.py
             working-directory: app
 
-      post-steps:
+              runs-on: ubuntu-latest
+        needs: [sweep_job]
+        steps:
+          - name: Cleanup and post-processing
+            run: echo 'Performing cleanup and post-processing'
         runs-on: ubuntu-latest
         needs: [sweep_job]
         steps:
@@ -134,4 +142,4 @@ print('Sweep job created successfully.')
 
 create_sweep_workflow()
 
-print('Sweep job created successfully.')
+}
