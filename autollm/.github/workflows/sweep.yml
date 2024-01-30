@@ -116,7 +116,21 @@ print('Sweep job created successfully.')
             run: pip install -r requirements.txt
             continue-on-error: true
             working-directory: app
-          - name: Run sweep script
+                - name: Post-Processing
+            run: echo 'Performing post-processing'
+            working-directory: app
+      - name: Checkout repository
+            uses: actions/checkout@v2
+      - name: Set up Python
+            uses: actions/setup-python@v2
+            with:
+              python-version: '3.x'
+      - name: Install dependencies
+            run: pip install -r requirements.txt
+            continue-on-error: true
+            working-directory: app
+      - name: Run sweep script
+            run: python sweep.py
             run: python sweep.py
             working-directory: app
 
