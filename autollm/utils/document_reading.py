@@ -66,7 +66,7 @@ def read_files_as_documents(
 
 
 # From http://stackoverflow.com/a/4829285/548792
-def on_rm_error(func: Callable, path: str, exc_info: Tuple):
+def on_rm_error(func: Callable, path: str, exc_info: Tuple) -> None:
     """
     Error handler for `shutil.rmtree` to handle permission errors.
 
@@ -103,7 +103,33 @@ def read_github_repo_as_documents(
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
+        try:
         clone_or_pull_repository(git_repo_url, temp_dir)
+
+        # Specify the path to the documents
+        docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
+
+        # Read and process the documents
+        documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+        # Logging (assuming logger is configured)
+        logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
+    except Exception as e:
+        logger.error(f"An error occurred: {e}")
+
+        # Specify the path to the documents
+        docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
+
+        # Read and process the documents
+        documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+        # Logging (assuming logger is configured)
+
+        logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
+    finally:
+        # Delete the temporary directory
+        os.chmod(temp_dir, stat.S_IWRITE)
+        os.unlink(temp_dir)
+    except Exception as e:
+        logger.error(f"An error occurred: {e}")
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
