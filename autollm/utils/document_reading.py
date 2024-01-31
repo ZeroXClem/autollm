@@ -154,8 +154,27 @@ def read_website_as_documents(
     Raises:
         ValueError: If neither parent_url nor sitemap_url is provided, or if both are provided.
     """
-    if (parent_url is None and sitemap_url is None) or (parent_url is not None and sitemap_url is not None):
+    if parent_url is None and sitemap_url is None:
         raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
+    elif parent_url is not None and sitemap_url is not None:
+        raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
+
+try:
+    reader = WebSiteReader()
+    if parent_url:
+        documents = reader.load_data(
+            parent_url=parent_url,
+            include_filter_str=include_filter_str,
+            exclude_filter_str=exclude_filter_str)
+    else:
+        documents = reader.load_data(
+            sitemap_url=sitemap_url,
+            include_filter_str=include_filter_str,
+            exclude_filter_str=exclude_filter_str)
+
+    return documents
+except Exception as e:
+    raise ValueError(f'Error reading website as documents: {e}')
 
     reader = WebSiteReader()
     if parent_url:
