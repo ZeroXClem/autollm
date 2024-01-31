@@ -55,13 +55,12 @@ def read_files_as_documents(
         required_exts=required_exts,
         **kwargs)
 
-    logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
-        f"Reading files {input_files}..")
+    logger.info(f"Processing files from {input_dir}..") if input_dir else logger.info(f"Processing files {input_files}..")
 
     # Read and process the documents
     documents = reader.load_data(show_progress=show_progress)
 
-    logger.info(f"Found {len(documents)} 'document(s)'.")
+    logger.info(f"Found {len(documents)} document(s) processed".")
     return documents
 
 
