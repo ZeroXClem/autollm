@@ -19,6 +19,7 @@ def read_files_as_documents(
         input_dir: Optional[str] = None,
         input_files: Optional[List] = None,
         exclude_hidden: bool = True,
+        show_progress: bool = True,
         filename_as_id: bool = True,
         recursive: bool = True,
         required_exts: Optional[List[str]] = None,
@@ -59,7 +60,12 @@ def read_files_as_documents(
         f"Reading files {input_files}..")
 
     # Read and process the documents
-    documents = reader.load_data(show_progress=show_progress)
+    try:
+        documents = reader.load_data(show_progress=show_progress)
+        logger.info(f"Found {len(documents)} 'document(s)'.")
+    except Exception as e:
+        logger.error(f"Error reading files: {e}")
+        documents = []
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
     return documents
