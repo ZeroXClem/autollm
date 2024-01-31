@@ -3,7 +3,7 @@ from pathlib import Path
 from autollm.utils.logging import logger
 
 
-def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
+def clone_or_pull_repository(git_url: str, local_path: Path, git, InvalidGitRepositoryError):
     """
     Clone a Git repository or pull latest changes if it already exists.
 
@@ -14,16 +14,18 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
     # Lazy import to avoid dependency on GitPython
     try:
         from git import InvalidGitRepositoryError, Repo
-    except ImportError:
+    except ImportError as e:
         logger.error(
             'GitPython is not installed. Please "pip install gitpython==3.1.37" to use this feature.')
-        raise
+        logger.error('GitPython is not installed. Please "pip install gitpython==3.1.37" to use this feature.')
+        return
 
     if local_path.exists():
         try:
             repo = Repo(str(local_path))
             repo.remotes.origin.pull()
-        except InvalidGitRepositoryError:
+        except InvalidGitRepositoryError as e:
+            logger.error(f"Error accessing the Git repository: {e}")
             # The existing directory is not a valid git repo, clone anew
             Repo.clone_from(git_url, str(local_path))
     else:
