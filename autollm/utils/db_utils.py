@@ -65,8 +65,12 @@ def update_vector_store_index(vector_store_index: VectorStoreIndex, documents: S
         None
     """
     for document in documents:
-        delete_documents_by_id(vector_store_index, [document.id_])
-        vector_store_index.insert(document)
+        try:
+            delete_documents_by_id(vector_store_index, [document.id_])
+            vector_store_index.insert(document)
+        except Exception as e:
+            logger.error(f"Error occurred while updating vector store index: {str(e)}")
+            return
 
 
 def overwrite_vectorindex(vector_store, documents: Sequence[Document]):
@@ -104,7 +108,11 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
 
     # Proceed with deletion.
     for document_id in document_ids:
-        vector_store_index.delete_ref_doc(document_id, delete_from_docstore=True)
+        try:
+            vector_store_index.delete_ref_doc(document_id, delete_from_docstore=True)
+        except Exception as e:
+            logger.error(f"Error occurred while deleting documents from vector store: {str(e)}")
+            return
 
 
 # TODO: refactor and update.
