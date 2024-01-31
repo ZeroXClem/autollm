@@ -66,7 +66,7 @@ def read_files_as_documents(
 
 
 # From http://stackoverflow.com/a/4829285/548792
-def on_rm_error(func: Callable, path: str, exc_info: Tuple):
+def on_rm_error(func: Callable, path: str, exc_info: Tuple) -> None:
     """
     Error handler for `shutil.rmtree` to handle permission errors.
 
