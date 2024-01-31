@@ -46,6 +46,17 @@ pip install autollm
 
 for built-in data readers (github, pdf, docx, ipynb, epub, mbox, websites..), install with:
 
+## Troubleshooting Guidelines
+
+### GitHub Actions Failures
+
+If you encounter issues with GitHub Actions, follow these steps to troubleshoot and resolve common problems:
+1. **Interpreting Error Logs**: Analyze the error logs to identify the root cause of the failure. Look for error messages, stack traces, and any specific details that can help pinpoint the issue.
+2. **Review Action Configuration**: Check the GitHub Actions workflow file to ensure that the configuration is correct. Look for typos, missing dependencies, or misconfigured settings that could be causing the failure.
+3. **Ensure Dependencies are Up-to-Date**: Verify that the dependencies and packages used in the workflow are up-to-date and compatible with the environment.
+4. **Check Environment Variables**: Review any environment variables or secrets used in the workflow to ensure they are properly configured and accessible.
+5. **Seek Community Support**: If you are unable to resolve the issue, seek assistance from the AutoLLM community by posting in the [discussions forum](https://github.com/safevideo/autollm/discussions).
+
 ```bash
 pip install autollm[readers]
 ```
