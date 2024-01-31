@@ -1,16 +1,16 @@
 # Contributing to AutoLLM 🌟
 
-Thank you for considering a contribution to AutoLLM. Your input is invaluable to our project's continued growth and improvement.
+Thank you for considering a contribution to AutoLLM. Your input is invaluable to our project's continued growth and improvement. Additionally, please note the following guidelines for troubleshooting and resolving GitHub Actions failures.
 
 ## PR Guidelines 📝
 
 To streamline the integration of your contributions:
 
-- **Start by Forking 🍴**: This allows you to work on your own copy of the project. See [these steps](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork) to open a PR from your fork.
+- **Start by Forking 🍴**: This allows you to work on your own copy of the project. See [these steps](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork) to open a PR from your fork. If you encounter issues with the GitHub Actions setup, check the troubleshooting guidelines below for solutions.
 
 - **New Branch 🌱**: Always create a new branch for your PR. It keeps things neat and makes the review process smoother.
 
-- **Size Matters 📏**: Aim for smaller PRs. If you have a big feature in mind, consider breaking it up. It helps us understand your contribution better and gets you feedback quicker!
+- **Size Matters 📏**: Aim for smaller PRs. If you have a big feature in mind, consider breaking it up. It helps us understand your contribution better and gets you feedback quicker! If you encounter any GitHub Actions failures related to your code changes, be sure to check the troubleshooting section for potential solutions.
 
 - **Stay Current 🕰️**: Ensure your PR is synchronized with the latest updates from the `safevideo/autollm` `main` branch. If your branch is outdated, update it using the 'Update branch' button or by executing `git pull` and `git merge main`.
 
@@ -65,4 +65,4 @@ pytest
 
 ______________________________________________________________________
 
-Your interest and potential contributions to AutoLLM are greatly appreciated. Together, we can continue refining and expanding AutoLLM for the broader community.
+Your interest and potential contributions to AutoLLM are greatly appreciated. Together, we can continue refining and expanding AutoLLM for the broader community. If you encounter any issues with GitHub Actions during the process, refer to the troubleshooting guidelines below for assistance.
