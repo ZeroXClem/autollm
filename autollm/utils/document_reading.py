@@ -8,6 +8,11 @@ from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
+from git import InvalidGitRepositoryError, Repo
+import shutil
+from autollm.utils.git_utils import on_rm_error
+from autollm.utils.logging import logger
+import os
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
@@ -103,7 +108,10 @@ def read_github_repo_as_documents(
 
     try:
         # Clone or pull the GitHub repository to get the latest documents
+        try:
         clone_or_pull_repository(git_repo_url, temp_dir)
+    finally:
+        shutil.rmtree(temp_dir, onerror=on_rm_error)
 
         # Specify the path to the documents
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
