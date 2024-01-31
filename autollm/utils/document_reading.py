@@ -121,6 +121,11 @@ def read_github_repo_as_documents(
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
         # Logging (assuming logger is configured)
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
+    except Exception as e:
+        # Log error message for reading and processing the documents
+        logger.error(f'Error while reading and processing documents from {git_repo_url}: {e}')
+        return []
+
     finally:
         # Delete the temporary directory
         shutil.rmtree(temp_dir, onerror=on_rm_error)
