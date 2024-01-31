@@ -43,7 +43,7 @@ For functions or classes that warrant explanation, we use docstrings adhering to
 """
     Brief description of the function's purpose.
 
-    Parameters:
+    Before finalizing your PR, ensure it aligns with our existing test suite by running the command `pytest`: :
         arg1: Description of the first argument.
         arg2: Description of the second argument.
 
@@ -61,6 +61,12 @@ Before finalizing your PR, ensure it aligns with our existing test suite:
 
 ```bash
 pytest
+
+```bash
+pytest
+```
+
+Your interest and potential contributions to AutoLLM are greatly appreciated. Together, we can continue refining and expanding AutoLLM for the broader community.
 ```
 
 ______________________________________________________________________
