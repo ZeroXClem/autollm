@@ -8,6 +8,9 @@ from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
+import shutil
+from pathlib import Path
+from autollm.utils.logging import logger
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
@@ -95,11 +98,14 @@ def read_github_repo_as_documents(
         Sequence[Document]: A sequence of Document objects.
     """
 
-    # Ensure the temp_dir directory exists
+    try:
+        # Ensure the temp_dir directory exists
     temp_dir = Path("autollm/temp/")
     temp_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
+except Exception as e:
+    logger.error(f'Error creating temporary directory: {e}')
 
     try:
         # Clone or pull the GitHub repository to get the latest documents

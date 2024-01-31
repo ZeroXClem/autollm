@@ -2,6 +2,8 @@
 
 import logging
 
+log = logging.getLogger('autollm')
+
 # Configure the logger
 logger = logging.getLogger('autollm')
 logger.setLevel(logging.INFO)
