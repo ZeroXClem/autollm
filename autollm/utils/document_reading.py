@@ -55,7 +55,7 @@ def read_files_as_documents(
         required_exts=required_exts,
         **kwargs)
 
-    logger.info(f"Processing files from {input_dir}..") if input_dir else logger.info(f"Processing files {input_files}..")
+    
 
     # Read and process the documents
     documents = reader.load_data(show_progress=show_progress)
@@ -155,6 +155,9 @@ def read_website_as_documents(
     """
     if (parent_url is None and sitemap_url is None) or (parent_url is not None and sitemap_url is not None):
         raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
+    except Exception as e:
+        # Log error message for reading documents from a website or webpage
+        logger.error(f'Error while processing documents from website or webpage: {e}')
 
     reader = WebSiteReader()
     if parent_url:
