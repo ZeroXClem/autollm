@@ -47,7 +47,11 @@ def load_config_and_dotenv(config_file_path: str, env_file_path: str = None) -> 
         dict: The configuration dictionary.
     """
     # Optionally load environment variables from a .env file
-    if env_file_path:
+    try:
+        if env_file_path:
+            load_dotenv(dotenv_path=env_file_path)
+    except OSError as e:
+        raise OSError(f'Error loading .env file: {e}')
         load_dotenv(dotenv_path=env_file_path)
 
     # Load the YAML configuration file
