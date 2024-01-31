@@ -55,18 +55,27 @@ def read_files_as_documents(
         required_exts=required_exts,
         **kwargs)
 
-    logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
-        f"Reading files {input_files}..")
+    
 
     # Read and process the documents
     documents = reader.load_data(show_progress=show_progress)
 
-    logger.info(f"Found {len(documents)} 'document(s)'.")
+    logger.info(f"Found {len(documents)} document(s) processed".")
     return documents
 
 
 # From http://stackoverflow.com/a/4829285/548792
 def on_rm_error(func: Callable, path: str, exc_info: Tuple):
+    """
+    Error handler for `shutil.rmtree` to handle permission errors.
+
+    Parameters:
+        func (Callable): The function that raised the error.
+        path (str): The path to the file or directory which couldn't be removed.
+        exc_info (Tuple): Exception information returned by sys.exc_info().
+    """
+    os.chmod(path, stat.S_IWRITE)
+    os.unlink(path)
     """
     Error handler for `shutil.rmtree` to handle permission errors.
 
@@ -112,6 +121,11 @@ def read_github_repo_as_documents(
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
         # Logging (assuming logger is configured)
         logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
+    except Exception as e:
+        # Log error message for reading and processing the documents
+        logger.error(f'Error while reading and processing documents from {git_repo_url}: {e}')
+        return []
+
     finally:
         # Delete the temporary directory
         shutil.rmtree(temp_dir, onerror=on_rm_error)
@@ -141,6 +155,9 @@ def read_website_as_documents(
     """
     if (parent_url is None and sitemap_url is None) or (parent_url is not None and sitemap_url is not None):
         raise ValueError("Please provide either parent_url or sitemap_url, not both or none.")
+    except Exception as e:
+        # Log error message for reading documents from a website or webpage
+        logger.error(f'Error while processing documents from website or webpage: {e}')
 
     reader = WebSiteReader()
     if parent_url:
