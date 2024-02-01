@@ -64,7 +64,7 @@ def read_files_as_documents(
         documents = reader.load_data(show_progress=show_progress)
 
         logger.info(f"Found {len(documents)} 'document(s)'.")
-        return documents
+        return []
     except Exception as e:
         logger.error(f"Error loading documents: {str(e)}")
         return []
