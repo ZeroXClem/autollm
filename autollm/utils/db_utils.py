@@ -1,5 +1,8 @@
 # db_utils.py
 from typing import Sequence
+import logging
+import sys
+from autollm.utils.env_utils import read_env_variable
 
 from llama_index import Document, StorageContext, VectorStoreIndex
 from llama_index.vector_stores import PineconeVectorStore, QdrantVectorStore
