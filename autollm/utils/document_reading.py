@@ -33,7 +33,7 @@ def read_files_as_documents(
         exclude_hidden (bool): Whether to exclude hidden files.
         filename_as_id (bool): Whether to use the filename as the document id.
         recursive (bool): Whether to recursively search for files in the input directory.
-        required_exts (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
+        [required_exts} (Optional[List[str]]): List of file extensions to be read. Defaults to all supported extensions.
 
     Returns:
         documents (Sequence[Document]): A sequence of Document objects.
