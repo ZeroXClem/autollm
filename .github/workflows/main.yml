@@ -1,0 +1,46 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build project
+        run: python build.py
+
+      - name: Run tests
+        run: pytest
+
+      - name: Notify on failure
+        if: ${{ failure() }}
+        run: echo "Build and test failed. Please check the logs."
+
+      - name: Send email notification
+        if: ${{ failure() }}
+        run: echo "Sending email notification."
+
+      - name: Create GitHub issue
+        if: ${{ failure() }}
+        run: echo "Creating GitHub issue."
