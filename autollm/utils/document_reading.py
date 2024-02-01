@@ -108,8 +108,15 @@ def read_github_repo_as_documents(
     except Exception as e:
         logger.error(f"An error occurred during cloning/pulling the GitHub repository: {e}")
         raise e
-
-        # Specify the path to the documents
+    try:
+        docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
+        documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+        logger.info(f"Operations complete, deleting temporary directory {temp_dir}..")
+    finally:
+        try:
+            shutil.rmtree(temp_dir, onerror=on_rm_error)
+        except Exception as e:
+            logger.error(f"An error occurred during the deletion of temporary directory: {e}")
         docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
 
         # Read and process the documents
