@@ -107,7 +107,10 @@ def delete_documents_by_id(vector_store_index: VectorStoreIndex, document_ids: S
 
     # Proceed with deletion.
     for document_id in document_ids:
-        vector_store_index.delete_ref_doc(document_id, delete_from_docstore=True)
+        try:
+            vector_store_index.delete_ref_doc(document_id, delete_from_docstore=True)
+        except Exception as e:
+            logger.error(f"Error deleting document {document_id}: {str(e)}")
 
 
 # TODO: refactor and update.
