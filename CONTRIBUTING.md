@@ -61,6 +61,8 @@ Before finalizing your PR, ensure it aligns with our existing test suite:
 
 ```bash
 pytest
+coverage run -m pytest
+coverage report
 ```
 
 ______________________________________________________________________

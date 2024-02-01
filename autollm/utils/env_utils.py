@@ -5,7 +5,7 @@ import yaml
 from dotenv import load_dotenv
 
 
-def find_dotenv_file(start_path: Path) -> Path:
+def find_dotenv_file(start_path: str) -> str:
     """Searches for the .env file from start_path moving upwards."""
     current_path = start_path
     while current_path != Path('/'):
