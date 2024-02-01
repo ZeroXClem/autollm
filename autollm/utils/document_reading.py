@@ -1,7 +1,8 @@
 import os
 import shutil
 import stat
-from pathlib import Path
+import sys
+import os
 from typing import Callable, List, Optional, Sequence, Tuple
 
 from llama_index.readers.file.base import SimpleDirectoryReader
@@ -58,7 +59,15 @@ def read_files_as_documents(
     logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
         f"Reading files {input_files}..")
 
-    # Read and process the documents
+    try:
+        # Read and process the documents
+        documents = reader.load_data(show_progress=show_progress)
+
+        logger.info(f"Found {len(documents)} 'document(s)'.")
+        return []
+    except Exception as e:
+        logger.error(f"Error loading documents: {str(e)}")
+        return []
     documents = reader.load_data(show_progress=show_progress)
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
@@ -75,8 +84,9 @@ def on_rm_error(func: Callable, path: str, exc_info: Tuple):
         path (str): The path to the file or directory which couldn't be removed.
         exc_info (Tuple): Exception information returned by sys.exc_info().
     """
-    os.chmod(path, stat.S_IWRITE)
-    os.unlink(path)
+    import logging
+import stat
+from typing import Callable, List, Optional, Sequence, Tuple
 
 
 def read_github_repo_as_documents(
