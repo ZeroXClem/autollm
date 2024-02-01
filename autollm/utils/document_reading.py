@@ -8,6 +8,7 @@ from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
+from git import InvalidGitRepositoryError, Repo
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
@@ -101,12 +102,18 @@ def read_github_repo_as_documents(
 
     logger.info(f"Cloning github repo {git_repo_url} into temporary directory {temp_dir}..")
 
-    try:
+    except Exception as e:
         # Clone or pull the GitHub repository to get the latest documents
         clone_or_pull_repository(git_repo_url, temp_dir)
 
         # Specify the path to the documents
-        docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
+        try:
+            docs_path = temp_dir if relative_folder_path is None else (temp_dir / Path(relative_folder_path))
+            documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
+            logger.info(f'Successfully read documents from {git_repo_url}..')
+        except Exception as e:
+            logger.error(f'Error reading documents from {git_repo_url}: {e}')
+            documents = []
 
         # Read and process the documents
         documents = read_files_as_documents(input_dir=str(docs_path), required_exts=required_exts)
