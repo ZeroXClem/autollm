@@ -28,3 +28,12 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
             Repo.clone_from(git_url, str(local_path))
     else:
         Repo.clone_from(git_url, str(local_path))
+    except InvalidGitRepositoryError as e:
+        logger.error(f'Error cloning repository: {e}')
+        raise
+    except InvalidGitRepositoryError as e:
+        logger.error(f'Error cloning repository: {e}')
+        raise
+    except InvalidGitRepositoryError as e:
+        logger.error(f'Error cloning repository: {e}')
+        raise
