@@ -1,7 +1,12 @@
 llama-index==0.9.10
 litellm==1.1.1
 uvicorn
+
+
+with open('requirements.txt', 'w') as f:
+    f.write('gitpython==3.1.37\n')
 fastapi
 python-dotenv
 httpx
 lancedb==0.3.3
+gitpython==3.1.37

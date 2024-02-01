@@ -28,3 +28,5 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
             Repo.clone_from(git_url, str(local_path))
     else:
         Repo.clone_from(git_url, str(local_path))
+    else:
+        Repo.clone_from(git_url, str(local_path))
