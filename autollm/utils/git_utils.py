@@ -15,9 +15,10 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
     try:
         from git import InvalidGitRepositoryError, Repo
     except ImportError:
+        import sys
         logger.error(
             'GitPython is not installed. Please "pip install gitpython==3.1.37" to use this feature.')
-        raise
+        sys.exit(1)
 
     if local_path.exists():
         try:
@@ -27,4 +28,7 @@ def clone_or_pull_repository(git_url: str, local_path: Path) -> None:
             # The existing directory is not a valid git repo, clone anew
             Repo.clone_from(git_url, str(local_path))
     else:
-        Repo.clone_from(git_url, str(local_path))
+        try:
+            Repo.clone_from(git_url, str(local_path))
+        except InvalidGitRepositoryError as e:
+            logger.error(f'Failed to clone the repository: {e}')
