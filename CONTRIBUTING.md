@@ -4,9 +4,12 @@ Thank you for considering a contribution to AutoLLM. Your input is invaluable to
 
 ## PR Guidelines 📝
 
+- **Providing Detailed Error Logs**:
+    When reporting issues related to GitHub Actions, it is important to provide detailed error logs to help identify and resolve the issue. Please include specific error messages and relevant logs when opening an issue related to GitHub Actions.
+
 To streamline the integration of your contributions:
 
-- **Start by Forking 🍴**: This allows you to work on your own copy of the project. See [these steps](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork) to open a PR from your fork.
+- **Start by Forking 🍴**: This allows you to work on your own copy of the project and by providing specific error logs when reporting issues related to GitHub Actions. See [these steps](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork) to open a PR from your fork. Note: Please provide detailed error logs to help identify and resolve the issue.
 
 - **New Branch 🌱**: Always create a new branch for your PR. It keeps things neat and makes the review process smoother.
 
