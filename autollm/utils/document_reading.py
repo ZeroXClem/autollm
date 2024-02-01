@@ -8,6 +8,7 @@ from llama_index.readers.file.base import SimpleDirectoryReader
 from llama_index.schema import Document
 
 from autollm.utils.git_utils import clone_or_pull_repository
+from autollm.utils.git_utils import clone_or_pull_repository as clone_or_pull_repository_old
 from autollm.utils.logging import logger
 from autollm.utils.markdown_reader import MarkdownReader
 from autollm.utils.pdf_reader import LangchainPDFReader
@@ -58,8 +59,11 @@ def read_files_as_documents(
     logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
         f"Reading files {input_files}..")
 
-    # Read and process the documents
+    try:
+        # Read and process the documents
     documents = reader.load_data(show_progress=show_progress)
+    except Exception as e:
+        logger.error(f'Error occurred while reading and processing the documents: {e}')
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
     return documents
@@ -169,4 +173,6 @@ def read_webpage_as_documents(url: str) -> List[Document]:
     """
     reader = WebPageReader()
     documents = reader.load_data(url)
+    except Exception as e:
+        logger.error(f'Error occurred while reading the webpage: {e}')
     return documents
