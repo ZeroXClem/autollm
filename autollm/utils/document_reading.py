@@ -59,7 +59,15 @@ def read_files_as_documents(
     logger.info(f"Reading files from {input_dir}..") if input_dir else logger.info(
         f"Reading files {input_files}..")
 
-    # Read and process the documents
+    try:
+        # Read and process the documents
+        documents = reader.load_data(show_progress=show_progress)
+
+        logger.info(f"Found {len(documents)} 'document(s)'.")
+        return documents
+    except Exception as e:
+        logger.error(f"Error loading documents: {str(e)}")
+        return []
     documents = reader.load_data(show_progress=show_progress)
 
     logger.info(f"Found {len(documents)} 'document(s)'.")
